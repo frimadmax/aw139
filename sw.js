@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v51-nome';
+const CACHE_NAME = 'aw139-companion-root-v52-efb';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -130,6 +130,9 @@ const PRECACHE = [
   "./shared/embedded-skin.css",
   "./shared/landing-oei.js",
   "./pac/",
+  "./cat-a/",
+  "./cat-a/index.html",
+  "./shared/tiles.css",
   "./pac/index.html",
   "./catb/",
   "./catb/index.html",

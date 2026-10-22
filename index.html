@@ -13,131 +13,69 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="shared/pwa.css">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="shared/omni-theme.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="shared/omni-theme.css"><link rel="stylesheet" href="shared/tiles.css">
 </head>
 <body>
   <main class="app-shell">
-    <header class="app-header">
-      <div>
-        <div class="omni-brand"><i aria-hidden="true"></i>Omni <em>Táxi Aéreo</em></div>
-        <h1>AW139</h1>
-        <p class="subtitle">Dashboard operacional</p>
-      </div>
-      <div class="header-actions" aria-label="Status do sistema">
-        <span class="status-icon connected">●</span>
-      </div>
+    <header class="efb-bar">
+      <a class="efb-id" href="./" aria-label="AW139 Omni">
+        <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-heli"/></svg>
+        <span><b>AW139</b><small>Omni <em>Táxi Aéreo</em></small></span>
+      </a>
+      <label class="efb-search"><input id="tileSearch" type="search" placeholder="Buscar…" autocomplete="off" aria-label="Buscar ferramenta"></label>
+      <span class="status-icon connected" aria-label="Online">●</span>
     </header>
 
-    <section class="flow-section" aria-labelledby="flowsHeading">
-      <h2 id="flowsHeading" class="section-kicker">Escolha o fluxo</h2>
-      <div class="flow-list">
-        <a class="flow-card flow-primary" href="cata/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-cata"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Cat A Clear Area</span>
-            <span class="flow-desc">WAT, RTO e decisão de decolagem em um só cálculo</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
-        </a>
-        <a class="flow-card" href="decolagem-offshore/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-takeoff"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Decolagem Offshore</span>
-            <span class="flow-desc">WAT offshore e dropdown para decolar da UM</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
-        </a>
-        <a class="flow-card" href="pouso-offshore/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-landing"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Pouso Offshore</span>
-            <span class="flow-desc">WAT offshore e dropdown para pousar na UM</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
-        </a>
-      </div>
-    </section>
-
     <section class="flow-section" aria-labelledby="toolsHeading">
-      <h2 id="toolsHeading" class="section-kicker">Já tem o RTO?</h2>
-      <div class="flow-list">
-        <a class="flow-card" href="adc/?back=1&amp;return=../index.html">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-adc"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">ADC</span>
-            <span class="flow-desc">Informe o RTO já calculado e confira a ASDA na carta</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+      <h2 id="toolsHeading" class="section-kicker">Ferramentas</h2>
+      <div class="tile-grid" id="tileGrid">
+        <a class="tile tile-key" href="cat-a/" data-search="cat a offshore enhanced clear area vertical short field confined backup decolagem pouso">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-cata"/></svg>
+          <span class="tile-label">CAT A</span>
         </a>
-      </div>
-    </section>
-
-    <section class="flow-section" aria-labelledby="moreHeading">
-      <h2 id="moreHeading" class="section-kicker">Mais ferramentas</h2>
-      <div class="flow-list">
-        <a class="flow-card" href="catb/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-catb"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">CAT B</span>
-            <span class="flow-desc">Take-off e landing: distâncias de decolagem, pouso e frenagem</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="catb/" data-search="cat b">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-catb"/></svg>
+          <span class="tile-label">CAT B</span>
         </a>
-        <a class="flow-card" href="power-check/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-gauge"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Power Check</span>
-            <span class="flow-desc">Verificação de potência dos motores com relatório</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="pac/" data-search="pac/epc">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-turbine"/></svg>
+          <span class="tile-label">PAC/EPC</span>
         </a>
-        <a class="flow-card" href="pac/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-gauge"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Power Assurance (AW139PAC)</span>
-            <span class="flow-desc">Power Assurance, Bleed Valve, Height Loss, Drop Down BTS, Hover Ceiling e Refuel (por Helder Costa)</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="power-check/" data-search="power check">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-gauge"/></svg>
+          <span class="tile-label">Power Check</span>
         </a>
-        <a class="flow-card" href="ndl/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-moon"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">NDL</span>
-            <span class="flow-desc">Vento, aproximação noturna e relatório de voo offshore</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="wat/" data-search="w.a.t">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-wat"/></svg>
+          <span class="tile-label">W.A.T</span>
         </a>
-        <a class="flow-card" href="roc/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-climb"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">ROC</span>
-            <span class="flow-desc">Razão de subida AEO e OEI</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="rto/" data-search="rto">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-rto"/></svg>
+          <span class="tile-label">RTO</span>
         </a>
-        <a class="flow-card" href="consumo/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-fuel"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Consumo</span>
-            <span class="flow-desc">Consumo de combustível</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="adc/?back=1&amp;return=../index.html" data-search="adc">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-adc"/></svg>
+          <span class="tile-label">ADC</span>
         </a>
-        <a class="flow-card" href="teto-pairado/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-hover"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Teto do Pairado</span>
-            <span class="flow-desc">Teto de pairado IGE / OGE</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="roc/" data-search="roc">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-climb"/></svg>
+          <span class="tile-label">ROC</span>
         </a>
-        <a class="flow-card" href="limitacoes/">
-          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-limits"/></svg></span>
-          <span class="flow-text">
-            <span class="flow-title">Limitações</span>
-            <span class="flow-desc">Limitações operacionais da aeronave</span>
-          </span>
-          <span class="flow-chevron" aria-hidden="true">›</span>
+        <a class="tile" href="consumo/" data-search="consumo">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-fuel"/></svg>
+          <span class="tile-label">Consumo</span>
+        </a>
+        <a class="tile" href="teto-pairado/" data-search="teto do pairado">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-hover"/></svg>
+          <span class="tile-label">Teto do Pairado</span>
+        </a>
+        <a class="tile" href="ndl/" data-search="ndl">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-moon"/></svg>
+          <span class="tile-label">NDL</span>
+        </a>
+        <a class="tile" href="limitacoes/" data-search="limitações">
+          <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-limits"/></svg>
+          <span class="tile-label">Limitações</span>
         </a>
       </div>
     </section>
@@ -153,5 +91,15 @@
 
   <script src="shared/pwa.js"></script>
   <script src="shared/home.js"></script>
+  <script>
+    (function(){
+      var input = document.getElementById('tileSearch');
+      var tiles = document.querySelectorAll('#tileGrid .tile');
+      input && input.addEventListener('input', function(){
+        var q = input.value.trim().toLowerCase();
+        tiles.forEach(function(t){ t.hidden = q && t.dataset.search.indexOf(q) === -1; });
+      });
+    })();
+  </script>
 </body>
 </html>

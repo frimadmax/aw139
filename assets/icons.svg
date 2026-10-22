@@ -110,4 +110,48 @@
   <symbol id="i-limits" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 4.5 5.5v6c0 4.6 3.2 8 7.5 9.7 4.3-1.7 7.5-5.1 7.5-9.7v-6z"/><path d="M12 8v5"/><path d="M12 16.3v.2"/></g>
   </symbol>
+  <!-- W.A.T: montanha + termômetro -->
+  <symbol id="i-wat" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20 8.5 9l4 6.5 2.5-3.5L22 20z"/><path d="M18 3.5v6"/><circle cx="18" cy="11" r="1.6"/><path d="M16.5 3.5h3"/></g>
+  </symbol>
+
+  <!-- RTO: pista com marca de parada -->
+  <symbol id="i-rto" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21 9.5 3M17 21 14.5 3"/><path d="M12 5v2M12 10v2"/><path d="M6.5 16.5h11"/><path d="M8.5 19h7"/></g>
+  </symbol>
+
+  <!-- PAC/EPC: turbina -->
+  <symbol id="i-turbine" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 10c0-3 1.5-5 4-6M14 12c3 0 5 1.5 6 4M12 14c0 3-1.5 5-4 6M10 12c-3 0-5-1.5-6-4"/></g>
+  </symbol>
+
+  <!-- Perfis CAT A (traçado da decolagem) -->
+  <symbol id="p-offshore" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 26h14"/><path d="M5 26v4M13 26v4"/><path d="M0 30.5c2-1 4-1 6 0s4 1 6 0 4-1 6 0 4 1 6 0 4-1 6 0 4 1 6 0 4-1 6 0 4 1 6 0"/><path d="M10 22c4-6 6-6 9-3s10 0 27-13" stroke-dasharray="2.5 2.5"/></g>
+    <g transform="translate(6 14) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
+  <symbol id="p-enhanced" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 26h14"/><path d="M5 26v4M13 26v4"/><path d="M0 30.5c2-1 4-1 6 0s4 1 6 0 4-1 6 0 4 1 6 0 4-1 6 0 4 1 6 0 4-1 6 0 4 1 6 0"/><path d="M9 22V10c0-2 2-3 5-3 7 0 14 1 32-4" stroke-dasharray="2.5 2.5"/></g>
+    <g transform="translate(4 14) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
+  <symbol id="p-clear" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 28h46"/><path d="M8 25c6-1 10-3 14-7s9-8 24-14" stroke-dasharray="2.5 2.5"/></g>
+    <g transform="translate(2 17) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
+  <symbol id="p-vertical" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28h20"/><path d="M14 22V8" stroke-dasharray="2.5 2.5"/><path d="M11 11l3-3 3 3"/><path d="M16 8c8 0 16-2 30-6" stroke-dasharray="2.5 2.5"/></g>
+    <g transform="translate(9 19) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
+  <symbol id="p-short" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 28h20"/><path d="M27 28v-8h3v8M36 28V14h4v14"/><path d="M8 24c2-8 6-14 14-16s14-3 24-6" stroke-dasharray="2.5 2.5"/></g>
+    <g transform="translate(2 17) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
+  <symbol id="p-confined" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 28h22"/><path d="M4 28V12l3-4 3 4v16M32 28V10l3-5 3 5v18"/><path d="M21 22V6c0-2 3-3 8-3 6 0 10-1 17-2" stroke-dasharray="2.5 2.5"/></g>
+    <g transform="translate(16 19) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
+  <symbol id="p-backup" viewBox="0 0 48 32">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 28h26"/><path d="M10 28v4M36 28v4"/><path d="M23 22l-9-14" stroke-dasharray="2.5 2.5"/><path d="M14 8c6-4 18-6 32-7" stroke-dasharray="2.5 2.5"/><path d="M14 13l0-5 4 1"/></g>
+    <g transform="translate(18 19) scale(0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
+  </symbol>
 </svg>
