@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-wat-offline-v5-omni';
+const CACHE_NAME = 'aw139-wat-offline-v6-nobar';
 const ASSETS = [
   "./",
   "../assets/icon-180.png",

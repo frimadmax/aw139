@@ -356,7 +356,6 @@
     document.body.classList.toggle('is-standalone', state.installed);
     updateInstallStatusText();
     wireInstallButton();
-    renderGlobalBottomNav();
     updateViewportClasses();
     window.dispatchEvent(new CustomEvent('aw139-pwa-state', { detail: state }));
   });
