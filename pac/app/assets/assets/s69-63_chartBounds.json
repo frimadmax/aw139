@@ -1,0 +1,20 @@
+{
+    "leftGraph": {
+        "x": { "min": 116, "max": 3640 },
+        "y": { "min": 1756, "max": 3869 },
+        "pressureAltRange": { "min": 14000, "max": -1000 },
+        "yTransferRange": { "min": 115, "max": 0 }
+    },
+    "middleGraph": {
+        "x": { "min": 3667, "max": 5680 },
+        "y": { "min": 1756, "max": 3869 },
+        "xTransferRange": { "min": 0, "max": 130 },
+        "yTransferRange": { "min": 115, "max": 0 }
+    },
+    "rightGraph": {
+        "x": { "min": 3667, "max": 5680 },
+        "y": { "min": 599, "max": 1727 },
+        "xTransferRange": { "min": 0, "max": 130 },
+        "feetLostRange": { "min": 400, "max": 0 }
+    }
+}

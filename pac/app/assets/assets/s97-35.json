@@ -1,0 +1,6092 @@
+{
+  "graph1": [
+    {
+      "oat": -30,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.13417821948722786
+        },
+        {
+          "pressureAltitude": -961.6478588376899,
+          "yTransfer": 0.13656726314407863
+        },
+        {
+          "pressureAltitude": -934.9800365293115,
+          "yTransfer": 0.13912407080541533
+        },
+        {
+          "pressureAltitude": -908.3123265315637,
+          "yTransfer": 0.14171443126764904
+        },
+        {
+          "pressureAltitude": -881.6447288444463,
+          "yTransfer": 0.14433834453077998
+        },
+        {
+          "pressureAltitude": -854.9770188466985,
+          "yTransfer": 0.1469287049930137
+        },
+        {
+          "pressureAltitude": -828.3086349851669,
+          "yTransfer": 0.14931774864986447
+        },
+        {
+          "pressureAltitude": -801.6408126767885,
+          "yTransfer": 0.15187455631120095
+        },
+        {
+          "pressureAltitude": -774.9731026790405,
+          "yTransfer": 0.15446491677343488
+        },
+        {
+          "pressureAltitude": -748.3053926812929,
+          "yTransfer": 0.1570552772356686
+        },
+        {
+          "pressureAltitude": -721.6374580622837,
+          "yTransfer": 0.15957853209610806
+        },
+        {
+          "pressureAltitude": -694.9694111326439,
+          "yTransfer": 0.16206823415565008
+        },
+        {
+          "pressureAltitude": -668.3019257561575,
+          "yTransfer": 0.16472570021967825
+        },
+        {
+          "pressureAltitude": -641.6339911371483,
+          "yTransfer": 0.1672489550801175
+        },
+        {
+          "pressureAltitude": -614.9660565181391,
+          "yTransfer": 0.16977220994055697
+        },
+        {
+          "pressureAltitude": -588.2983465203913,
+          "yTransfer": 0.1723625704027909
+        },
+        {
+          "pressureAltitude": -561.6302995907517,
+          "yTransfer": 0.17485227246233315
+        },
+        {
+          "pressureAltitude": -534.9625895930039,
+          "yTransfer": 0.17744263292456686
+        },
+        {
+          "pressureAltitude": -508.2948795952559,
+          "yTransfer": 0.18003299338680057
+        },
+        {
+          "pressureAltitude": -481.62672035498576,
+          "yTransfer": 0.18248914264544558
+        },
+        {
+          "pressureAltitude": -454.95912266786854,
+          "yTransfer": 0.18511305590857652
+        },
+        {
+          "pressureAltitude": -428.2909634275982,
+          "yTransfer": 0.18756920516722175
+        },
+        {
+          "pressureAltitude": -401.62336574048095,
+          "yTransfer": 0.1901931184303527
+        },
+        {
+          "pressureAltitude": -374.9553188108414,
+          "yTransfer": 0.19268282048989493
+        },
+        {
+          "pressureAltitude": -348.28760881309336,
+          "yTransfer": 0.19527318095212864
+        },
+        {
+          "pressureAltitude": -321.61967419408415,
+          "yTransfer": 0.19779643581256812
+        },
+        {
+          "pressureAltitude": -294.951851885706,
+          "yTransfer": 0.2003532434739046
+        },
+        {
+          "pressureAltitude": -268.2839172666968,
+          "yTransfer": 0.20287649833434385
+        },
+        {
+          "pressureAltitude": -241.61609495831817,
+          "yTransfer": 0.20543330599568077
+        },
+        {
+          "pressureAltitude": -214.94816033930942,
+          "yTransfer": 0.20795656085612002
+        },
+        {
+          "pressureAltitude": -188.2803380309308,
+          "yTransfer": 0.21051336851745672
+        },
+        {
+          "pressureAltitude": -161.612628033183,
+          "yTransfer": 0.21310372897969043
+        },
+        {
+          "pressureAltitude": -134.94446879291263,
+          "yTransfer": 0.21555987823833545
+        },
+        {
+          "pressureAltitude": -108.27675879516482,
+          "yTransfer": 0.21815023870056915
+        },
+        {
+          "pressureAltitude": -81.60904879741702,
+          "yTransfer": 0.2207405991628031
+        },
+        {
+          "pressureAltitude": -54.94088955714665,
+          "yTransfer": 0.2231967484214481
+        },
+        {
+          "pressureAltitude": -28.27317955939884,
+          "yTransfer": 0.2257871088836818
+        },
+        {
+          "pressureAltitude": -1.605357251020223,
+          "yTransfer": 0.2283439165450185
+        },
+        {
+          "pressureAltitude": 25.062465057358168,
+          "yTransfer": 0.230900724206355
+        },
+        {
+          "pressureAltitude": 51.73073660825912,
+          "yTransfer": 0.233323320664103
+        },
+        {
+          "pressureAltitude": 78.39822198474576,
+          "yTransfer": 0.23598078672813116
+        },
+        {
+          "pressureAltitude": 105.06615660375473,
+          "yTransfer": 0.23850404158857064
+        },
+        {
+          "pressureAltitude": 131.73409122276416,
+          "yTransfer": 0.2410272964490099
+        },
+        {
+          "pressureAltitude": 158.40191353114233,
+          "yTransfer": 0.24358410411034637
+        },
+        {
+          "pressureAltitude": 185.0697358395205,
+          "yTransfer": 0.24614091177168307
+        },
+        {
+          "pressureAltitude": 211.73767045852992,
+          "yTransfer": 0.24866416663212232
+        },
+        {
+          "pressureAltitude": 238.40549276690808,
+          "yTransfer": 0.2512209742934588
+        },
+        {
+          "pressureAltitude": 265.0732027646559,
+          "yTransfer": 0.25381133475569273
+        },
+        {
+          "pressureAltitude": 291.7413620049265,
+          "yTransfer": 0.25626748401433797
+        },
+        {
+          "pressureAltitude": 318.4089596920435,
+          "yTransfer": 0.2588913972774689
+        },
+        {
+          "pressureAltitude": 345.07689431105246,
+          "yTransfer": 0.26141465213790815
+        },
+        {
+          "pressureAltitude": 371.7448289300619,
+          "yTransfer": 0.2639379069983476
+        },
+        {
+          "pressureAltitude": 398.41265123844005,
+          "yTransfer": 0.2664947146596841
+        },
+        {
+          "pressureAltitude": 425.0803612361883,
+          "yTransfer": 0.26908507512191804
+        },
+        {
+          "pressureAltitude": 451.7482958551973,
+          "yTransfer": 0.2716083299823573
+        },
+        {
+          "pressureAltitude": 478.4163427848366,
+          "yTransfer": 0.27409803204189975
+        },
+        {
+          "pressureAltitude": 505.0839404719545,
+          "yTransfer": 0.27672194530503047
+        },
+        {
+          "pressureAltitude": 531.7519874015939,
+          "yTransfer": 0.27921164736457293
+        },
+        {
+          "pressureAltitude": 558.4196973993417,
+          "yTransfer": 0.28180200782680664
+        },
+        {
+          "pressureAltitude": 585.0874073970895,
+          "yTransfer": 0.28439236828904035
+        },
+        {
+          "pressureAltitude": 611.7553420160984,
+          "yTransfer": 0.2869156231494798
+        },
+        {
+          "pressureAltitude": 638.423164324477,
+          "yTransfer": 0.2894724308108163
+        },
+        {
+          "pressureAltitude": 665.0910989434865,
+          "yTransfer": 0.2919956856712558
+        },
+        {
+          "pressureAltitude": 691.7586966306035,
+          "yTransfer": 0.2946195989343867
+        },
+        {
+          "pressureAltitude": 718.4267435602428,
+          "yTransfer": 0.29710930099392874
+        },
+        {
+          "pressureAltitude": 745.0945658686214,
+          "yTransfer": 0.29966610865526544
+        },
+        {
+          "pressureAltitude": 771.7625004876304,
+          "yTransfer": 0.30218936351570513
+        },
+        {
+          "pressureAltitude": 798.4302104853782,
+          "yTransfer": 0.30477972397793884
+        },
+        {
+          "pressureAltitude": 825.0980327937568,
+          "yTransfer": 0.3073365316392753
+        },
+        {
+          "pressureAltitude": 851.7658551021354,
+          "yTransfer": 0.3098933393006118
+        },
+        {
+          "pressureAltitude": 878.4337897211444,
+          "yTransfer": 0.3124165941610513
+        },
+        {
+          "pressureAltitude": 905.1013874082619,
+          "yTransfer": 0.315040507424182
+        },
+        {
+          "pressureAltitude": 931.7694343379012,
+          "yTransfer": 0.31753020948372446
+        },
+        {
+          "pressureAltitude": 958.4373689569102,
+          "yTransfer": 0.32005346434416393
+        },
+        {
+          "pressureAltitude": 985.1055281971808,
+          "yTransfer": 0.32250961360280916
+        },
+        {
+          "pressureAltitude": 1000.8648435748837,
+          "yTransfer": 0.3237047531397026
+        }
+      ]
+    },
+    {
+      "oat": -20,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.24090967914109518
+        },
+        {
+          "pressureAltitude": -962.005118953686,
+          "yTransfer": 0.24329872279794595
+        },
+        {
+          "pressureAltitude": -935.3368474027852,
+          "yTransfer": 0.24572131925569418
+        },
+        {
+          "pressureAltitude": -908.669249715668,
+          "yTransfer": 0.2483452325188249
+        },
+        {
+          "pressureAltitude": -882.0010904753976,
+          "yTransfer": 0.25080138177747013
+        },
+        {
+          "pressureAltitude": -855.333268167019,
+          "yTransfer": 0.2533581894388066
+        },
+        {
+          "pressureAltitude": -828.6652212373795,
+          "yTransfer": 0.25584789149834886
+        },
+        {
+          "pressureAltitude": -801.9973989290011,
+          "yTransfer": 0.25840469915968556
+        },
+        {
+          "pressureAltitude": -775.3294643099919,
+          "yTransfer": 0.26092795402012503
+        },
+        {
+          "pressureAltitude": -748.6613050697217,
+          "yTransfer": 0.26338410327877027
+        },
+        {
+          "pressureAltitude": -721.9937073826043,
+          "yTransfer": 0.266008016541901
+        },
+        {
+          "pressureAltitude": -695.3255481423339,
+          "yTransfer": 0.268464165800546
+        },
+        {
+          "pressureAltitude": -668.6577258339557,
+          "yTransfer": 0.2710209734618827
+        },
+        {
+          "pressureAltitude": -641.9897912149465,
+          "yTransfer": 0.27354422832232195
+        },
+        {
+          "pressureAltitude": -615.3219689065679,
+          "yTransfer": 0.2761010359836584
+        },
+        {
+          "pressureAltitude": -588.6540342875589,
+          "yTransfer": 0.2786242908440981
+        },
+        {
+          "pressureAltitude": -561.98609966855,
+          "yTransfer": 0.2811475457045376
+        },
+        {
+          "pressureAltitude": -535.3180527389102,
+          "yTransfer": 0.28363724776407984
+        },
+        {
+          "pressureAltitude": -508.65034274116215,
+          "yTransfer": 0.28622760822631355
+        },
+        {
+          "pressureAltitude": -481.982183500892,
+          "yTransfer": 0.28868375748495856
+        },
+        {
+          "pressureAltitude": -455.3145858137748,
+          "yTransfer": 0.2913076707480893
+        },
+        {
+          "pressureAltitude": -428.646538884135,
+          "yTransfer": 0.29379737280763196
+        },
+        {
+          "pressureAltitude": -401.97871657575683,
+          "yTransfer": 0.29635418046896844
+        },
+        {
+          "pressureAltitude": -375.3099957823333,
+          "yTransfer": 0.29864256572312775
+        },
+        {
+          "pressureAltitude": -348.6425104058467,
+          "yTransfer": 0.3013000317871557
+        },
+        {
+          "pressureAltitude": -321.97468809746806,
+          "yTransfer": 0.3038568394484922
+        },
+        {
+          "pressureAltitude": -295.3067534784591,
+          "yTransfer": 0.30638009430893165
+        },
+        {
+          "pressureAltitude": -268.6389311700807,
+          "yTransfer": 0.30893690197026835
+        },
+        {
+          "pressureAltitude": -241.9708842404409,
+          "yTransfer": 0.3114266040298106
+        },
+        {
+          "pressureAltitude": -215.30294962143194,
+          "yTransfer": 0.31394985889025007
+        },
+        {
+          "pressureAltitude": -188.63501500242273,
+          "yTransfer": 0.3164731137506893
+        },
+        {
+          "pressureAltitude": -161.96696807278295,
+          "yTransfer": 0.3189628158102318
+        },
+        {
+          "pressureAltitude": -135.29937038566595,
+          "yTransfer": 0.3215867290733625
+        },
+        {
+          "pressureAltitude": -108.63121114539558,
+          "yTransfer": 0.3240428783320075
+        },
+        {
+          "pressureAltitude": -81.96327652638638,
+          "yTransfer": 0.3265661331924472
+        },
+        {
+          "pressureAltitude": -55.29522959674682,
+          "yTransfer": 0.32905583525198945
+        },
+        {
+          "pressureAltitude": -28.62740728836843,
+          "yTransfer": 0.33161264291332593
+        },
+        {
+          "pressureAltitude": -1.9594726693592293,
+          "yTransfer": 0.3341358977737654
+        },
+        {
+          "pressureAltitude": 24.708461949649518,
+          "yTransfer": 0.3366591526342049
+        },
+        {
+          "pressureAltitude": 51.37639656865895,
+          "yTransfer": 0.3391824074946441
+        },
+        {
+          "pressureAltitude": 78.04455580892909,
+          "yTransfer": 0.34163855675328936
+        },
+        {
+          "pressureAltitude": 104.71237811730771,
+          "yTransfer": 0.34419536441462606
+        },
+        {
+          "pressureAltitude": 131.38020042568633,
+          "yTransfer": 0.34675217207596254
+        },
+        {
+          "pressureAltitude": 158.04824735532566,
+          "yTransfer": 0.3492418741355048
+        },
+        {
+          "pressureAltitude": 184.71629428496544,
+          "yTransfer": 0.351731576195047
+        },
+        {
+          "pressureAltitude": 211.38422890397487,
+          "yTransfer": 0.3542548310554865
+        },
+        {
+          "pressureAltitude": 238.05216352298385,
+          "yTransfer": 0.35677808591592575
+        },
+        {
+          "pressureAltitude": 264.7198735207312,
+          "yTransfer": 0.3593684463781597
+        },
+        {
+          "pressureAltitude": 291.3881450716326,
+          "yTransfer": 0.3617910428359077
+        },
+        {
+          "pressureAltitude": 318.05596738001077,
+          "yTransfer": 0.36434785049724416
+        },
+        {
+          "pressureAltitude": 344.72390199901974,
+          "yTransfer": 0.36687110535768364
+        },
+        {
+          "pressureAltitude": 371.3918366180292,
+          "yTransfer": 0.3693943602181229
+        },
+        {
+          "pressureAltitude": 398.059546615777,
+          "yTransfer": 0.3719847206803566
+        },
+        {
+          "pressureAltitude": 424.7277058560476,
+          "yTransfer": 0.37444086993900205
+        },
+        {
+          "pressureAltitude": 451.39564047505655,
+          "yTransfer": 0.3769641247994413
+        },
+        {
+          "pressureAltitude": 478.0634627834347,
+          "yTransfer": 0.3795209324607778
+        },
+        {
+          "pressureAltitude": 504.73139740244414,
+          "yTransfer": 0.38204418732121725
+        },
+        {
+          "pressureAltitude": 531.3993320214531,
+          "yTransfer": 0.3845674421816565
+        },
+        {
+          "pressureAltitude": 558.0674912617233,
+          "yTransfer": 0.38702359144030174
+        },
+        {
+          "pressureAltitude": 584.7352012594715,
+          "yTransfer": 0.38961395190253545
+        },
+        {
+          "pressureAltitude": 611.4030235678497,
+          "yTransfer": 0.3921707595638724
+        },
+        {
+          "pressureAltitude": 638.071070497489,
+          "yTransfer": 0.3946604616234144
+        },
+        {
+          "pressureAltitude": 664.7391174271293,
+          "yTransfer": 0.39715016368295664
+        },
+        {
+          "pressureAltitude": 691.4069397355074,
+          "yTransfer": 0.3997069713442931
+        },
+        {
+          "pressureAltitude": 718.0747620438856,
+          "yTransfer": 0.4022637790056298
+        },
+        {
+          "pressureAltitude": 744.7429212841562,
+          "yTransfer": 0.40471992826427483
+        },
+        {
+          "pressureAltitude": 771.4105189712736,
+          "yTransfer": 0.407343841527406
+        },
+        {
+          "pressureAltitude": 798.078565900913,
+          "yTransfer": 0.40983354358694823
+        },
+        {
+          "pressureAltitude": 824.7466128305527,
+          "yTransfer": 0.41232324564649026
+        },
+        {
+          "pressureAltitude": 851.4144351389314,
+          "yTransfer": 0.41488005330782696
+        },
+        {
+          "pressureAltitude": 878.0824820685707,
+          "yTransfer": 0.4173697553673692
+        },
+        {
+          "pressureAltitude": 904.7500797556881,
+          "yTransfer": 0.41999366863050014
+        },
+        {
+          "pressureAltitude": 931.4181266853279,
+          "yTransfer": 0.42248337069004216
+        },
+        {
+          "pressureAltitude": 958.0862859255981,
+          "yTransfer": 0.4249395199486876
+        },
+        {
+          "pressureAltitude": 984.7546697871298,
+          "yTransfer": 0.4273285636055384
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.4287079346931322
+        }
+      ]
+    },
+    {
+      "oat": -10,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.34210492664693115
+        },
+        {
+          "pressureAltitude": -962.3439601262608,
+          "yTransfer": 0.3445275231046794
+        },
+        {
+          "pressureAltitude": -935.6768116816663,
+          "yTransfer": 0.3472856475713988
+        },
+        {
+          "pressureAltitude": -909.0084278201346,
+          "yTransfer": 0.34967469122824957
+        },
+        {
+          "pressureAltitude": -882.3406055117562,
+          "yTransfer": 0.35223149888958627
+        },
+        {
+          "pressureAltitude": -855.672670892747,
+          "yTransfer": 0.35475475375002574
+        },
+        {
+          "pressureAltitude": -829.0046239631074,
+          "yTransfer": 0.35724445580956776
+        },
+        {
+          "pressureAltitude": -802.3368016547288,
+          "yTransfer": 0.35980126347090446
+        },
+        {
+          "pressureAltitude": -775.6685301038278,
+          "yTransfer": 0.36222385992865247
+        },
+        {
+          "pressureAltitude": -749.0004831741883,
+          "yTransfer": 0.3647135619881947
+        },
+        {
+          "pressureAltitude": -722.3325485551793,
+          "yTransfer": 0.3672368168486342
+        },
+        {
+          "pressureAltitude": -695.6646139361701,
+          "yTransfer": 0.36976007170907366
+        },
+        {
+          "pressureAltitude": -668.9965670065305,
+          "yTransfer": 0.3722497737686157
+        },
+        {
+          "pressureAltitude": -642.3286323875213,
+          "yTransfer": 0.37477302862905515
+        },
+        {
+          "pressureAltitude": -615.660473147251,
+          "yTransfer": 0.37722917788770016
+        },
+        {
+          "pressureAltitude": -588.9925385282418,
+          "yTransfer": 0.37975243274813986
+        },
+        {
+          "pressureAltitude": -562.324603909233,
+          "yTransfer": 0.38227568760857933
+        },
+        {
+          "pressureAltitude": -535.6564446689624,
+          "yTransfer": 0.38473183686722434
+        },
+        {
+          "pressureAltitude": -508.98862236058403,
+          "yTransfer": 0.3872886445285608
+        },
+        {
+          "pressureAltitude": -482.32068774157506,
+          "yTransfer": 0.3898118993890003
+        },
+        {
+          "pressureAltitude": -455.65275312256585,
+          "yTransfer": 0.39233515424943954
+        },
+        {
+          "pressureAltitude": -428.98470619292607,
+          "yTransfer": 0.394824856308982
+        },
+        {
+          "pressureAltitude": -402.3165469526559,
+          "yTransfer": 0.39728100556762724
+        },
+        {
+          "pressureAltitude": -375.64861233364695,
+          "yTransfer": 0.3998042604280665
+        },
+        {
+          "pressureAltitude": -348.9804530933766,
+          "yTransfer": 0.40226040968671173
+        },
+        {
+          "pressureAltitude": -322.31274309562855,
+          "yTransfer": 0.40485077014894544
+        },
+        {
+          "pressureAltitude": -295.64435923409724,
+          "yTransfer": 0.407239813805796
+        },
+        {
+          "pressureAltitude": -268.97642461508804,
+          "yTransfer": 0.40976306866623546
+        },
+        {
+          "pressureAltitude": -242.30860230670942,
+          "yTransfer": 0.41231987632757217
+        },
+        {
+          "pressureAltitude": -215.64055537706986,
+          "yTransfer": 0.4148095783871144
+        },
+        {
+          "pressureAltitude": -188.97273306869147,
+          "yTransfer": 0.4173663860484509
+        },
+        {
+          "pressureAltitude": -162.3045738284211,
+          "yTransfer": 0.4198225353070959
+        },
+        {
+          "pressureAltitude": -135.63641458815096,
+          "yTransfer": 0.42227868456574114
+        },
+        {
+          "pressureAltitude": -108.96870459040292,
+          "yTransfer": 0.42486904502797485
+        },
+        {
+          "pressureAltitude": -82.30065766076314,
+          "yTransfer": 0.4273587470875173
+        },
+        {
+          "pressureAltitude": -55.63249842049299,
+          "yTransfer": 0.4298148963461623
+        },
+        {
+          "pressureAltitude": -28.96456380148402,
+          "yTransfer": 0.4323381512066018
+        },
+        {
+          "pressureAltitude": -2.2964045612134214,
+          "yTransfer": 0.4347943004652468
+        },
+        {
+          "pressureAltitude": 24.37141774716474,
+          "yTransfer": 0.4373511081265833
+        },
+        {
+          "pressureAltitude": 51.03946467680498,
+          "yTransfer": 0.43984081018612575
+        },
+        {
+          "pressureAltitude": 77.7073992958135,
+          "yTransfer": 0.4423640650465652
+        },
+        {
+          "pressureAltitude": 104.37555853608364,
+          "yTransfer": 0.44482021430521046
+        },
+        {
+          "pressureAltitude": 131.04371777635424,
+          "yTransfer": 0.4472763635638555
+        },
+        {
+          "pressureAltitude": 157.71165239536322,
+          "yTransfer": 0.4497996184242947
+        },
+        {
+          "pressureAltitude": 184.37947470374183,
+          "yTransfer": 0.4523564260856312
+        },
+        {
+          "pressureAltitude": 211.04763394401243,
+          "yTransfer": 0.45481257534427644
+        },
+        {
+          "pressureAltitude": 237.7155685630214,
+          "yTransfer": 0.4573358302047157
+        },
+        {
+          "pressureAltitude": 264.38372780329155,
+          "yTransfer": 0.4597919794633609
+        },
+        {
+          "pressureAltitude": 291.0521116648233,
+          "yTransfer": 0.4621810231202117
+        },
+        {
+          "pressureAltitude": 317.7198216625711,
+          "yTransfer": 0.4647713835824454
+        },
+        {
+          "pressureAltitude": 344.38786859221045,
+          "yTransfer": 0.46726108564198765
+        },
+        {
+          "pressureAltitude": 371.05591552185024,
+          "yTransfer": 0.4697507877015299
+        },
+        {
+          "pressureAltitude": 397.72373783022886,
+          "yTransfer": 0.4723075953628666
+        },
+        {
+          "pressureAltitude": 424.39178475986864,
+          "yTransfer": 0.47479729742240906
+        },
+        {
+          "pressureAltitude": 451.0600563107696,
+          "yTransfer": 0.47721989388015684
+        },
+        {
+          "pressureAltitude": 477.7281032404089,
+          "yTransfer": 0.4797095959396991
+        },
+        {
+          "pressureAltitude": 504.39603785941836,
+          "yTransfer": 0.48223285080013856
+        },
+        {
+          "pressureAltitude": 531.0640847890581,
+          "yTransfer": 0.4847225528596806
+        },
+        {
+          "pressureAltitude": 557.7322440293283,
+          "yTransfer": 0.4871787021183258
+        },
+        {
+          "pressureAltitude": 584.4002909589681,
+          "yTransfer": 0.48966840417786806
+        },
+        {
+          "pressureAltitude": 611.0684501992382,
+          "yTransfer": 0.4921245534365133
+        },
+        {
+          "pressureAltitude": 637.736497128878,
+          "yTransfer": 0.49461425549605553
+        },
+        {
+          "pressureAltitude": 664.4046563691486,
+          "yTransfer": 0.49707040475470055
+        },
+        {
+          "pressureAltitude": 691.0725909881571,
+          "yTransfer": 0.49959365961514
+        },
+        {
+          "pressureAltitude": 717.7407502284273,
+          "yTransfer": 0.502049808873785
+        },
+        {
+          "pressureAltitude": 744.4090217793287,
+          "yTransfer": 0.504472405331533
+        },
+        {
+          "pressureAltitude": 771.0768440877068,
+          "yTransfer": 0.5070292129928697
+        },
+        {
+          "pressureAltitude": 797.7448910173466,
+          "yTransfer": 0.509518915052412
+        },
+        {
+          "pressureAltitude": 824.4130502576172,
+          "yTransfer": 0.511975064311057
+        },
+        {
+          "pressureAltitude": 851.0812094978874,
+          "yTransfer": 0.5144312135697022
+        },
+        {
+          "pressureAltitude": 877.7491441168963,
+          "yTransfer": 0.5169544684301415
+        },
+        {
+          "pressureAltitude": 904.4175279784281,
+          "yTransfer": 0.5193435120869923
+        },
+        {
+          "pressureAltitude": 931.0854625974371,
+          "yTransfer": 0.5218667669474317
+        },
+        {
+          "pressureAltitude": 957.753397216446,
+          "yTransfer": 0.5243900218078712
+        },
+        {
+          "pressureAltitude": 984.4215564567166,
+          "yTransfer": 0.5268461710665163
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.5283597533576989
+        }
+      ]
+    },
+    {
+      "oat": 0,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.4391060740406223
+        },
+        {
+          "pressureAltitude": -962.668874780639,
+          "yTransfer": 0.44159577610016454
+        },
+        {
+          "pressureAltitude": -936.0007155403689,
+          "yTransfer": 0.4440519253588098
+        },
+        {
+          "pressureAltitude": -909.3322193682066,
+          "yTransfer": 0.4464074162147633
+        },
+        {
+          "pressureAltitude": -882.6645093704587,
+          "yTransfer": 0.44899777667699703
+        },
+        {
+          "pressureAltitude": -855.996462440819,
+          "yTransfer": 0.45148747873653927
+        },
+        {
+          "pressureAltitude": -829.3281908899182,
+          "yTransfer": 0.45391007519428705
+        },
+        {
+          "pressureAltitude": -802.660256270909,
+          "yTransfer": 0.4564333300547265
+        },
+        {
+          "pressureAltitude": -775.9920970306387,
+          "yTransfer": 0.45888947931337176
+        },
+        {
+          "pressureAltitude": -749.3240501009991,
+          "yTransfer": 0.461379181372914
+        },
+        {
+          "pressureAltitude": -722.6558908607287,
+          "yTransfer": 0.46383533063155924
+        },
+        {
+          "pressureAltitude": -695.9877316204584,
+          "yTransfer": 0.46629147989020425
+        },
+        {
+          "pressureAltitude": -669.3197970014494,
+          "yTransfer": 0.4688147347506437
+        },
+        {
+          "pressureAltitude": -642.6518623824402,
+          "yTransfer": 0.471337989611083
+        },
+        {
+          "pressureAltitude": -615.9837031421698,
+          "yTransfer": 0.4737941388697282
+        },
+        {
+          "pressureAltitude": -589.3155439018994,
+          "yTransfer": 0.47625028812837344
+        },
+        {
+          "pressureAltitude": -562.6476092828907,
+          "yTransfer": 0.4787735429888127
+        },
+        {
+          "pressureAltitude": -535.9794500426201,
+          "yTransfer": 0.48122969224745793
+        },
+        {
+          "pressureAltitude": -509.31129080234973,
+          "yTransfer": 0.48368584150610294
+        },
+        {
+          "pressureAltitude": -482.6432438727102,
+          "yTransfer": 0.48617554356564496
+        },
+        {
+          "pressureAltitude": -455.9749723218092,
+          "yTransfer": 0.4885981400233932
+        },
+        {
+          "pressureAltitude": -429.3071500134308,
+          "yTransfer": 0.49115494768472967
+        },
+        {
+          "pressureAltitude": -402.6389907731607,
+          "yTransfer": 0.4936110969433749
+        },
+        {
+          "pressureAltitude": -375.9707192222595,
+          "yTransfer": 0.4960336934011229
+        },
+        {
+          "pressureAltitude": -349.30278460325053,
+          "yTransfer": 0.49855694826156216
+        },
+        {
+          "pressureAltitude": -322.63473767361074,
+          "yTransfer": 0.5010466503211044
+        },
+        {
+          "pressureAltitude": -295.9663538120792,
+          "yTransfer": 0.5034356939779552
+        },
+        {
+          "pressureAltitude": -269.2986438143314,
+          "yTransfer": 0.5060260544401889
+        },
+        {
+          "pressureAltitude": -242.63037226343044,
+          "yTransfer": 0.5084486508979371
+        },
+        {
+          "pressureAltitude": -215.9623253337909,
+          "yTransfer": 0.5109383529574791
+        },
+        {
+          "pressureAltitude": -189.29439071478168,
+          "yTransfer": 0.5134616078179186
+        },
+        {
+          "pressureAltitude": -162.62611916388073,
+          "yTransfer": 0.5158842042756665
+        },
+        {
+          "pressureAltitude": -135.95807223424117,
+          "yTransfer": 0.5183739063352087
+        },
+        {
+          "pressureAltitude": -109.29002530460139,
+          "yTransfer": 0.5208636083947511
+        },
+        {
+          "pressureAltitude": -82.62186606433102,
+          "yTransfer": 0.5233197576533961
+        },
+        {
+          "pressureAltitude": -55.95370682406087,
+          "yTransfer": 0.5257759069120411
+        },
+        {
+          "pressureAltitude": -29.28577220505167,
+          "yTransfer": 0.5282991617724807
+        },
+        {
+          "pressureAltitude": -2.6176129647813013,
+          "yTransfer": 0.5307553110311257
+        },
+        {
+          "pressureAltitude": 24.050433964858257,
+          "yTransfer": 0.5332450130906681
+        },
+        {
+          "pressureAltitude": 50.71836858386769,
+          "yTransfer": 0.5357682679511074
+        },
+        {
+          "pressureAltitude": 77.38664013476819,
+          "yTransfer": 0.5381908644088556
+        },
+        {
+          "pressureAltitude": 104.05468706440797,
+          "yTransfer": 0.5406805664683977
+        },
+        {
+          "pressureAltitude": 130.72284630467857,
+          "yTransfer": 0.5431367157270428
+        },
+        {
+          "pressureAltitude": 157.3910055449487,
+          "yTransfer": 0.5455928649856879
+        },
+        {
+          "pressureAltitude": 184.05905247458804,
+          "yTransfer": 0.5480825670452302
+        },
+        {
+          "pressureAltitude": 210.72721171485864,
+          "yTransfer": 0.5505387163038753
+        },
+        {
+          "pressureAltitude": 237.39537095512878,
+          "yTransfer": 0.5529948655625204
+        },
+        {
+          "pressureAltitude": 264.06341788476857,
+          "yTransfer": 0.5554845676220626
+        },
+        {
+          "pressureAltitude": 290.73157712503917,
+          "yTransfer": 0.5579407168807077
+        },
+        {
+          "pressureAltitude": 317.3996240546785,
+          "yTransfer": 0.56043041894025
+        },
+        {
+          "pressureAltitude": 344.0676709843183,
+          "yTransfer": 0.5629201209997922
+        },
+        {
+          "pressureAltitude": 370.7358302245889,
+          "yTransfer": 0.5653762702584373
+        },
+        {
+          "pressureAltitude": 397.4042140861202,
+          "yTransfer": 0.5677653139152881
+        },
+        {
+          "pressureAltitude": 424.0720363944988,
+          "yTransfer": 0.5703221215766247
+        },
+        {
+          "pressureAltitude": 450.74019563476895,
+          "yTransfer": 0.5727782708352697
+        },
+        {
+          "pressureAltitude": 477.4083548750391,
+          "yTransfer": 0.575234420093915
+        },
+        {
+          "pressureAltitude": 504.07617718341817,
+          "yTransfer": 0.5777912277552516
+        },
+        {
+          "pressureAltitude": 530.7445610449495,
+          "yTransfer": 0.5801802714121022
+        },
+        {
+          "pressureAltitude": 557.4126079745888,
+          "yTransfer": 0.5826699734716446
+        },
+        {
+          "pressureAltitude": 584.0807672148594,
+          "yTransfer": 0.5851261227302896
+        },
+        {
+          "pressureAltitude": 610.7488141444992,
+          "yTransfer": 0.587615824789832
+        },
+        {
+          "pressureAltitude": 637.4168610741385,
+          "yTransfer": 0.5901055268493742
+        },
+        {
+          "pressureAltitude": 664.084795693148,
+          "yTransfer": 0.5926287817098137
+        },
+        {
+          "pressureAltitude": 690.7535164865712,
+          "yTransfer": 0.5949171669639729
+        },
+        {
+          "pressureAltitude": 717.4213387949494,
+          "yTransfer": 0.5974739746253095
+        },
+        {
+          "pressureAltitude": 744.0891611033285,
+          "yTransfer": 0.6000307822866462
+        },
+        {
+          "pressureAltitude": 770.7575449648598,
+          "yTransfer": 0.602419825943497
+        },
+        {
+          "pressureAltitude": 797.4257042051299,
+          "yTransfer": 0.604875975202142
+        },
+        {
+          "pressureAltitude": 824.0937511347697,
+          "yTransfer": 0.6073656772616842
+        },
+        {
+          "pressureAltitude": 850.7619103750399,
+          "yTransfer": 0.6098218265203293
+        },
+        {
+          "pressureAltitude": 877.4299573046796,
+          "yTransfer": 0.6123115285798716
+        },
+        {
+          "pressureAltitude": 904.0978919236891,
+          "yTransfer": 0.6148347834403111
+        },
+        {
+          "pressureAltitude": 930.7661634745896,
+          "yTransfer": 0.617257379898059
+        },
+        {
+          "pressureAltitude": 957.4343227148597,
+          "yTransfer": 0.6197135291567041
+        },
+        {
+          "pressureAltitude": 984.1023696445,
+          "yTransfer": 0.6222032312162464
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.6235826023038403
+        }
+      ]
+    },
+    {
+      "oat": 10,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.5315775933131965
+        },
+        {
+          "pressureAltitude": -962.9789644317757,
+          "yTransfer": 0.5342350593772247
+        },
+        {
+          "pressureAltitude": -936.3106928808747,
+          "yTransfer": 0.5366576558349726
+        },
+        {
+          "pressureAltitude": -909.6426459512352,
+          "yTransfer": 0.5391473578945148
+        },
+        {
+          "pressureAltitude": -882.974374400334,
+          "yTransfer": 0.5415699543522627
+        },
+        {
+          "pressureAltitude": -856.3059905388025,
+          "yTransfer": 0.5439589980091135
+        },
+        {
+          "pressureAltitude": -829.6380559197935,
+          "yTransfer": 0.546482252869553
+        },
+        {
+          "pressureAltitude": -802.9700089901537,
+          "yTransfer": 0.5489719549290952
+        },
+        {
+          "pressureAltitude": -776.3015128179916,
+          "yTransfer": 0.5513274457850489
+        },
+        {
+          "pressureAltitude": -749.6336905096132,
+          "yTransfer": 0.5538842534463855
+        },
+        {
+          "pressureAltitude": -722.9650820268205,
+          "yTransfer": 0.5562061915014419
+        },
+        {
+          "pressureAltitude": -696.2970350971807,
+          "yTransfer": 0.5586958935609843
+        },
+        {
+          "pressureAltitude": -669.6288758569106,
+          "yTransfer": 0.5611520428196293
+        },
+        {
+          "pressureAltitude": -642.9606043060094,
+          "yTransfer": 0.5635746392773773
+        },
+        {
+          "pressureAltitude": -616.2925573763696,
+          "yTransfer": 0.5660643413369195
+        },
+        {
+          "pressureAltitude": -589.6243981360992,
+          "yTransfer": 0.5685204905955646
+        },
+        {
+          "pressureAltitude": -562.9562388958291,
+          "yTransfer": 0.5709766398542098
+        },
+        {
+          "pressureAltitude": -536.2878550342975,
+          "yTransfer": 0.5733656835110605
+        },
+        {
+          "pressureAltitude": -509.61980810465775,
+          "yTransfer": 0.5758553855706027
+        },
+        {
+          "pressureAltitude": -482.9516488643876,
+          "yTransfer": 0.5783115348292479
+        },
+        {
+          "pressureAltitude": -456.28337731348665,
+          "yTransfer": 0.5807341312869958
+        },
+        {
+          "pressureAltitude": -429.6152180732163,
+          "yTransfer": 0.5831902805456408
+        },
+        {
+          "pressureAltitude": -402.9471711435767,
+          "yTransfer": 0.5856799826051832
+        },
+        {
+          "pressureAltitude": -376.27901190330635,
+          "yTransfer": 0.5881361318638283
+        },
+        {
+          "pressureAltitude": -349.61096497366657,
+          "yTransfer": 0.5906258339233704
+        },
+        {
+          "pressureAltitude": -322.9426934227656,
+          "yTransfer": 0.5930484303811183
+        },
+        {
+          "pressureAltitude": -296.2743095612341,
+          "yTransfer": 0.5954374740379692
+        },
+        {
+          "pressureAltitude": -269.6062626315943,
+          "yTransfer": 0.5979271760975116
+        },
+        {
+          "pressureAltitude": -242.93810339132392,
+          "yTransfer": 0.6003833253561566
+        },
+        {
+          "pressureAltitude": -216.27005646168436,
+          "yTransfer": 0.6028730274156988
+        },
+        {
+          "pressureAltitude": -189.60167260015282,
+          "yTransfer": 0.6052620710725496
+        },
+        {
+          "pressureAltitude": -162.93351335988245,
+          "yTransfer": 0.6077182203311948
+        },
+        {
+          "pressureAltitude": -136.26557874087348,
+          "yTransfer": 0.6102414751916342
+        },
+        {
+          "pressureAltitude": -109.59730718997253,
+          "yTransfer": 0.6126640716493821
+        },
+        {
+          "pressureAltitude": -82.92903563907157,
+          "yTransfer": 0.61508666810713
+        },
+        {
+          "pressureAltitude": -56.26098870943201,
+          "yTransfer": 0.6175763701666723
+        },
+        {
+          "pressureAltitude": -29.59271715853106,
+          "yTransfer": 0.6199989666244203
+        },
+        {
+          "pressureAltitude": -2.924670228891273,
+          "yTransfer": 0.6224886686839625
+        },
+        {
+          "pressureAltitude": 23.743489011379097,
+          "yTransfer": 0.6249448179426076
+        },
+        {
+          "pressureAltitude": 50.41153594101888,
+          "yTransfer": 0.6274345200021499
+        },
+        {
+          "pressureAltitude": 77.0799198025502,
+          "yTransfer": 0.6298235636590007
+        },
+        {
+          "pressureAltitude": 103.74785442155917,
+          "yTransfer": 0.6323468185194401
+        },
+        {
+          "pressureAltitude": 130.41623828309093,
+          "yTransfer": 0.634735862176291
+        },
+        {
+          "pressureAltitude": 157.08439752336108,
+          "yTransfer": 0.637192011434936
+        },
+        {
+          "pressureAltitude": 183.75244445300086,
+          "yTransfer": 0.6396817134944782
+        },
+        {
+          "pressureAltitude": 210.42071600390182,
+          "yTransfer": 0.6421043099522262
+        },
+        {
+          "pressureAltitude": 237.08887524417196,
+          "yTransfer": 0.6445604592108714
+        },
+        {
+          "pressureAltitude": 263.75703448444256,
+          "yTransfer": 0.6470166084695164
+        },
+        {
+          "pressureAltitude": 290.4253060353435,
+          "yTransfer": 0.6494392049272643
+        },
+        {
+          "pressureAltitude": 317.0933529649833,
+          "yTransfer": 0.6519289069868067
+        },
+        {
+          "pressureAltitude": 343.7616245158838,
+          "yTransfer": 0.6543515034445546
+        },
+        {
+          "pressureAltitude": 370.42967144552404,
+          "yTransfer": 0.6568412055040967
+        },
+        {
+          "pressureAltitude": 397.09805530705535,
+          "yTransfer": 0.6592302491609476
+        },
+        {
+          "pressureAltitude": 423.76621454732594,
+          "yTransfer": 0.6616863984195926
+        },
+        {
+          "pressureAltitude": 450.4341491663349,
+          "yTransfer": 0.6642096532800321
+        },
+        {
+          "pressureAltitude": 477.10219609597425,
+          "yTransfer": 0.6666993553395744
+        },
+        {
+          "pressureAltitude": 503.7706922681368,
+          "yTransfer": 0.669054846195528
+        },
+        {
+          "pressureAltitude": 530.4386268871458,
+          "yTransfer": 0.6715781010559675
+        },
+        {
+          "pressureAltitude": 557.1068984380463,
+          "yTransfer": 0.6740006975137155
+        },
+        {
+          "pressureAltitude": 583.7751699889477,
+          "yTransfer": 0.6764232939714634
+        },
+        {
+          "pressureAltitude": 610.443216918587,
+          "yTransfer": 0.6789129960310055
+        },
+        {
+          "pressureAltitude": 637.1112638482268,
+          "yTransfer": 0.681402698090548
+        },
+        {
+          "pressureAltitude": 663.7795353991282,
+          "yTransfer": 0.6838252945482958
+        },
+        {
+          "pressureAltitude": 690.4475823287676,
+          "yTransfer": 0.686314996607838
+        },
+        {
+          "pressureAltitude": 717.1158538796685,
+          "yTransfer": 0.6887375930655859
+        },
+        {
+          "pressureAltitude": 743.7841254305695,
+          "yTransfer": 0.691160189523334
+        },
+        {
+          "pressureAltitude": 770.4521723602093,
+          "yTransfer": 0.6936498915828762
+        },
+        {
+          "pressureAltitude": 797.1203316004794,
+          "yTransfer": 0.6961060408415212
+        },
+        {
+          "pressureAltitude": 823.7886031513804,
+          "yTransfer": 0.6985286372992692
+        },
+        {
+          "pressureAltitude": 850.4567623916505,
+          "yTransfer": 0.7009847865579144
+        },
+        {
+          "pressureAltitude": 877.1246970106595,
+          "yTransfer": 0.7035080414183537
+        },
+        {
+          "pressureAltitude": 903.793193182822,
+          "yTransfer": 0.7058635322743074
+        },
+        {
+          "pressureAltitude": 930.461127801831,
+          "yTransfer": 0.7083867871347469
+        },
+        {
+          "pressureAltitude": 957.1293993527315,
+          "yTransfer": 0.7108093835924948
+        },
+        {
+          "pressureAltitude": 983.7978955248941,
+          "yTransfer": 0.7131648744484483
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.7143764815315565
+        }
+      ]
+    },
+    {
+      "oat": 20,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.6199556708763173
+        },
+        {
+          "pressureAltitude": -963.2744537009319,
+          "yTransfer": 0.6225124785376539
+        },
+        {
+          "pressureAltitude": -936.6060698394006,
+          "yTransfer": 0.6249015221945047
+        },
+        {
+          "pressureAltitude": -909.9377982884994,
+          "yTransfer": 0.6273241186522527
+        },
+        {
+          "pressureAltitude": -883.269639048229,
+          "yTransfer": 0.6297802679108977
+        },
+        {
+          "pressureAltitude": -856.60170442922,
+          "yTransfer": 0.6323035227713371
+        },
+        {
+          "pressureAltitude": -829.9334328783191,
+          "yTransfer": 0.634726119229085
+        },
+        {
+          "pressureAltitude": -803.2652736380487,
+          "yTransfer": 0.6371822684877302
+        },
+        {
+          "pressureAltitude": -776.5971143977783,
+          "yTransfer": 0.6396384177463752
+        },
+        {
+          "pressureAltitude": -749.9288428468776,
+          "yTransfer": 0.6420610142041232
+        },
+        {
+          "pressureAltitude": -723.2605712959767,
+          "yTransfer": 0.6444836106618712
+        },
+        {
+          "pressureAltitude": -696.592748987598,
+          "yTransfer": 0.6470404183232077
+        },
+        {
+          "pressureAltitude": -669.9242528154361,
+          "yTransfer": 0.6493959091791612
+        },
+        {
+          "pressureAltitude": -643.2562058857964,
+          "yTransfer": 0.6518856112387037
+        },
+        {
+          "pressureAltitude": -616.5879343348954,
+          "yTransfer": 0.6543082076964516
+        },
+        {
+          "pressureAltitude": -589.9198874052556,
+          "yTransfer": 0.6567979097559937
+        },
+        {
+          "pressureAltitude": -563.2513912330935,
+          "yTransfer": 0.6591534006119475
+        },
+        {
+          "pressureAltitude": -536.5835689247151,
+          "yTransfer": 0.6617102082732841
+        },
+        {
+          "pressureAltitude": -509.9149604419222,
+          "yTransfer": 0.6640321463283404
+        },
+        {
+          "pressureAltitude": -483.2471381335438,
+          "yTransfer": 0.6665889539896771
+        },
+        {
+          "pressureAltitude": -456.5789788932734,
+          "yTransfer": 0.6690451032483221
+        },
+        {
+          "pressureAltitude": -429.91070734237246,
+          "yTransfer": 0.67146769970607
+        },
+        {
+          "pressureAltitude": -403.24221117021034,
+          "yTransfer": 0.6738231905620237
+        },
+        {
+          "pressureAltitude": -376.5739396193094,
+          "yTransfer": 0.6762457870197717
+        },
+        {
+          "pressureAltitude": -349.9060050003002,
+          "yTransfer": 0.6787690418802111
+        },
+        {
+          "pressureAltitude": -323.23762113876865,
+          "yTransfer": 0.6811580855370619
+        },
+        {
+          "pressureAltitude": -296.5693495878679,
+          "yTransfer": 0.6835806819948098
+        },
+        {
+          "pressureAltitude": -269.90130265822813,
+          "yTransfer": 0.6860703840543521
+        },
+        {
+          "pressureAltitude": -243.23314341795776,
+          "yTransfer": 0.6885265333129972
+        },
+        {
+          "pressureAltitude": -216.56475955642645,
+          "yTransfer": 0.6909155769698481
+        },
+        {
+          "pressureAltitude": -189.89660031615608,
+          "yTransfer": 0.6933717262284931
+        },
+        {
+          "pressureAltitude": -163.22821645462432,
+          "yTransfer": 0.6957607698853439
+        },
+        {
+          "pressureAltitude": -136.56005721435417,
+          "yTransfer": 0.698216919143989
+        },
+        {
+          "pressureAltitude": -109.89167335282264,
+          "yTransfer": 0.7006059628008398
+        },
+        {
+          "pressureAltitude": -83.22373873381343,
+          "yTransfer": 0.7031292176612792
+        },
+        {
+          "pressureAltitude": -56.55524256165131,
+          "yTransfer": 0.7054847085172327
+        },
+        {
+          "pressureAltitude": -29.887083321380942,
+          "yTransfer": 0.707940857775878
+        },
+        {
+          "pressureAltitude": -3.218811770479988,
+          "yTransfer": 0.7103634542336259
+        },
+        {
+          "pressureAltitude": 23.449235159159343,
+          "yTransfer": 0.712853156293168
+        },
+        {
+          "pressureAltitude": 50.11750671006075,
+          "yTransfer": 0.715275752750916
+        },
+        {
+          "pressureAltitude": 76.78589057159206,
+          "yTransfer": 0.7176647964077668
+        },
+        {
+          "pressureAltitude": 103.45393750123185,
+          "yTransfer": 0.7201544984673092
+        },
+        {
+          "pressureAltitude": 130.1222090521328,
+          "yTransfer": 0.7225770949250572
+        },
+        {
+          "pressureAltitude": 156.7905929136641,
+          "yTransfer": 0.7249661385819078
+        },
+        {
+          "pressureAltitude": 183.45886446456507,
+          "yTransfer": 0.7273887350396557
+        },
+        {
+          "pressureAltitude": 210.12713601546648,
+          "yTransfer": 0.7298113314974037
+        },
+        {
+          "pressureAltitude": 236.7951829451058,
+          "yTransfer": 0.732301033556946
+        },
+        {
+          "pressureAltitude": 263.46367911726793,
+          "yTransfer": 0.7346565244128995
+        },
+        {
+          "pressureAltitude": 290.13161373627736,
+          "yTransfer": 0.737179779273339
+        },
+        {
+          "pressureAltitude": 316.7997729765475,
+          "yTransfer": 0.7396359285319841
+        },
+        {
+          "pressureAltitude": 343.4684937699708,
+          "yTransfer": 0.7419243137861433
+        },
+        {
+          "pressureAltitude": 370.13676532087175,
+          "yTransfer": 0.7443469102438912
+        },
+        {
+          "pressureAltitude": 396.8046999398807,
+          "yTransfer": 0.7468701651043308
+        },
+        {
+          "pressureAltitude": 423.4730838014125,
+          "yTransfer": 0.7492592087611816
+        },
+        {
+          "pressureAltitude": 450.14135535231344,
+          "yTransfer": 0.7516818052189295
+        },
+        {
+          "pressureAltitude": 476.8095145925836,
+          "yTransfer": 0.7541379544775746
+        },
+        {
+          "pressureAltitude": 503.47756152222337,
+          "yTransfer": 0.7566276565371169
+        },
+        {
+          "pressureAltitude": 530.1460576943855,
+          "yTransfer": 0.7589831473930704
+        },
+        {
+          "pressureAltitude": 556.8143292452864,
+          "yTransfer": 0.7614057438508185
+        },
+        {
+          "pressureAltitude": 583.482488485557,
+          "yTransfer": 0.7638618931094635
+        },
+        {
+          "pressureAltitude": 610.1506477258272,
+          "yTransfer": 0.7663180423681086
+        },
+        {
+          "pressureAltitude": 636.8189192767277,
+          "yTransfer": 0.7687406388258566
+        },
+        {
+          "pressureAltitude": 663.4870785169983,
+          "yTransfer": 0.7711967880845018
+        },
+        {
+          "pressureAltitude": 690.15546237853,
+          "yTransfer": 0.7735858317413524
+        },
+        {
+          "pressureAltitude": 716.8235093081694,
+          "yTransfer": 0.7760755338008947
+        },
+        {
+          "pressureAltitude": 743.4917808590708,
+          "yTransfer": 0.7784981302586427
+        },
+        {
+          "pressureAltitude": 770.1600524099713,
+          "yTransfer": 0.7809207267163906
+        },
+        {
+          "pressureAltitude": 796.8283239608722,
+          "yTransfer": 0.7833433231741385
+        },
+        {
+          "pressureAltitude": 823.4964832011428,
+          "yTransfer": 0.7857994724327837
+        },
+        {
+          "pressureAltitude": 850.1645301307822,
+          "yTransfer": 0.7882891744923258
+        },
+        {
+          "pressureAltitude": 876.8328016816831,
+          "yTransfer": 0.7907117709500738
+        },
+        {
+          "pressureAltitude": 903.5010732325845,
+          "yTransfer": 0.7931343674078218
+        },
+        {
+          "pressureAltitude": 930.1691201622239,
+          "yTransfer": 0.7956240694673641
+        },
+        {
+          "pressureAltitude": 956.8373917131248,
+          "yTransfer": 0.798046665925112
+        },
+        {
+          "pressureAltitude": 983.5060001959177,
+          "yTransfer": 0.8003686039801685
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.8014795526605851
+        }
+      ]
+    },
+    {
+      "oat": 30,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.7048442571461333
+        },
+        {
+          "pressureAltitude": -963.5584872857651,
+          "yTransfer": 0.7073675120065728
+        },
+        {
+          "pressureAltitude": -936.8904403561255,
+          "yTransfer": 0.7098572140661149
+        },
+        {
+          "pressureAltitude": -910.2223934264857,
+          "yTransfer": 0.7123469161256574
+        },
+        {
+          "pressureAltitude": -883.5541218755848,
+          "yTransfer": 0.7147695125834053
+        },
+        {
+          "pressureAltitude": -856.8858503246838,
+          "yTransfer": 0.7171921090411532
+        },
+        {
+          "pressureAltitude": -830.2175787737829,
+          "yTransfer": 0.719614705498901
+        },
+        {
+          "pressureAltitude": -803.5490826016207,
+          "yTransfer": 0.7219701963548547
+        },
+        {
+          "pressureAltitude": -776.881035671981,
+          "yTransfer": 0.724459898414397
+        },
+        {
+          "pressureAltitude": -750.2126518104496,
+          "yTransfer": 0.7268489420712476
+        },
+        {
+          "pressureAltitude": -723.5444925701793,
+          "yTransfer": 0.7293050913298929
+        },
+        {
+          "pressureAltitude": -696.8763333299089,
+          "yTransfer": 0.731761240588538
+        },
+        {
+          "pressureAltitude": -670.2079494683774,
+          "yTransfer": 0.7341502842453886
+        },
+        {
+          "pressureAltitude": -643.5394532962152,
+          "yTransfer": 0.7365057751013423
+        },
+        {
+          "pressureAltitude": -616.871518677206,
+          "yTransfer": 0.7390290299617818
+        },
+        {
+          "pressureAltitude": -590.2029101944131,
+          "yTransfer": 0.7413509680168381
+        },
+        {
+          "pressureAltitude": -563.5346386435124,
+          "yTransfer": 0.7437735644745861
+        },
+        {
+          "pressureAltitude": -536.8665917138726,
+          "yTransfer": 0.7462632665341284
+        },
+        {
+          "pressureAltitude": -510.1984324736022,
+          "yTransfer": 0.7487194157927735
+        },
+        {
+          "pressureAltitude": -483.5300486120709,
+          "yTransfer": 0.7511084594496243
+        },
+        {
+          "pressureAltitude": -456.86177706116996,
+          "yTransfer": 0.7535310559073722
+        },
+        {
+          "pressureAltitude": -430.1935055102688,
+          "yTransfer": 0.7559536523651201
+        },
+        {
+          "pressureAltitude": -403.52534626999864,
+          "yTransfer": 0.7584098016237654
+        },
+        {
+          "pressureAltitude": -376.8570747190977,
+          "yTransfer": 0.7608323980815133
+        },
+        {
+          "pressureAltitude": -350.18869085756614,
+          "yTransfer": 0.763221441738364
+        },
+        {
+          "pressureAltitude": -323.52041930666496,
+          "yTransfer": 0.7656440381961119
+        },
+        {
+          "pressureAltitude": -296.8522600663948,
+          "yTransfer": 0.768100187454757
+        },
+        {
+          "pressureAltitude": -270.18398851549387,
+          "yTransfer": 0.770522783912505
+        },
+        {
+          "pressureAltitude": -243.51560465396233,
+          "yTransfer": 0.7729118275693557
+        },
+        {
+          "pressureAltitude": -216.8472207924308,
+          "yTransfer": 0.7753008712262066
+        },
+        {
+          "pressureAltitude": -190.17917386279123,
+          "yTransfer": 0.7777905732857489
+        },
+        {
+          "pressureAltitude": -163.51079000125947,
+          "yTransfer": 0.7801796169425995
+        },
+        {
+          "pressureAltitude": -136.84251845035874,
+          "yTransfer": 0.7826022134003476
+        },
+        {
+          "pressureAltitude": -110.17435921008837,
+          "yTransfer": 0.7850583626589926
+        },
+        {
+          "pressureAltitude": -83.50597534855683,
+          "yTransfer": 0.7874474063158434
+        },
+        {
+          "pressureAltitude": -56.83770379765588,
+          "yTransfer": 0.7898700027735913
+        },
+        {
+          "pressureAltitude": -30.169432246754923,
+          "yTransfer": 0.7922925992313393
+        },
+        {
+          "pressureAltitude": -3.5012730064845528,
+          "yTransfer": 0.7947487484899844
+        },
+        {
+          "pressureAltitude": 23.1669985444164,
+          "yTransfer": 0.7971713449477323
+        },
+        {
+          "pressureAltitude": 49.83538240594817,
+          "yTransfer": 0.7995603886045832
+        },
+        {
+          "pressureAltitude": 76.50365395684867,
+          "yTransfer": 0.8019829850623311
+        },
+        {
+          "pressureAltitude": 103.17181319711881,
+          "yTransfer": 0.8044391343209762
+        },
+        {
+          "pressureAltitude": 129.84008474802022,
+          "yTransfer": 0.8068617307787243
+        },
+        {
+          "pressureAltitude": 156.50846860955153,
+          "yTransfer": 0.8092507744355749
+        },
+        {
+          "pressureAltitude": 183.17696478171365,
+          "yTransfer": 0.8116062652915285
+        },
+        {
+          "pressureAltitude": 209.84478709009227,
+          "yTransfer": 0.8141630729528652
+        },
+        {
+          "pressureAltitude": 236.51350788351556,
+          "yTransfer": 0.8164514582070244
+        },
+        {
+          "pressureAltitude": 263.18155481315534,
+          "yTransfer": 0.8189411602665666
+        },
+        {
+          "pressureAltitude": 289.8498263640563,
+          "yTransfer": 0.8213637567243145
+        },
+        {
+          "pressureAltitude": 316.51809791495725,
+          "yTransfer": 0.8237863531820626
+        },
+        {
+          "pressureAltitude": 343.18636946585775,
+          "yTransfer": 0.8262089496398105
+        },
+        {
+          "pressureAltitude": 369.85475332739,
+          "yTransfer": 0.8285979932966613
+        },
+        {
+          "pressureAltitude": 396.5229125676601,
+          "yTransfer": 0.8310541425553064
+        },
+        {
+          "pressureAltitude": 423.19140873982224,
+          "yTransfer": 0.8334096334112601
+        },
+        {
+          "pressureAltitude": 449.859455669462,
+          "yTransfer": 0.8358993354708023
+        },
+        {
+          "pressureAltitude": 476.5277272203625,
+          "yTransfer": 0.8383219319285503
+        },
+        {
+          "pressureAltitude": 503.1958864606331,
+          "yTransfer": 0.8407780811871953
+        },
+        {
+          "pressureAltitude": 529.864494943426,
+          "yTransfer": 0.8431000192422518
+        },
+        {
+          "pressureAltitude": 556.5327664943266,
+          "yTransfer": 0.8455226156999999
+        },
+        {
+          "pressureAltitude": 583.2008134239668,
+          "yTransfer": 0.848012317759542
+        },
+        {
+          "pressureAltitude": 609.8694219067593,
+          "yTransfer": 0.8503342558145984
+        },
+        {
+          "pressureAltitude": 636.5375811470294,
+          "yTransfer": 0.8527904050732437
+        },
+        {
+          "pressureAltitude": 663.2061896298228,
+          "yTransfer": 0.8551123431283
+        },
+        {
+          "pressureAltitude": 689.8742365594621,
+          "yTransfer": 0.8576020451878422
+        },
+        {
+          "pressureAltitude": 716.5423957997323,
+          "yTransfer": 0.8600581944464873
+        },
+        {
+          "pressureAltitude": 743.2110042825252,
+          "yTransfer": 0.8623801325015439
+        },
+        {
+          "pressureAltitude": 769.879388144057,
+          "yTransfer": 0.8647691761583947
+        },
+        {
+          "pressureAltitude": 796.5474350736963,
+          "yTransfer": 0.8672588782179368
+        },
+        {
+          "pressureAltitude": 823.2158189352281,
+          "yTransfer": 0.8696479218747877
+        },
+        {
+          "pressureAltitude": 849.8842027967594,
+          "yTransfer": 0.8720369655316385
+        },
+        {
+          "pressureAltitude": 876.5526989689215,
+          "yTransfer": 0.8743924563875921
+        },
+        {
+          "pressureAltitude": 903.2207458985617,
+          "yTransfer": 0.8768821584471344
+        },
+        {
+          "pressureAltitude": 929.8890174494622,
+          "yTransfer": 0.8793047549048824
+        },
+        {
+          "pressureAltitude": 956.5574013109936,
+          "yTransfer": 0.881693798561733
+        },
+        {
+          "pressureAltitude": 983.225672861895,
+          "yTransfer": 0.8841163950194811
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.8848918156909261
+        }
+      ]
+    },
+    {
+      "oat": 40,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.7867801969369992
+        },
+        {
+          "pressureAltitude": -963.8328621563651,
+          "yTransfer": 0.7893370045983358
+        },
+        {
+          "pressureAltitude": -937.1648152267255,
+          "yTransfer": 0.791826706657878
+        },
+        {
+          "pressureAltitude": -910.496431365194,
+          "yTransfer": 0.7942157503147289
+        },
+        {
+          "pressureAltitude": -883.8283844355542,
+          "yTransfer": 0.796705452374271
+        },
+        {
+          "pressureAltitude": -857.1597759527613,
+          "yTransfer": 0.7990273904293276
+        },
+        {
+          "pressureAltitude": -830.49139209123,
+          "yTransfer": 0.8014164340861782
+        },
+        {
+          "pressureAltitude": -803.8230082296982,
+          "yTransfer": 0.8038054777430291
+        },
+        {
+          "pressureAltitude": -777.1548489894278,
+          "yTransfer": 0.8062616270016741
+        },
+        {
+          "pressureAltitude": -750.4863528172659,
+          "yTransfer": 0.8086171178576277
+        },
+        {
+          "pressureAltitude": -723.8178566451036,
+          "yTransfer": 0.8109726087135815
+        },
+        {
+          "pressureAltitude": -697.149472783572,
+          "yTransfer": 0.8133616523704321
+        },
+        {
+          "pressureAltitude": -670.4809766114099,
+          "yTransfer": 0.8157171432263858
+        },
+        {
+          "pressureAltitude": -643.8128173711395,
+          "yTransfer": 0.8181732924850309
+        },
+        {
+          "pressureAltitude": -617.1443211989774,
+          "yTransfer": 0.8205287833409846
+        },
+        {
+          "pressureAltitude": -590.4759373374459,
+          "yTransfer": 0.8229178269978353
+        },
+        {
+          "pressureAltitude": -563.8075534759143,
+          "yTransfer": 0.8253068706546862
+        },
+        {
+          "pressureAltitude": -537.1390573037522,
+          "yTransfer": 0.8276623615106398
+        },
+        {
+          "pressureAltitude": -510.47089806348185,
+          "yTransfer": 0.8301185107692849
+        },
+        {
+          "pressureAltitude": -483.8025142019503,
+          "yTransfer": 0.8325075544261357
+        },
+        {
+          "pressureAltitude": -457.1340180297882,
+          "yTransfer": 0.8348630452820893
+        },
+        {
+          "pressureAltitude": -430.46540954699526,
+          "yTransfer": 0.8371849833371456
+        },
+        {
+          "pressureAltitude": -403.7974749279863,
+          "yTransfer": 0.8397082381975851
+        },
+        {
+          "pressureAltitude": -377.12897875582416,
+          "yTransfer": 0.8420637290535388
+        },
+        {
+          "pressureAltitude": -350.4604825836618,
+          "yTransfer": 0.8444192199094923
+        },
+        {
+          "pressureAltitude": -323.7919864114997,
+          "yTransfer": 0.846774710765446
+        },
+        {
+          "pressureAltitude": -297.12393948186013,
+          "yTransfer": 0.8492644128249882
+        },
+        {
+          "pressureAltitude": -270.4555556203286,
+          "yTransfer": 0.851653456481839
+        },
+        {
+          "pressureAltitude": -243.78694713753566,
+          "yTransfer": 0.8539753945368954
+        },
+        {
+          "pressureAltitude": -217.11867558663494,
+          "yTransfer": 0.8563979909946435
+        },
+        {
+          "pressureAltitude": -190.45029172510317,
+          "yTransfer": 0.8587870346514942
+        },
+        {
+          "pressureAltitude": -163.78202017420222,
+          "yTransfer": 0.8612096311092422
+        },
+        {
+          "pressureAltitude": -137.1136363126709,
+          "yTransfer": 0.863598674766093
+        },
+        {
+          "pressureAltitude": -110.44514014050856,
+          "yTransfer": 0.8659541656220466
+        },
+        {
+          "pressureAltitude": -83.7768685896076,
+          "yTransfer": 0.8683767620797945
+        },
+        {
+          "pressureAltitude": -57.108597038706876,
+          "yTransfer": 0.8707993585375424
+        },
+        {
+          "pressureAltitude": -30.440100866544526,
+          "yTransfer": 0.8731548493934961
+        },
+        {
+          "pressureAltitude": -3.771717005012988,
+          "yTransfer": 0.8755438930503469
+        },
+        {
+          "pressureAltitude": 22.89666685651855,
+          "yTransfer": 0.8779329367071975
+        },
+        {
+          "pressureAltitude": 49.564938407419504,
+          "yTransfer": 0.8803555331649455
+        },
+        {
+          "pressureAltitude": 76.23320995832046,
+          "yTransfer": 0.8827781296226935
+        },
+        {
+          "pressureAltitude": 102.90159381985177,
+          "yTransfer": 0.8851671732795442
+        },
+        {
+          "pressureAltitude": 129.569640749492,
+          "yTransfer": 0.8876568753390865
+        },
+        {
+          "pressureAltitude": 156.23858616417647,
+          "yTransfer": 0.8898781549914515
+        },
+        {
+          "pressureAltitude": 182.9067454044466,
+          "yTransfer": 0.8923343042500966
+        },
+        {
+          "pressureAltitude": 209.57524157660873,
+          "yTransfer": 0.8946897951060503
+        },
+        {
+          "pressureAltitude": 236.2435131275097,
+          "yTransfer": 0.8971123915637983
+        },
+        {
+          "pressureAltitude": 262.911560057149,
+          "yTransfer": 0.8996020936233404
+        },
+        {
+          "pressureAltitude": 289.5801685399424,
+          "yTransfer": 0.901924031678397
+        },
+        {
+          "pressureAltitude": 316.2484400908429,
+          "yTransfer": 0.904346628136145
+        },
+        {
+          "pressureAltitude": 342.91682395237467,
+          "yTransfer": 0.9067356717929956
+        },
+        {
+          "pressureAltitude": 369.58498319264527,
+          "yTransfer": 0.9091918210516408
+        },
+        {
+          "pressureAltitude": 396.25347936480694,
+          "yTransfer": 0.9115473119075944
+        },
+        {
+          "pressureAltitude": 422.92186322633916,
+          "yTransfer": 0.9139363555644451
+        },
+        {
+          "pressureAltitude": 449.59013477723965,
+          "yTransfer": 0.9163589520221931
+        },
+        {
+          "pressureAltitude": 476.2582940175098,
+          "yTransfer": 0.9188151012808382
+        },
+        {
+          "pressureAltitude": 502.9269025003032,
+          "yTransfer": 0.9211370393358946
+        },
+        {
+          "pressureAltitude": 529.5951740512037,
+          "yTransfer": 0.9235596357936425
+        },
+        {
+          "pressureAltitude": 556.2634456021046,
+          "yTransfer": 0.9259822322513906
+        },
+        {
+          "pressureAltitude": 582.9320540848976,
+          "yTransfer": 0.9283041703064471
+        },
+        {
+          "pressureAltitude": 609.6001010145374,
+          "yTransfer": 0.9307938723659893
+        },
+        {
+          "pressureAltitude": 636.2684848760687,
+          "yTransfer": 0.9331829160228401
+        },
+        {
+          "pressureAltitude": 662.9368687376004,
+          "yTransfer": 0.9355719596796909
+        },
+        {
+          "pressureAltitude": 689.6053649097626,
+          "yTransfer": 0.9379274505356445
+        },
+        {
+          "pressureAltitude": 716.2735241500327,
+          "yTransfer": 0.9403835997942895
+        },
+        {
+          "pressureAltitude": 742.9417957009337,
+          "yTransfer": 0.9428061962520375
+        },
+        {
+          "pressureAltitude": 769.6102918730958,
+          "yTransfer": 0.9451616871079911
+        },
+        {
+          "pressureAltitude": 796.2786757346271,
+          "yTransfer": 0.9475507307648419
+        },
+        {
+          "pressureAltitude": 822.9468349748977,
+          "yTransfer": 0.950006880023487
+        },
+        {
+          "pressureAltitude": 849.615218836429,
+          "yTransfer": 0.9523959236803378
+        },
+        {
+          "pressureAltitude": 876.2836026979608,
+          "yTransfer": 0.9547849673371885
+        },
+        {
+          "pressureAltitude": 902.9519865594925,
+          "yTransfer": 0.9571740109940394
+        },
+        {
+          "pressureAltitude": 929.6201457997627,
+          "yTransfer": 0.9596301602526844
+        },
+        {
+          "pressureAltitude": 956.288529661294,
+          "yTransfer": 0.9620192039095352
+        },
+        {
+          "pressureAltitude": 982.9572504547177,
+          "yTransfer": 0.9643075891636946
+        },
+        {
+          "pressureAltitude": 1000,
+          "yTransfer": 0.9653514322423169
+        }
+      ]
+    },
+    {
+      "oat": 50,
+      "points": [
+        {
+          "pressureAltitude": -1000,
+          "yTransfer": 0.8651930926336632
+        },
+        {
+          "pressureAltitude": -964.0948828575972,
+          "yTransfer": 0.8676156890914111
+        },
+        {
+          "pressureAltitude": -937.4266113066963,
+          "yTransfer": 0.870038285549159
+        },
+        {
+          "pressureAltitude": -910.7580028239036,
+          "yTransfer": 0.8723602236042155
+        },
+        {
+          "pressureAltitude": -884.0895066517412,
+          "yTransfer": 0.8747157144601692
+        },
+        {
+          "pressureAltitude": -857.4213474114708,
+          "yTransfer": 0.8771718637188142
+        },
+        {
+          "pressureAltitude": -830.7526266180475,
+          "yTransfer": 0.8794602489729735
+        },
+        {
+          "pressureAltitude": -804.084242756516,
+          "yTransfer": 0.8818492926298244
+        },
+        {
+          "pressureAltitude": -777.4157465843537,
+          "yTransfer": 0.8842047834857779
+        },
+        {
+          "pressureAltitude": -750.7474750334529,
+          "yTransfer": 0.8866273799435259
+        },
+        {
+          "pressureAltitude": -724.0790911719214,
+          "yTransfer": 0.8890164236003767
+        },
+        {
+          "pressureAltitude": -697.4101457572367,
+          "yTransfer": 0.8912377032527417
+        },
+        {
+          "pressureAltitude": -670.7420988275971,
+          "yTransfer": 0.8937274053122839
+        },
+        {
+          "pressureAltitude": -644.0736026554348,
+          "yTransfer": 0.8960828961682376
+        },
+        {
+          "pressureAltitude": -617.4053311045338,
+          "yTransfer": 0.8985054926259854
+        },
+        {
+          "pressureAltitude": -590.7368349323717,
+          "yTransfer": 0.900860983481939
+        },
+        {
+          "pressureAltitude": -564.0685633814708,
+          "yTransfer": 0.9032835799396871
+        },
+        {
+          "pressureAltitude": -537.4000672093086,
+          "yTransfer": 0.9056390707956407
+        },
+        {
+          "pressureAltitude": -510.7316833477771,
+          "yTransfer": 0.9080281144524914
+        },
+        {
+          "pressureAltitude": -484.06341179687615,
+          "yTransfer": 0.9104507109102394
+        },
+        {
+          "pressureAltitude": -457.39480331408345,
+          "yTransfer": 0.9127726489652959
+        },
+        {
+          "pressureAltitude": -430.7265317631825,
+          "yTransfer": 0.9151952454230438
+        },
+        {
+          "pressureAltitude": -404.0579232803898,
+          "yTransfer": 0.9175171834781002
+        },
+        {
+          "pressureAltitude": -377.389539418858,
+          "yTransfer": 0.9199062271349511
+        },
+        {
+          "pressureAltitude": -350.72149248921846,
+          "yTransfer": 0.9223959291944933
+        },
+        {
+          "pressureAltitude": -324.0529963170561,
+          "yTransfer": 0.924751420050447
+        },
+        {
+          "pressureAltitude": -297.38405090237165,
+          "yTransfer": 0.9269726997028119
+        },
+        {
+          "pressureAltitude": -270.7158916621013,
+          "yTransfer": 0.929428848961457
+        },
+        {
+          "pressureAltitude": -244.04728317930835,
+          "yTransfer": 0.9317507870165134
+        },
+        {
+          "pressureAltitude": -217.37901162840762,
+          "yTransfer": 0.9341733834742614
+        },
+        {
+          "pressureAltitude": -190.7106277668761,
+          "yTransfer": 0.9365624271311122
+        },
+        {
+          "pressureAltitude": -164.04201928408315,
+          "yTransfer": 0.9388843651861686
+        },
+        {
+          "pressureAltitude": -137.37352311192103,
+          "yTransfer": 0.9412398560421223
+        },
+        {
+          "pressureAltitude": -110.70581311417322,
+          "yTransfer": 0.9438302165043561
+        },
+        {
+          "pressureAltitude": -84.03754156327227,
+          "yTransfer": 0.946252812962104
+        },
+        {
+          "pressureAltitude": -63.42955164052455,
+          "yTransfer": 0.9479189271284948
+        }
+      ]
+    }
+  ],
+  "graph2": [
+    {
+      "grossWeight": 5800,
+      "points": [
+        {
+          "yTransfer": 0.9576178074579721,
+          "xTransfer": 0
+        },
+        {
+          "yTransfer": 0.9667407977103301,
+          "xTransfer": 1.7783751306547515
+        },
+        {
+          "yTransfer": 0.9745191853521381,
+          "xTransfer": 3.2013781322572754
+        },
+        {
+          "yTransfer": 0.9826421851046593,
+          "xTransfer": 4.699272292281535
+        },
+        {
+          "yTransfer": 0.9907282621310325,
+          "xTransfer": 6.197164322558081
+        },
+        {
+          "yTransfer": 0.9977712721437297,
+          "xTransfer": 7.54525362590897
+        }
+      ]
+    },
+    {
+      "grossWeight": 6000,
+      "points": [
+        {
+          "yTransfer": 0.8716340089412289,
+          "xTransfer": 0
+        },
+        {
+          "yTransfer": 0.880587770032076,
+          "xTransfer": 1.623663157776548
+        },
+        {
+          "yTransfer": 0.8896953758152057,
+          "xTransfer": 2.82212898796746
+        },
+        {
+          "yTransfer": 0.8976091467862225,
+          "xTransfer": 4.245139798644971
+        },
+        {
+          "yTransfer": 0.9055106101818566,
+          "xTransfer": 5.74302118018295
+        },
+        {
+          "yTransfer": 0.9134120735774909,
+          "xTransfer": 7.2409025617209295
+        },
+        {
+          "yTransfer": 0.9212766142469772,
+          "xTransfer": 8.738781813511196
+        },
+        {
+          "yTransfer": 0.9292519230949069,
+          "xTransfer": 10.236667454544602
+        },
+        {
+          "yTransfer": 0.9371164637643933,
+          "xTransfer": 11.734546706334868
+        },
+        {
+          "yTransfer": 0.9449440817077318,
+          "xTransfer": 13.23242382837742
+        },
+        {
+          "yTransfer": 0.9528824678295137,
+          "xTransfer": 14.730307339663113
+        },
+        {
+          "yTransfer": 0.9607839312251479,
+          "xTransfer": 16.228188721201093
+        },
+        {
+          "yTransfer": 0.9674233087088201,
+          "xTransfer": 17.800868584866464
+        },
+        {
+          "yTransfer": 0.9735994738099105,
+          "xTransfer": 19.44839301065514
+        },
+        {
+          "yTransfer": 0.9797085066816413,
+          "xTransfer": 21.09591356417519
+        },
+        {
+          "yTransfer": 0.985817539553372,
+          "xTransfer": 22.743434117695244
+        },
+        {
+          "yTransfer": 0.9920272707691422,
+          "xTransfer": 24.390960479618172
+        },
+        {
+          "yTransfer": 0.9977435800991189,
+          "xTransfer": 25.963587099590768
+        }
+      ]
+    },
+    {
+      "grossWeight": 6200,
+      "points": [
+        {
+          "yTransfer": 0.789757863708431,
+          "xTransfer":0
+        },
+        {
+          "yTransfer": 0.7989885452453869,
+          "xTransfer": 1.7686989768882313
+        },
+        {
+          "yTransfer": 0.8073225320044669,
+          "xTransfer": 2.817377622241054
+        },
+        {
+          "yTransfer": 0.8159319740221102,
+          "xTransfer": 4.015814717740682
+        },
+        {
+          "yTransfer": 0.8235052354075415,
+          "xTransfer": 5.43880588741149
+        },
+        {
+          "yTransfer": 0.8314805442554712,
+          "xTransfer": 7.011562809221289
+        },
+        {
+          "yTransfer": 0.8399727712694706,
+          "xTransfer": 8.659220828275409
+        },
+        {
+          "yTransfer": 0.848021925569696,
+          "xTransfer": 10.231982009580634
+        },
+        {
+          "yTransfer": 0.8556280071561476,
+          "xTransfer": 11.729846353136907
+        },
+        {
+          "yTransfer": 0.8633079341948948,
+          "xTransfer": 13.227714956188606
+        },
+        {
+          "yTransfer": 0.8713570884951203,
+          "xTransfer": 14.800476137493831
+        },
+        {
+          "yTransfer": 0.8793693200691979,
+          "xTransfer": 16.373235189051343
+        },
+        {
+          "yTransfer": 0.8873009929680439,
+          "xTransfer": 17.945989593886623
+        },
+        {
+          "yTransfer": 0.893947083674652,
+          "xTransfer": 19.59354112555519
+        },
+        {
+          "yTransfer": 0.8999889843170231,
+          "xTransfer": 21.241057806806737
+        },
+        {
+          "yTransfer": 0.906064451074074,
+          "xTransfer": 22.88857642419248
+        },
+        {
+          "yTransfer": 0.9121734839458048,
+          "xTransfer": 24.53609697771259
+        },
+        {
+          "yTransfer": 0.9181818184734959,
+          "xTransfer": 26.183611722829767
+        },
+        {
+          "yTransfer": 0.9241901530011871,
+          "xTransfer": 27.831126467947
+        },
+        {
+          "yTransfer": 0.9302320536435582,
+          "xTransfer": 29.478643149198547
+        },
+        {
+          "yTransfer": 0.936341086515289,
+          "xTransfer": 31.1261637027186
+        },
+        {
+          "yTransfer": 0.9423494210429803,
+          "xTransfer": 32.773678447835835
+        },
+        {
+          "yTransfer": 0.9484248878000311,
+          "xTransfer": 34.42119706522158
+        },
+        {
+          "yTransfer": 0.9544332223277223,
+          "xTransfer": 36.06871181033881
+        },
+        {
+          "yTransfer": 0.960542255199453,
+          "xTransfer": 37.716232363858865
+        },
+        {
+          "yTransfer": 0.9657450029748282,
+          "xTransfer": 39.363700641753326
+        },
+        {
+          "yTransfer": 0.970377126800646,
+          "xTransfer": 41.01113600536496
+        },
+        {
+          "yTransfer": 0.974975684511784,
+          "xTransfer": 42.658569432842285
+        },
+        {
+          "yTransfer": 0.979540676108242,
+          "xTransfer": 44.30600092418541
+        },
+        {
+          "yTransfer": 0.9841056677047002,
+          "xTransfer": 45.95343241552848
+        },
+        {
+          "yTransfer": 0.9886370931864785,
+          "xTransfer": 47.6008619707373
+        },
+        {
+          "yTransfer": 0.9932356508976165,
+          "xTransfer": 49.24829539821462
+        },
+        {
+          "yTransfer": 0.9978006424940746,
+          "xTransfer": 50.89572688955769
+        },
+        {
+          "yTransfer": 0.9994789482280666,
+          "xTransfer": 51.79427906558857
+        }
+      ]
+    },
+    {
+      "grossWeight": 6400,
+      "points": [
+        {
+          "yTransfer": 0.709430421711278,
+          "xTransfer":0
+        },
+        {
+          "yTransfer": 0.7184970022431324,
+          "xTransfer": 1.7640561268784722
+        },
+        {
+          "yTransfer": 0.7266727487472933,
+          "xTransfer": 2.8127256447410787
+        },
+        {
+          "yTransfer": 0.734848495251454,
+          "xTransfer": 3.861395162603685
+        },
+        {
+          "yTransfer": 0.7433090742144695,
+          "xTransfer": 5.134694952277812
+        },
+        {
+          "yTransfer": 0.751358228514695,
+          "xTransfer": 6.707456133583037
+        },
+        {
+          "yTransfer": 0.7594812282672161,
+          "xTransfer": 8.35509285516008
+        },
+        {
+          "yTransfer": 0.7675673052935894,
+          "xTransfer": 9.927856166213019
+        },
+        {
+          "yTransfer": 0.7753580005107801,
+          "xTransfer": 11.50060243928425
+        },
+        {
+          "yTransfer": 0.7834810002633011,
+          "xTransfer": 13.148239160861294
+        },
+        {
+          "yTransfer": 0.7915301545635266,
+          "xTransfer": 14.721000342166462
+        },
+        {
+          "yTransfer": 0.7993577725068651,
+          "xTransfer": 16.293748744985407
+        },
+        {
+          "yTransfer": 0.8074807722593862,
+          "xTransfer": 17.941385466562508
+        },
+        {
+          "yTransfer": 0.8154695075531879,
+          "xTransfer": 19.589014443602423
+        },
+        {
+          "yTransfer": 0.8215785404249186,
+          "xTransfer": 21.236534997122476
+        },
+        {
+          "yTransfer": 0.8275868749526099,
+          "xTransfer": 22.88404974223971
+        },
+        {
+          "yTransfer": 0.8335616433656213,
+          "xTransfer": 24.531562551222635
+        },
+        {
+          "yTransfer": 0.8395699778933126,
+          "xTransfer": 26.17907729633987
+        },
+        {
+          "yTransfer": 0.8455111801916441,
+          "xTransfer": 27.82658816918854
+        },
+        {
+          "yTransfer": 0.8514859486046554,
+          "xTransfer": 29.474100978171464
+        },
+        {
+          "yTransfer": 0.8575278492470264,
+          "xTransfer": 31.121617659422952
+        },
+        {
+          "yTransfer": 0.8634354854306782,
+          "xTransfer": 32.76912659613731
+        },
+        {
+          "yTransfer": 0.8694773860730493,
+          "xTransfer": 34.41664327738886
+        },
+        {
+          "yTransfer": 0.8754185883713808,
+          "xTransfer": 36.06415415023747
+        },
+        {
+          "yTransfer": 0.881426922899072,
+          "xTransfer": 37.711668895354705
+        },
+        {
+          "yTransfer": 0.8874352574267632,
+          "xTransfer": 39.35918364047194
+        },
+        {
+          "yTransfer": 0.8923023440553399,
+          "xTransfer": 41.00663255702358
+        },
+        {
+          "yTransfer": 0.8970016001105174,
+          "xTransfer": 42.65407179290378
+        },
+        {
+          "yTransfer": 0.9015665917069755,
+          "xTransfer": 44.30150328424685
+        },
+        {
+          "yTransfer": 0.9061315833034337,
+          "xTransfer": 45.94893477558992
+        },
+        {
+          "yTransfer": 0.9107301410145717,
+          "xTransfer": 47.5963682030673
+        },
+        {
+          "yTransfer": 0.9152951326110298,
+          "xTransfer": 49.24379969441037
+        },
+        {
+          "yTransfer": 0.9198601242074879,
+          "xTransfer": 50.89123118575344
+        },
+        {
+          "yTransfer": 0.924425115803946,
+          "xTransfer": 52.53866267709651
+        },
+        {
+          "yTransfer": 0.9289901074004041,
+          "xTransfer": 54.18609416843958
+        },
+        {
+          "yTransfer": 0.9335550989968623,
+          "xTransfer": 55.83352565978265
+        },
+        {
+          "yTransfer": 0.9381872228226802,
+          "xTransfer": 57.480961023394286
+        },
+        {
+          "yTransfer": 0.9427522144191383,
+          "xTransfer": 59.12839251473736
+        },
+        {
+          "yTransfer": 0.9472836399009166,
+          "xTransfer": 60.775822069946116
+        },
+        {
+          "yTransfer": 0.9518486314973748,
+          "xTransfer": 62.42325356128919
+        },
+        {
+          "yTransfer": 0.9564471892085127,
+          "xTransfer": 64.07068698876657
+        },
+        {
+          "yTransfer": 0.9610457469196507,
+          "xTransfer": 65.71812041624389
+        },
+        {
+          "yTransfer": 0.9651743790252708,
+          "xTransfer": 67.36552673784126
+        },
+        {
+          "yTransfer": 0.9687659532960137,
+          "xTransfer": 69.01290208129018
+        },
+        {
+          "yTransfer": 0.9723239614520767,
+          "xTransfer": 70.66027548860473
+        },
+        {
+          "yTransfer": 0.9759491018374993,
+          "xTransfer": 72.30765276818795
+        },
+        {
+          "yTransfer": 0.979540676108242,
+          "xTransfer": 73.9550281116368
+        },
+        {
+          "yTransfer": 0.983098684264305,
+          "xTransfer": 75.60240151895141
+        },
+        {
+          "yTransfer": 0.9867238246497276,
+          "xTransfer": 77.24977879853458
+        },
+        {
+          "yTransfer": 0.9902818328057906,
+          "xTransfer": 78.89715220584918
+        },
+        {
+          "yTransfer": 0.9938734070765334,
+          "xTransfer": 80.54452754929804
+        },
+        {
+          "yTransfer": 0.9975656796913157,
+          "xTransfer": 82.19190870114977
+        },
+        {
+          "yTransfer": 0.9994789482280666,
+          "xTransfer": 83.24021699167338
+        }
+      ]
+    },
+    {
+      "grossWeight": 6600,
+      "points": [
+        {
+          "yTransfer": 0.6314003937855451,
+          "xTransfer": 0
+        },
+        {
+          "yTransfer": 0.6402208228097472,
+          "xTransfer": 1.7595410617313405
+        },
+        {
+          "yTransfer": 0.6481855823073491,
+          "xTransfer": 2.808198409607087
+        },
+        {
+          "yTransfer": 0.6562558353082305,
+          "xTransfer": 3.856861842476235
+        },
+        {
+          "yTransfer": 0.6640096077992734,
+          "xTransfer": 4.9055070203650075
+        },
+        {
+          "yTransfer": 0.6719743672968752,
+          "xTransfer": 6.253649491346266
+        },
+        {
+          "yTransfer": 0.6800973670493963,
+          "xTransfer": 7.90128621292331
+        },
+        {
+          "yTransfer": 0.6878511395404392,
+          "xTransfer": 9.474030356246828
+        },
+        {
+          "yTransfer": 0.6959741392929603,
+          "xTransfer": 11.04679579704748
+        },
+        {
+          "yTransfer": 0.7041307051601612,
+          "xTransfer": 12.694434454758778
+        },
+        {
+          "yTransfer": 0.7119247569888197,
+          "xTransfer": 14.267180921443412
+        },
+        {
+          "yTransfer": 0.7199739112890453,
+          "xTransfer": 15.839942102748637
+        },
+        {
+          "yTransfer": 0.7280969110415664,
+          "xTransfer": 17.487578824325738
+        },
+        {
+          "yTransfer": 0.735887606258757,
+          "xTransfer": 19.06032509739697
+        },
+        {
+          "yTransfer": 0.743000265959415,
+          "xTransfer": 20.633032260555694
+        },
+        {
+          "yTransfer": 0.7489750343724264,
+          "xTransfer": 22.28054506953862
+        },
+        {
+          "yTransfer": 0.754882670556078,
+          "xTransfer": 23.928054006253035
+        },
+        {
+          "yTransfer": 0.7607903067397298,
+          "xTransfer": 25.575562942967395
+        },
+        {
+          "yTransfer": 0.7667315090380614,
+          "xTransfer": 27.223073815816065
+        },
+        {
+          "yTransfer": 0.7726391452217131,
+          "xTransfer": 28.870582752530424
+        },
+        {
+          "yTransfer": 0.7785467814053648,
+          "xTransfer": 30.518091689244784
+        },
+        {
+          "yTransfer": 0.7844544175890165,
+          "xTransfer": 32.165600625959144
+        },
+        {
+          "yTransfer": 0.7903620537726682,
+          "xTransfer": 33.81310956267356
+        },
+        {
+          "yTransfer": 0.7962696899563199,
+          "xTransfer": 35.46061849938792
+        },
+        {
+          "yTransfer": 0.8021773261399716,
+          "xTransfer": 37.10812743610228
+        },
+        {
+          "yTransfer": 0.8080849623236234,
+          "xTransfer": 38.75563637281664
+        },
+        {
+          "yTransfer": 0.8139254662779153,
+          "xTransfer": 40.403141437262434
+        },
+        {
+          "yTransfer": 0.8188261190211719,
+          "xTransfer": 42.05059228994838
+        },
+        {
+          "yTransfer": 0.8234246767323098,
+          "xTransfer": 43.69802571742571
+        },
+        {
+          "yTransfer": 0.8280232344434478,
+          "xTransfer": 45.34545914490309
+        },
+        {
+          "yTransfer": 0.8325882260399059,
+          "xTransfer": 46.99289063624616
+        },
+        {
+          "yTransfer": 0.8371867837510439,
+          "xTransfer": 48.64032406372354
+        },
+        {
+          "yTransfer": 0.8416510770034625,
+          "xTransfer": 50.287749746663735
+        },
+        {
+          "yTransfer": 0.84635033305864,
+          "xTransfer": 51.935188982543934
+        },
+        {
+          "yTransfer": 0.850948890769778,
+          "xTransfer": 53.582622410021315
+        },
+        {
+          "yTransfer": 0.8554803162515563,
+          "xTransfer": 55.230051965230075
+        },
+        {
+          "yTransfer": 0.8601124400773741,
+          "xTransfer": 56.87748732884171
+        },
+        {
+          "yTransfer": 0.8646438655591524,
+          "xTransfer": 58.524916884050526
+        },
+        {
+          "yTransfer": 0.86930955549965,
+          "xTransfer": 60.172354183796415
+        },
+        {
+          "yTransfer": 0.8738074148667485,
+          "xTransfer": 61.81978180287092
+        },
+        {
+          "yTransfer": 0.8784731048072462,
+          "xTransfer": 63.467219102616866
+        },
+        {
+          "yTransfer": 0.8830045302890245,
+          "xTransfer": 65.11464865782563
+        },
+        {
+          "yTransfer": 0.8877037863442019,
+          "xTransfer": 66.76208789370583
+        },
+        {
+          "yTransfer": 0.8915303234177037,
+          "xTransfer": 68.40947679009469
+        },
+        {
+          "yTransfer": 0.8952561621471657,
+          "xTransfer": 70.05685987808067
+        },
+        {
+          "yTransfer": 0.8988813025325884,
+          "xTransfer": 71.70423715766384
+        },
+        {
+          "yTransfer": 0.9025400090326909,
+          "xTransfer": 73.35161637338132
+        },
+        {
+          "yTransfer": 0.9061987155327933,
+          "xTransfer": 74.99899558909874
+        },
+        {
+          "yTransfer": 0.909823855918216,
+          "xTransfer": 76.64637286868191
+        },
+        {
+          "yTransfer": 0.9135161285329984,
+          "xTransfer": 78.29375402053364
+        },
+        {
+          "yTransfer": 0.9171748350331007,
+          "xTransfer": 79.94113323625106
+        },
+        {
+          "yTransfer": 0.9207999754185234,
+          "xTransfer": 81.58851051583423
+        },
+        {
+          "yTransfer": 0.9244922480333058,
+          "xTransfer": 83.23589166768596
+        },
+        {
+          "yTransfer": 0.9280166900746889,
+          "xTransfer": 84.88326313886625
+        },
+        {
+          "yTransfer": 0.9316753965747913,
+          "xTransfer": 86.53064235458368
+        },
+        {
+          "yTransfer": 0.9354012353042535,
+          "xTransfer": 88.17802544256972
+        },
+        {
+          "yTransfer": 0.9390599418043559,
+          "xTransfer": 89.82540465828714
+        },
+        {
+          "yTransfer": 0.9426515160750988,
+          "xTransfer": 91.472780001736
+        },
+        {
+          "yTransfer": 0.9462766564605214,
+          "xTransfer": 93.12015728131917
+        },
+        {
+          "yTransfer": 0.9499689290753037,
+          "xTransfer": 94.7675384331709
+        },
+        {
+          "yTransfer": 0.9535940694607263,
+          "xTransfer": 96.41491571275401
+        },
+        {
+          "yTransfer": 0.9572527759608289,
+          "xTransfer": 98.06229492847149
+        },
+        {
+          "yTransfer": 0.9608779163462515,
+          "xTransfer": 99.7096722080546
+        },
+        {
+          "yTransfer": 0.9643016600435951,
+          "xTransfer": 101.35703787083213
+        },
+        {
+          "yTransfer": 0.9672554781354209,
+          "xTransfer": 103.00437642772965
+        },
+        {
+          "yTransfer": 0.9702092962272468,
+          "xTransfer": 104.65171498462712
+        },
+        {
+          "yTransfer": 0.9731295482043928,
+          "xTransfer": 106.29905160539039
+        },
+        {
+          "yTransfer": 0.9760833662962187,
+          "xTransfer": 107.94639016228786
+        },
+        {
+          "yTransfer": 0.9790036182733647,
+          "xTransfer": 109.59372678305107
+        },
+        {
+          "yTransfer": 0.9819574363651905,
+          "xTransfer": 111.24106533994859
+        },
+        {
+          "yTransfer": 0.9848441222276566,
+          "xTransfer": 112.88840002457755
+        },
+        {
+          "yTransfer": 0.9877979403194825,
+          "xTransfer": 114.53573858147502
+        },
+        {
+          "yTransfer": 0.9907517584113084,
+          "xTransfer": 116.18307713837254
+        },
+        {
+          "yTransfer": 0.9937055765031342,
+          "xTransfer": 117.83041569527
+        },
+        {
+          "yTransfer": 0.9965922623656004,
+          "xTransfer": 119.47775037989896
+        },
+        {
+          "yTransfer": 0.9991558743742731,
+          "xTransfer": 120.90045258690628
+        }
+      ]
+    },
+    {
+      "grossWeight": 6800,
+      "points": [
+        {
+          "yTransfer": 0.5554216284235801,
+          "xTransfer": 0
+        },
+        {
+          "yTransfer": 0.5641072601935918,
+          "xTransfer": 1.7551507389501921
+        },
+        {
+          "yTransfer": 0.5726522339592309,
+          "xTransfer": 2.878712835066324
+        },
+        {
+          "yTransfer": 0.5812499544765097,
+          "xTransfer": 4.002277973679156
+        },
+        {
+          "yTransfer": 0.5895905345795448,
+          "xTransfer": 5.125828280120459
+        },
+        {
+          "yTransfer": 0.598095348886549,
+          "xTransfer": 6.548873182895761
+        },
+        {
+          "yTransfer": 0.60625191475375,
+          "xTransfer": 8.196511840607059
+        },
+        {
+          "yTransfer": 0.614374914506271,
+          "xTransfer": 9.844148562184103
+        },
+        {
+          "yTransfer": 0.6224979142587922,
+          "xTransfer": 11.491785283761146
+        },
+        {
+          "yTransfer": 0.6304363003805742,
+          "xTransfer": 13.064540075823231
+        },
+        {
+          "yTransfer": 0.6383746865023561,
+          "xTransfer": 14.63729486788526
+        },
+        {
+          "yTransfer": 0.6464976862548772,
+          "xTransfer": 16.284931589462303
+        },
+        {
+          "yTransfer": 0.6546206860073983,
+          "xTransfer": 17.932568311039404
+        },
+        {
+          "yTransfer": 0.6627436857599194,
+          "xTransfer": 19.580205032616448
+        },
+        {
+          "yTransfer": 0.6699604004160848,
+          "xTransfer": 21.227789478567843
+        },
+        {
+          "yTransfer": 0.6759016027144163,
+          "xTransfer": 22.875300351416456
+        },
+        {
+          "yTransfer": 0.6818763711274278,
+          "xTransfer": 24.522813160399437
+        },
+        {
+          "yTransfer": 0.6878511395404392,
+          "xTransfer": 26.17032596938236
+        },
+        {
+          "yTransfer": 0.6937587757240908,
+          "xTransfer": 27.81783490609672
+        },
+        {
+          "yTransfer": 0.6997671102517822,
+          "xTransfer": 29.465349651213955
+        },
+        {
+          "yTransfer": 0.7057083125501137,
+          "xTransfer": 31.112860524062626
+        },
+        {
+          "yTransfer": 0.7116495148484452,
+          "xTransfer": 32.76037139691124
+        },
+        {
+          "yTransfer": 0.7176242832614566,
+          "xTransfer": 34.40788420589422
+        },
+        {
+          "yTransfer": 0.7236326177891478,
+          "xTransfer": 36.0553989510114
+        },
+        {
+          "yTransfer": 0.7295738200874793,
+          "xTransfer": 37.70290982386007
+        },
+        {
+          "yTransfer": 0.7355821546151706,
+          "xTransfer": 39.3504245689773
+        },
+        {
+          "yTransfer": 0.7412548279960633,
+          "xTransfer": 40.997919952751715
+        },
+        {
+          "yTransfer": 0.7460212162806005,
+          "xTransfer": 42.64536306090048
+        },
+        {
+          "yTransfer": 0.7505526417623789,
+          "xTransfer": 44.292792616109296
+        },
+        {
+          "yTransfer": 0.7551847655881967,
+          "xTransfer": 45.94022797972093
+        },
+        {
+          "yTransfer": 0.7597833232993346,
+          "xTransfer": 47.58766140719831
+        },
+        {
+          "yTransfer": 0.7643147487811129,
+          "xTransfer": 49.23509096240707
+        },
+        {
+          "yTransfer": 0.7689468726069307,
+          "xTransfer": 50.882526326018706
+        },
+        {
+          "yTransfer": 0.7735454303180687,
+          "xTransfer": 52.52995975349603
+        },
+        {
+          "yTransfer": 0.7781775541438866,
+          "xTransfer": 54.177395117107665
+        },
+        {
+          "yTransfer": 0.7827425457403446,
+          "xTransfer": 55.824826608450735
+        },
+        {
+          "yTransfer": 0.7873411034514827,
+          "xTransfer": 57.472260035928116
+        },
+        {
+          "yTransfer": 0.7919060950479407,
+          "xTransfer": 59.119691527271186
+        },
+        {
+          "yTransfer": 0.7965382188737585,
+          "xTransfer": 60.76712689088282
+        },
+        {
+          "yTransfer": 0.801036078240857,
+          "xTransfer": 62.41455450995733
+        },
+        {
+          "yTransfer": 0.8057017681813547,
+          "xTransfer": 64.06199180970322
+        },
+        {
+          "yTransfer": 0.810233193663133,
+          "xTransfer": 65.70942136491203
+        },
+        {
+          "yTransfer": 0.8147981852595911,
+          "xTransfer": 67.3568528562551
+        },
+        {
+          "yTransfer": 0.8185575901037331,
+          "xTransfer": 69.00423788037534
+        },
+        {
+          "yTransfer": 0.8222498627185154,
+          "xTransfer": 70.65161903222707
+        },
+        {
+          "yTransfer": 0.8259421353332977,
+          "xTransfer": 72.29900018407886
+        },
+        {
+          "yTransfer": 0.8296008418334002,
+          "xTransfer": 73.94637939979629
+        },
+        {
+          "yTransfer": 0.8332595483335027,
+          "xTransfer": 75.59375861551376
+        },
+        {
+          "yTransfer": 0.8369182548336052,
+          "xTransfer": 77.24113783123119
+        },
+        {
+          "yTransfer": 0.8406105274483875,
+          "xTransfer": 78.88851898308292
+        },
+        {
+          "yTransfer": 0.8442356678338101,
+          "xTransfer": 80.53589626266603
+        },
+        {
+          "yTransfer": 0.8479279404485924,
+          "xTransfer": 82.18327741451776
+        },
+        {
+          "yTransfer": 0.8516202130633748,
+          "xTransfer": 83.8306585663695
+        },
+        {
+          "yTransfer": 0.8552453534487974,
+          "xTransfer": 85.47803584595266
+        },
+        {
+          "yTransfer": 0.8589376260635797,
+          "xTransfer": 87.12541699780434
+        },
+        {
+          "yTransfer": 0.8625627664490024,
+          "xTransfer": 88.7727942773875
+        },
+        {
+          "yTransfer": 0.8662886051784645,
+          "xTransfer": 90.42017736537355
+        },
+        {
+          "yTransfer": 0.869947311678567,
+          "xTransfer": 92.06755658109097
+        },
+        {
+          "yTransfer": 0.8736060181786695,
+          "xTransfer": 93.71493579680839
+        },
+        {
+          "yTransfer": 0.8772982907934518,
+          "xTransfer": 95.36231694866012
+        },
+        {
+          "yTransfer": 0.8809569972935543,
+          "xTransfer": 97.00969616437754
+        },
+        {
+          "yTransfer": 0.8846492699083366,
+          "xTransfer": 98.65707731622928
+        },
+        {
+          "yTransfer": 0.8883415425231189,
+          "xTransfer": 100.30445846808107
+        },
+        {
+          "yTransfer": 0.8913960589589842,
+          "xTransfer": 101.95180283338141
+        },
+        {
+          "yTransfer": 0.8944505753948496,
+          "xTransfer": 103.59914719868175
+        },
+        {
+          "yTransfer": 0.8974715257160352,
+          "xTransfer": 105.24648962784784
+        },
+        {
+          "yTransfer": 0.9004589099225409,
+          "xTransfer": 106.89383012087961
+        },
+        {
+          "yTransfer": 0.9034798602437264,
+          "xTransfer": 108.54117255004564
+        },
+        {
+          "yTransfer": 0.9065008105649119,
+          "xTransfer": 110.18851497921173
+        },
+        {
+          "yTransfer": 0.9094546286567378,
+          "xTransfer": 111.83585353610925
+        },
+        {
+          "yTransfer": 0.9124420128632434,
+          "xTransfer": 113.48319402914103
+        },
+        {
+          "yTransfer": 0.915462963184429,
+          "xTransfer": 115.13053645830706
+        },
+        {
+          "yTransfer": 0.9184503473909347,
+          "xTransfer": 116.7778769513389
+        },
+        {
+          "yTransfer": 0.9214712977121202,
+          "xTransfer": 118.42521938050493
+        },
+        {
+          "yTransfer": 0.924425115803946,
+          "xTransfer": 120.07255793740245
+        },
+        {
+          "yTransfer": 0.9273453677810921,
+          "xTransfer": 121.71989455816566
+        },
+        {
+          "yTransfer": 0.9304670164463171,
+          "xTransfer": 123.36724279573457
+        },
+        {
+          "yTransfer": 0.9334544006528228,
+          "xTransfer": 125.01458328876635
+        },
+        {
+          "yTransfer": 0.9364417848593285,
+          "xTransfer": 126.66192378179812
+        },
+        {
+          "yTransfer": 0.9394291690658342,
+          "xTransfer": 128.30926427482996
+        },
+        {
+          "yTransfer": 0.9424165532723399,
+          "xTransfer": 129.9566047678618
+        },
+        {
+          "yTransfer": 0.9454039374788455,
+          "xTransfer": 131.60394526089357
+        },
+        {
+          "yTransfer": 0.9483913216853513,
+          "xTransfer": 133.25128575392534
+        },
+        {
+          "yTransfer": 0.9514122720065368,
+          "xTransfer": 134.89862818309138
+        },
+        {
+          "yTransfer": 0.9544332223277223,
+          "xTransfer": 136.54597061225746
+        },
+        {
+          "yTransfer": 0.9573870404195481,
+          "xTransfer": 138.193309169155
+        },
+        {
+          "yTransfer": 0.9604415568554135,
+          "xTransfer": 139.84065353445533
+        },
+        {
+          "yTransfer": 0.9633618088325596,
+          "xTransfer": 141.48799015521854
+        },
+        {
+          "yTransfer": 0.9659463996629072,
+          "xTransfer": 143.13530741463893
+        },
+        {
+          "yTransfer": 0.9683631599198557,
+          "xTransfer": 144.78261499338794
+        },
+        {
+          "yTransfer": 0.9708470524061638,
+          "xTransfer": 146.42992644440545
+        },
+        {
+          "yTransfer": 0.9734316432365113,
+          "xTransfer": 148.07724370382584
+        },
+        {
+          "yTransfer": 0.9755253296396663,
+          "xTransfer": 150
+        }
+      ]
+    },
+    {
+      "grossWeight": 7000,
+      "points": [
+        {
+          "yTransfer": 0.48112489836390493,
+          "xTransfer": 0
+        },
+        {
+          "yTransfer": 0.48973434038154817,
+          "xTransfer": 1.7508608185610797
+        },
+        {
+          "yTransfer": 0.49759360637587036,
+          "xTransfer": 2.7995120814433108
+        },
+        {
+          "yTransfer": 0.5061913268931493,
+          "xTransfer": 3.9230772200562
+        },
+        {
+          "yTransfer": 0.5150527811686267,
+          "xTransfer": 5.1215288519290425
+        },
+        {
+          "yTransfer": 0.5235450081826261,
+          "xTransfer": 6.5445730286540424
+        },
+        {
+          "yTransfer": 0.531701574049827,
+          "xTransfer": 8.19221168636534
+        },
+        {
+          "yTransfer": 0.5401938010638263,
+          "xTransfer": 9.83986970541946
+        },
+        {
+          "yTransfer": 0.5480616983447807,
+          "xTransfer": 11.412620431599578
+        },
+        {
+          "yTransfer": 0.5560370071927104,
+          "xTransfer": 12.985377353409376
+        },
+        {
+          "yTransfer": 0.5639384705883447,
+          "xTransfer": 14.558130015723748
+        },
+        {
+          "yTransfer": 0.5719137794362744,
+          "xTransfer": 16.13088693753349
+        },
+        {
+          "yTransfer": 0.5798890882842042,
+          "xTransfer": 17.703643859343345
+        },
+        {
+          "yTransfer": 0.5878241177945182,
+          "xTransfer": 19.276398457792027
+        },
+        {
+          "yTransfer": 0.5952086630240828,
+          "xTransfer": 20.923992584414805
+        },
+        {
+          "yTransfer": 0.6012841297811338,
+          "xTransfer": 22.571511201800604
+        },
+        {
+          "yTransfer": 0.607292464308825,
+          "xTransfer": 24.21902594691784
+        },
+        {
+          "yTransfer": 0.6133007988365162,
+          "xTransfer": 25.866540692035073
+        },
+        {
+          "yTransfer": 0.6193091333642075,
+          "xTransfer": 27.51405543715225
+        },
+        {
+          "yTransfer": 0.6252839017772188,
+          "xTransfer": 29.161568246135232
+        },
+        {
+          "yTransfer": 0.63129223630491,
+          "xTransfer": 30.80908299125241
+        },
+        {
+          "yTransfer": 0.6372670047179214,
+          "xTransfer": 32.45659580023539
+        },
+        {
+          "yTransfer": 0.6432753392456128,
+          "xTransfer": 34.10411054535257
+        },
+        {
+          "yTransfer": 0.6492836737733039,
+          "xTransfer": 35.7516252904698
+        },
+        {
+          "yTransfer": 0.6552920083009951,
+          "xTransfer": 37.39914003558704
+        },
+        {
+          "yTransfer": 0.6612667767140065,
+          "xTransfer": 39.04665284456996
+        },
+        {
+          "yTransfer": 0.6670401484389388,
+          "xTransfer": 40.69415403674719
+        },
+        {
+          "yTransfer": 0.671806536723476,
+          "xTransfer": 42.34159714489596
+        },
+        {
+          "yTransfer": 0.6765393588933334,
+          "xTransfer": 43.98903831691047
+        },
+        {
+          "yTransfer": 0.6811043504897913,
+          "xTransfer": 45.636469808253594
+        },
+        {
+          "yTransfer": 0.6858371726596488,
+          "xTransfer": 47.28391098026805
+        },
+        {
+          "yTransfer": 0.6905028626001464,
+          "xTransfer": 48.93134828001399
+        },
+        {
+          "yTransfer": 0.6951349864259642,
+          "xTransfer": 50.57878364362563
+        },
+        {
+          "yTransfer": 0.6997671102517822,
+          "xTransfer": 52.22621900723726
+        },
+        {
+          "yTransfer": 0.7044328001922797,
+          "xTransfer": 53.87365630698315
+        },
+        {
+          "yTransfer": 0.7090984901327774,
+          "xTransfer": 55.521093606729096
+        },
+        {
+          "yTransfer": 0.7137306139585952,
+          "xTransfer": 57.16852897034073
+        },
+        {
+          "yTransfer": 0.718362737784413,
+          "xTransfer": 58.815964333952365
+        },
+        {
+          "yTransfer": 0.7229948616102307,
+          "xTransfer": 60.463399697564
+        },
+        {
+          "yTransfer": 0.7276941176654084,
+          "xTransfer": 62.1108389334442
+        },
+        {
+          "yTransfer": 0.7323598076059059,
+          "xTransfer": 63.75827623319009
+        },
+        {
+          "yTransfer": 0.7370254975464036,
+          "xTransfer": 65.40571353293603
+        },
+        {
+          "yTransfer": 0.7414562246841423,
+          "xTransfer": 67.05313727974197
+        },
+        {
+          "yTransfer": 0.7452156295282845,
+          "xTransfer": 68.70052230386221
+        },
+        {
+          "yTransfer": 0.7489750343724264,
+          "xTransfer": 70.34790732798251
+        },
+        {
+          "yTransfer": 0.7526673069872087,
+          "xTransfer": 71.99528847983424
+        },
+        {
+          "yTransfer": 0.7563931457166708,
+          "xTransfer": 73.64267156782029
+        },
+        {
+          "yTransfer": 0.7600518522167733,
+          "xTransfer": 75.29005078353777
+        },
+        {
+          "yTransfer": 0.7638112570609153,
+          "xTransfer": 76.937435807658
+        },
+        {
+          "yTransfer": 0.767436397446338,
+          "xTransfer": 78.58481308724117
+        },
+        {
+          "yTransfer": 0.7711622361758002,
+          "xTransfer": 80.23219617522716
+        },
+        {
+          "yTransfer": 0.7749216410199421,
+          "xTransfer": 81.87958119934746
+        },
+        {
+          "yTransfer": 0.7785132152906848,
+          "xTransfer": 83.52695654279637
+        },
+        {
+          "yTransfer": 0.7823397523641866,
+          "xTransfer": 85.17434543918517
+        },
+        {
+          "yTransfer": 0.7859648927496092,
+          "xTransfer": 86.82172271876834
+        },
+        {
+          "yTransfer": 0.7897242975937513,
+          "xTransfer": 88.46910774288864
+        },
+        {
+          "yTransfer": 0.7933494379791739,
+          "xTransfer": 90.1164850224718
+        },
+        {
+          "yTransfer": 0.797075276708636,
+          "xTransfer": 91.76386811045779
+        },
+        {
+          "yTransfer": 0.8007675493234183,
+          "xTransfer": 93.41124926230952
+        },
+        {
+          "yTransfer": 0.8044933880528805,
+          "xTransfer": 95.05863235029551
+        },
+        {
+          "yTransfer": 0.8081856606676628,
+          "xTransfer": 96.70601350214724
+        },
+        {
+          "yTransfer": 0.8119114993971249,
+          "xTransfer": 98.35339659013323
+        },
+        {
+          "yTransfer": 0.8154695075531879,
+          "xTransfer": 100.00076999744783
+        },
+        {
+          "yTransfer": 0.8185240239890533,
+          "xTransfer": 101.64811436274823
+        },
+        {
+          "yTransfer": 0.8216121065395985,
+          "xTransfer": 103.29546066418288
+        },
+        {
+          "yTransfer": 0.8245659246314243,
+          "xTransfer": 104.94279922108035
+        },
+        {
+          "yTransfer": 0.8276540071819696,
+          "xTransfer": 106.590145522515
+        },
+        {
+          "yTransfer": 0.8306413913884753,
+          "xTransfer": 108.23748601554678
+        },
+        {
+          "yTransfer": 0.8337294739390204,
+          "xTransfer": 109.88483231698143
+        },
+        {
+          "yTransfer": 0.836750424260206,
+          "xTransfer": 111.53217474614746
+        },
+        {
+          "yTransfer": 0.8397713745813915,
+          "xTransfer": 113.17951717531355
+        },
+        {
+          "yTransfer": 0.842792324902577,
+          "xTransfer": 114.82685960447964
+        },
+        {
+          "yTransfer": 0.8458468413384425,
+          "xTransfer": 116.47420396977998
+        },
+        {
+          "yTransfer": 0.8489013577743078,
+          "xTransfer": 118.12154833508032
+        },
+        {
+          "yTransfer": 0.8518887419808134,
+          "xTransfer": 119.7688888281121
+        },
+        {
+          "yTransfer": 0.8549432584166788,
+          "xTransfer": 121.41623319341244
+        },
+        {
+          "yTransfer": 0.8579642087378644,
+          "xTransfer": 123.06357562257853
+        },
+        {
+          "yTransfer": 0.8610187251737298,
+          "xTransfer": 124.71091998787887
+        },
+        {
+          "yTransfer": 0.8640732416095951,
+          "xTransfer": 126.35826435317921
+        },
+        {
+          "yTransfer": 0.8670941919307806,
+          "xTransfer": 128.00560678234535
+        },
+        {
+          "yTransfer": 0.8701151422519662,
+          "xTransfer": 129.65294921151138
+        },
+        {
+          "yTransfer": 0.8731360925731517,
+          "xTransfer": 131.30029164067747
+        },
+        {
+          "yTransfer": 0.876224175123697,
+          "xTransfer": 132.94763794211212
+        },
+        {
+          "yTransfer": 0.8792115593302026,
+          "xTransfer": 134.5949784351439
+        },
+        {
+          "yTransfer": 0.882266075766068,
+          "xTransfer": 136.24232280044424
+        },
+        {
+          "yTransfer": 0.8853205922019334,
+          "xTransfer": 137.88966716574458
+        },
+        {
+          "yTransfer": 0.8884086747524785,
+          "xTransfer": 139.53701346717924
+        },
+        {
+          "yTransfer": 0.8908590011241068,
+          "xTransfer": 141.1843229820625
+        },
+        {
+          "yTransfer": 0.8935107241838142,
+          "xTransfer": 142.83164411375145
+        },
+        {
+          "yTransfer": 0.8959946166701223,
+          "xTransfer": 144.47895556476897
+        },
+        {
+          "yTransfer": 0.8984113769270706,
+          "xTransfer": 146.12626314351797
+        },
+        {
+          "yTransfer": 0.9008952694133787,
+          "xTransfer": 147.7735745945355
+        },
+        {
+          "yTransfer": 0.9032583238868395,
+          "xTransfer": 150
+        }
+      ]
+    }
+  ],
+  "windLines": [
+    {
+      "line": "A",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.048213638963217065
+        },
+        {
+          "wind": 0.669722566439134,
+          "yTransfer": 0.045426246007512106
+        },
+        {
+          "wind": 1.1364266538675167,
+          "yTransfer": 0.042504658970831555
+        },
+        {
+          "wind": 1.6031288465683176,
+          "yTransfer": 0.03971726601512682
+        },
+        {
+          "wind": 2.069831986632906,
+          "yTransfer": 0.036862776018934174
+        },
+        {
+          "wind": 2.536537021425083,
+          "yTransfer": 0.03387409194176616
+        },
+        {
+          "wind": 3.003239214125884,
+          "yTransfer": 0.0310866989860612
+        },
+        {
+          "wind": 3.4699433015542667,
+          "yTransfer": 0.028165111949380872
+        },
+        {
+          "wind": 3.9366459679369683,
+          "yTransfer": 0.02534417047343207
+        },
+        {
+          "wind": 4.4033491080015565,
+          "yTransfer": 0.022489680477239427
+        },
+        {
+          "wind": 4.870054142793734,
+          "yTransfer": 0.019500996400071413
+        },
+        {
+          "wind": 5.33676486176865,
+          "yTransfer": 0.016109730079977513
+        },
+        {
+          "wind": 5.803480317562524,
+          "yTransfer": 0.01238297855744519
+        },
+        {
+          "wind": 6.270195773356399,
+          "yTransfer": 0.00865622703491331
+        },
+        {
+          "wind": 6.736910755468379,
+          "yTransfer": 0.004963024032625052
+        },
+        {
+          "wind": 7.182410425479652,
+          "yTransfer": 0.001508145786589088
+        }
+      ]
+    },
+    {
+      "line": "B",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.2072671734392011
+        },
+        {
+          "wind": 0.6674754195272072,
+          "yTransfer": 0.20458042604422766
+        },
+        {
+          "wind": 1.1341790332736963,
+          "yTransfer": 0.20169238752779117
+        },
+        {
+          "wind": 1.6008807522926034,
+          "yTransfer": 0.19893854309233006
+        },
+        {
+          "wind": 2.067584839720986,
+          "yTransfer": 0.19601695605564973
+        },
+        {
+          "wind": 2.534287032421787,
+          "yTransfer": 0.19322956309994477
+        },
+        {
+          "wind": 3.000990646168276,
+          "yTransfer": 0.19034152458350828
+        },
+        {
+          "wind": 3.467692838869077,
+          "yTransfer": 0.18755413162780332
+        },
+        {
+          "wind": 3.934395978933672,
+          "yTransfer": 0.18469964163161068
+        },
+        {
+          "wind": 4.401098645316367,
+          "yTransfer": 0.18187870015566188
+        },
+        {
+          "wind": 4.867802259062856,
+          "yTransfer": 0.17899066163922517
+        },
+        {
+          "wind": 5.334515346447255,
+          "yTransfer": 0.17543165271791228
+        },
+        {
+          "wind": 5.801231275923023,
+          "yTransfer": 0.1716713526751361
+        },
+        {
+          "wind": 6.267948152762578,
+          "yTransfer": 0.16784395559187293
+        },
+        {
+          "wind": 6.734664555920247,
+          "yTransfer": 0.16405010702885292
+        },
+        {
+          "wind": 7.201380485396015,
+          "yTransfer": 0.16028980698607698
+        },
+        {
+          "wind": 7.668096888553677,
+          "yTransfer": 0.15649595842305697
+        },
+        {
+          "wind": 8.134813291711346,
+          "yTransfer": 0.1527021098600374
+        },
+        {
+          "wind": 8.601530168550902,
+          "yTransfer": 0.14887471277677355
+        },
+        {
+          "wind": 9.068245150662882,
+          "yTransfer": 0.1451815097744853
+        },
+        {
+          "wind": 9.534962027502445,
+          "yTransfer": 0.14135411269122145
+        },
+        {
+          "wind": 10.001680799069582,
+          "yTransfer": 0.13739252152698267
+        },
+        {
+          "wind": 10.468406675865168,
+          "yTransfer": 0.13292770255908626
+        },
+        {
+          "wind": 10.935132552660733,
+          "yTransfer": 0.12846288359119007
+        },
+        {
+          "wind": 11.401863639957156,
+          "yTransfer": 0.12362903090061161
+        },
+        {
+          "wind": 11.868590937798416,
+          "yTransfer": 0.11906356637198368
+        },
+        {
+          "wind": 12.335318235639676,
+          "yTransfer": 0.11449810184335596
+        },
+        {
+          "wind": 12.8020493229361,
+          "yTransfer": 0.1096642491527775
+        },
+        {
+          "wind": 13.268778515504948,
+          "yTransfer": 0.1049645905431742
+        },
+        {
+          "wind": 13.735506760709981,
+          "yTransfer": 0.1003320289740588
+        },
+        {
+          "wind": 14.202235005915043,
+          "yTransfer": 0.09569946740494317
+        },
+        {
+          "wind": 14.668963724801984,
+          "yTransfer": 0.09103335731558393
+        },
+        {
+          "wind": 14.94475458741438,
+          "yTransfer": 0.08851552488452086
+        }
+      ]
+    },
+    {
+      "line": "C",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.36346908369446007
+        },
+        {
+          "wind": 0.665272325031566,
+          "yTransfer": 0.3606145936982672
+        },
+        {
+          "wind": 1.1319754650961542,
+          "yTransfer": 0.3577601037020748
+        },
+        {
+          "wind": 1.5986786051607496,
+          "yTransfer": 0.35490561370588214
+        },
+        {
+          "wind": 2.0653822189072386,
+          "yTransfer": 0.3520175751894459
+        },
+        {
+          "wind": 2.5320858326537206,
+          "yTransfer": 0.34912953667300917
+        },
+        {
+          "wind": 2.998788972718316,
+          "yTransfer": 0.3462750466768165
+        },
+        {
+          "wind": 3.465492586464805,
+          "yTransfer": 0.34338700816038004
+        },
+        {
+          "wind": 3.932195726529393,
+          "yTransfer": 0.34053251816418717
+        },
+        {
+          "wind": 4.3988988665939885,
+          "yTransfer": 0.33767802816799475
+        },
+        {
+          "wind": 4.865602954022371,
+          "yTransfer": 0.3347564411313142
+        },
+        {
+          "wind": 5.332314620361082,
+          "yTransfer": 0.3312980777707326
+        },
+        {
+          "wind": 5.79903054983685,
+          "yTransfer": 0.32753777772795667
+        },
+        {
+          "wind": 6.265745531948831,
+          "yTransfer": 0.32384457472566863
+        },
+        {
+          "wind": 6.732461461424599,
+          "yTransfer": 0.3200842746828927
+        },
+        {
+          "wind": 7.1991764435365795,
+          "yTransfer": 0.31639107168060443
+        },
+        {
+          "wind": 7.665891899330454,
+          "yTransfer": 0.3126643201580721
+        },
+        {
+          "wind": 8.132607355124321,
+          "yTransfer": 0.3089375686355398
+        },
+        {
+          "wind": 8.599322337236302,
+          "yTransfer": 0.3052443656332515
+        },
+        {
+          "wind": 9.066037793030176,
+          "yTransfer": 0.3015176141107194
+        },
+        {
+          "wind": 9.532754669869739,
+          "yTransfer": 0.2976902170274556
+        },
+        {
+          "wind": 9.999469178299819,
+          "yTransfer": 0.29403056254541116
+        },
+        {
+          "wind": 10.466199791914349,
+          "yTransfer": 0.28923025837507654
+        },
+        {
+          "wind": 10.932929931846985,
+          "yTransfer": 0.284463502724986
+        },
+        {
+          "wind": 11.399660545461515,
+          "yTransfer": 0.2796631985546514
+        },
+        {
+          "wind": 11.866390685394137,
+          "yTransfer": 0.2748964429045604
+        },
+        {
+          "wind": 12.333121299008667,
+          "yTransfer": 0.2700961387342258
+        },
+        {
+          "wind": 12.799851912623197,
+          "yTransfer": 0.26529583456389116
+        },
+        {
+          "wind": 13.26658157887394,
+          "yTransfer": 0.26056262743404424
+        },
+        {
+          "wind": 13.733312192488455,
+          "yTransfer": 0.2557623232637094
+        },
+        {
+          "wind": 14.200042332421091,
+          "yTransfer": 0.25099556761361885
+        },
+        {
+          "wind": 14.666773419717515,
+          "yTransfer": 0.24616171492304018
+        },
+        {
+          "wind": 15.133506875423421,
+          "yTransfer": 0.2411601196312425
+        },
+        {
+          "wind": 15.600246488993946,
+          "yTransfer": 0.23572239357627556
+        },
+        {
+          "wind": 16.066988470973982,
+          "yTransfer": 0.23011692492008895
+        },
+        {
+          "wind": 16.533728084544506,
+          "yTransfer": 0.22467919886512155
+        },
+        {
+          "wind": 17.00046769811506,
+          "yTransfer": 0.21924147281015438
+        },
+        {
+          "wind": 17.46721015377696,
+          "yTransfer": 0.21360245563372393
+        },
+        {
+          "wind": 17.933948819983726,
+          "yTransfer": 0.20823182661924422
+        },
+        {
+          "wind": 18.40069032828184,
+          "yTransfer": 0.20265990648330168
+        },
+        {
+          "wind": 18.86743088921618,
+          "yTransfer": 0.1971550833878466
+        },
+        {
+          "wind": 19.3341709764686,
+          "yTransfer": 0.19168380881263536
+        },
+        {
+          "wind": 19.80091153740294,
+          "yTransfer": 0.18617898571718028
+        },
+        {
+          "wind": 20.267660150929487,
+          "yTransfer": 0.18010383777758054
+        },
+        {
+          "wind": 20.73441208022932,
+          "yTransfer": 0.1737938501962737
+        },
+        {
+          "wind": 21.20116448321103,
+          "yTransfer": 0.167450314094723
+        },
+        {
+          "wind": 21.667917833556544,
+          "yTransfer": 0.16103968095268462
+        },
+        {
+          "wind": 22.134669762856362,
+          "yTransfer": 0.15472969337137776
+        },
+        {
+          "wind": 22.601423113201875,
+          "yTransfer": 0.14831906022933938
+        },
+        {
+          "wind": 23.068175516183587,
+          "yTransfer": 0.1419755241277887
+        },
+        {
+          "wind": 23.534928392847206,
+          "yTransfer": 0.13559843950599415
+        },
+        {
+          "wind": 24.001680795828918,
+          "yTransfer": 0.12925490340444346
+        },
+        {
+          "wind": 24.468433198810644,
+          "yTransfer": 0.12291136730289276
+        },
+        {
+          "wind": 24.85031791131574,
+          "yTransfer": 0.11797739010166786
+        }
+      ]
+    },
+    {
+      "line": "D",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.5152756167476926
+        },
+        {
+          "wind": 0.7479738682003614,
+          "yTransfer": 0.512622417872963
+        },
+        {
+          "wind": 1.214674639855474,
+          "yTransfer": 0.5099356704779894
+        },
+        {
+          "wind": 1.681378253601963,
+          "yTransfer": 0.5070476319615529
+        },
+        {
+          "wind": 2.1480809199846576,
+          "yTransfer": 0.5042266904856041
+        },
+        {
+          "wind": 2.6147826390035647,
+          "yTransfer": 0.501472846050143
+        },
+        {
+          "wind": 3.08148577906816,
+          "yTransfer": 0.4986183560539501
+        },
+        {
+          "wind": 3.5481870244051734,
+          "yTransfer": 0.49589806013873283
+        },
+        {
+          "wind": 4.014891111833556,
+          "yTransfer": 0.4929764731020527
+        },
+        {
+          "wind": 4.481593304534357,
+          "yTransfer": 0.49018908014634777
+        },
+        {
+          "wind": 4.948295497235158,
+          "yTransfer": 0.4874016871906426
+        },
+        {
+          "wind": 5.415010005665238,
+          "yTransfer": 0.48374203270859817
+        },
+        {
+          "wind": 5.881724514095325,
+          "yTransfer": 0.48008237822655353
+        },
+        {
+          "wind": 6.3484404435711,
+          "yTransfer": 0.4763220781837776
+        },
+        {
+          "wind": 6.8151554256830735,
+          "yTransfer": 0.4726288751814891
+        },
+        {
+          "wind": 7.281870881476948,
+          "yTransfer": 0.468902123658957
+        },
+        {
+          "wind": 7.748586810952716,
+          "yTransfer": 0.46514182361618106
+        },
+        {
+          "wind": 8.215301793064697,
+          "yTransfer": 0.4614486206138928
+        },
+        {
+          "wind": 8.682017248858571,
+          "yTransfer": 0.4577218690913607
+        },
+        {
+          "wind": 9.148732704652446,
+          "yTransfer": 0.4539951175688286
+        },
+        {
+          "wind": 9.61544816044632,
+          "yTransfer": 0.4502683660462963
+        },
+        {
+          "wind": 10.082166932013457,
+          "yTransfer": 0.4463067748820575
+        },
+        {
+          "wind": 10.548895177218512,
+          "yTransfer": 0.4416742133129419
+        },
+        {
+          "wind": 11.015625790833028,
+          "yTransfer": 0.43687390914260726
+        },
+        {
+          "wind": 11.482355930765664,
+          "yTransfer": 0.4321071534925165
+        },
+        {
+          "wind": 11.949085597016392,
+          "yTransfer": 0.42737394636266934
+        },
+        {
+          "wind": 12.415815736949043,
+          "yTransfer": 0.4226071907125788
+        },
+        {
+          "wind": 12.882545876881665,
+          "yTransfer": 0.4178404350624878
+        },
+        {
+          "wind": 13.349275543132407,
+          "yTransfer": 0.4131072279326411
+        },
+        {
+          "wind": 13.816005683065029,
+          "yTransfer": 0.4083404722825501
+        },
+        {
+          "wind": 14.282735349315772,
+          "yTransfer": 0.4036072651527032
+        },
+        {
+          "wind": 14.749465962930302,
+          "yTransfer": 0.39880696098236856
+        },
+        {
+          "wind": 15.216200839681889,
+          "yTransfer": 0.39370472012983937
+        },
+        {
+          "wind": 15.682942821661896,
+          "yTransfer": 0.388099251473653
+        },
+        {
+          "wind": 16.149684329960024,
+          "yTransfer": 0.3825273313377102
+        },
+        {
+          "wind": 16.616425838258138,
+          "yTransfer": 0.3769554112017677
+        },
+        {
+          "wind": 17.083166872874372,
+          "yTransfer": 0.37141703958606875
+        },
+        {
+          "wind": 17.549907907490592,
+          "yTransfer": 0.36587866797036983
+        },
+        {
+          "wind": 18.016649889470628,
+          "yTransfer": 0.36027319931418345
+        },
+        {
+          "wind": 18.48339139776874,
+          "yTransfer": 0.3547012791782411
+        },
+        {
+          "wind": 18.950132432384976,
+          "yTransfer": 0.3491629075625422
+        },
+        {
+          "wind": 19.416874414364983,
+          "yTransfer": 0.3435574389063556
+        },
+        {
+          "wind": 19.88361592266311,
+          "yTransfer": 0.33798551877041305
+        },
+        {
+          "wind": 20.350363115143978,
+          "yTransfer": 0.3320110163915444
+        },
+        {
+          "wind": 20.81711125498863,
+          "yTransfer": 0.32596941697218806
+        },
+        {
+          "wind": 21.283860342197073,
+          "yTransfer": 0.31986072051234427
+        },
+        {
+          "wind": 21.750609429405543,
+          "yTransfer": 0.31375202405250047
+        },
+        {
+          "wind": 22.217358042932077,
+          "yTransfer": 0.3076768761129003
+        },
+        {
+          "wind": 22.684107130140546,
+          "yTransfer": 0.3015681796530565
+        },
+        {
+          "wind": 23.150855269985186,
+          "yTransfer": 0.2955265802337004
+        },
+        {
+          "wind": 23.617604830875536,
+          "yTransfer": 0.28938433525361273
+        },
+        {
+          "wind": 24.08435297072019,
+          "yTransfer": 0.2833427358342564
+        },
+        {
+          "wind": 24.551102057928645,
+          "yTransfer": 0.2772340393744124
+        },
+        {
+          "wind": 25.017853039864676,
+          "yTransfer": 0.2709911488335932
+        },
+        {
+          "wind": 25.484611600711034,
+          "yTransfer": 0.264211481968873
+        },
+        {
+          "wind": 25.951371108921187,
+          "yTransfer": 0.2573647180636647
+        },
+        {
+          "wind": 26.418131090813233,
+          "yTransfer": 0.2504844056382127
+        },
+        {
+          "wind": 26.884890125341478,
+          "yTransfer": 0.24367119025324846
+        },
+        {
+          "wind": 27.351650580915425,
+          "yTransfer": 0.2367573293075529
+        },
+        {
+          "wind": 27.818409141761776,
+          "yTransfer": 0.22997766244283246
+        },
+        {
+          "wind": 28.285169123653834,
+          "yTransfer": 0.22309735001738074
+        },
+        {
+          "wind": 28.75192910554587,
+          "yTransfer": 0.21621703759192878
+        },
+        {
+          "wind": 29.218689561119803,
+          "yTransfer": 0.209303176646233
+        },
+        {
+          "wind": 29.685448595648054,
+          "yTransfer": 0.20248996126126872
+        },
+        {
+          "wind": 29.982463249267084,
+          "yTransfer": 0.1991332855615886
+        }
+      ]
+    },
+    {
+      "line": "E",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.6657747996115858
+        },
+        {
+          "wind": 0.661003977471843,
+          "yTransfer": 0.6629203096153933
+        },
+        {
+          "wind": 1.1277061701726439,
+          "yTransfer": 0.6601329166596881
+        },
+        {
+          "wind": 1.5944088365553384,
+          "yTransfer": 0.6573119751837393
+        },
+        {
+          "wind": 2.0611119766199337,
+          "yTransfer": 0.6544574851875467
+        },
+        {
+          "wind": 2.5278146430026283,
+          "yTransfer": 0.6516365437115978
+        },
+        {
+          "wind": 2.994517309385323,
+          "yTransfer": 0.648815602235649
+        },
+        {
+          "wind": 3.461220923131812,
+          "yTransfer": 0.6459275637192126
+        },
+        {
+          "wind": 3.9279235895145064,
+          "yTransfer": 0.6431066222432636
+        },
+        {
+          "wind": 4.394626255897208,
+          "yTransfer": 0.6402856807673148
+        },
+        {
+          "wind": 4.861329869643697,
+          "yTransfer": 0.6373976422508784
+        },
+        {
+          "wind": 5.328040588618613,
+          "yTransfer": 0.6340063759307846
+        },
+        {
+          "wind": 5.794754623366799,
+          "yTransfer": 0.6303802699689838
+        },
+        {
+          "wind": 6.261468184433092,
+          "yTransfer": 0.6267877125274269
+        },
+        {
+          "wind": 6.728181745499384,
+          "yTransfer": 0.62319515508587
+        },
+        {
+          "wind": 7.19489578024757,
+          "yTransfer": 0.6195690491240695
+        },
+        {
+          "wind": 7.661610288677657,
+          "yTransfer": 0.615909394642025
+        },
+        {
+          "wind": 8.12832384974395,
+          "yTransfer": 0.6123168372004681
+        },
+        {
+          "wind": 8.595037884492136,
+          "yTransfer": 0.6086907312386675
+        },
+        {
+          "wind": 9.061751919240322,
+          "yTransfer": 0.6050646252768667
+        },
+        {
+          "wind": 9.528465480306615,
+          "yTransfer": 0.6014720678353099
+        },
+        {
+          "wind": 9.995181409782383,
+          "yTransfer": 0.5977117677925339
+        },
+        {
+          "wind": 10.461910602351224,
+          "yTransfer": 0.5930121091829308
+        },
+        {
+          "wind": 10.928641215965754,
+          "yTransfer": 0.5882118050125962
+        },
+        {
+          "wind": 11.395371829580284,
+          "yTransfer": 0.5834115008422615
+        },
+        {
+          "wind": 11.862101969512906,
+          "yTransfer": 0.5786447451921706
+        },
+        {
+          "wind": 12.328831635763649,
+          "yTransfer": 0.5739115380623239
+        },
+        {
+          "wind": 12.795562249378179,
+          "yTransfer": 0.5691112338919893
+        },
+        {
+          "wind": 13.262292862992709,
+          "yTransfer": 0.5643109297216545
+        },
+        {
+          "wind": 13.729023476607225,
+          "yTransfer": 0.5595106255513199
+        },
+        {
+          "wind": 14.195753616539875,
+          "yTransfer": 0.554743869901229
+        },
+        {
+          "wind": 14.662483756472497,
+          "yTransfer": 0.5499771142511384
+        },
+        {
+          "wind": 15.129217685860297,
+          "yTransfer": 0.544941970439097
+        },
+        {
+          "wind": 15.595959667840305,
+          "yTransfer": 0.5393365017829104
+        },
+        {
+          "wind": 16.06270070245654,
+          "yTransfer": 0.5337981301672114
+        },
+        {
+          "wind": 16.529442210754652,
+          "yTransfer": 0.5282262100312689
+        },
+        {
+          "wind": 16.996184666416582,
+          "yTransfer": 0.5225871928548387
+        },
+        {
+          "wind": 17.462924753669,
+          "yTransfer": 0.5171159182796274
+        },
+        {
+          "wind": 17.929666261967128,
+          "yTransfer": 0.5115439981436849
+        },
+        {
+          "wind": 18.396408717629043,
+          "yTransfer": 0.5059049809672544
+        },
+        {
+          "wind": 18.863149278563384,
+          "yTransfer": 0.5004001578717994
+        },
+        {
+          "wind": 19.32989126054339,
+          "yTransfer": 0.494794689215613
+        },
+        {
+          "wind": 19.79663276884152,
+          "yTransfer": 0.4892227690796702
+        },
+        {
+          "wind": 20.263376645549116,
+          "yTransfer": 0.4834831063425087
+        },
+        {
+          "wind": 20.730124311711876,
+          "yTransfer": 0.4774750554433962
+        },
+        {
+          "wind": 21.19687103051085,
+          "yTransfer": 0.4715341015847716
+        },
+        {
+          "wind": 21.66361774930982,
+          "yTransfer": 0.4655931477261468
+        },
+        {
+          "wind": 22.1303639944269,
+          "yTransfer": 0.4596857423877658
+        },
+        {
+          "wind": 22.597110713225874,
+          "yTransfer": 0.453744788529141
+        },
+        {
+          "wind": 23.063858853070528,
+          "yTransfer": 0.4477031891097849
+        },
+        {
+          "wind": 23.530604624505713,
+          "yTransfer": 0.4418293322916478
+        },
+        {
+          "wind": 23.99735181698658,
+          "yTransfer": 0.43585482991277913
+        },
+        {
+          "wind": 24.46409806210366,
+          "yTransfer": 0.42994742457439816
+        },
+        {
+          "wind": 24.9308471493121,
+          "yTransfer": 0.42383872811455436
+        },
+        {
+          "wind": 25.3976014470214,
+          "yTransfer": 0.4173609979320285
+        },
+        {
+          "wind": 25.86435669209449,
+          "yTransfer": 0.41081617070901477
+        },
+        {
+          "wind": 26.33111288453138,
+          "yTransfer": 0.40420424644551356
+        },
+        {
+          "wind": 26.797869550650148,
+          "yTransfer": 0.3975587736617683
+        },
+        {
+          "wind": 27.26462621676893,
+          "yTransfer": 0.39091330087802323
+        },
+        {
+          "wind": 27.7313828828877,
+          "yTransfer": 0.3842678280942782
+        },
+        {
+          "wind": 28.19813907532459,
+          "yTransfer": 0.37765590383077674
+        },
+        {
+          "wind": 28.664894794079558,
+          "yTransfer": 0.37107752808751937
+        },
+        {
+          "wind": 29.131650986516448,
+          "yTransfer": 0.36446560382401794
+        },
+        {
+          "wind": 29.598407652635217,
+          "yTransfer": 0.3578201310402729
+        },
+        {
+          "wind": 30.06516621348159,
+          "yTransfer": 0.3510404641755527
+        },
+        {
+          "wind": 30.531931405874474,
+          "yTransfer": 0.3437911180274187
+        },
+        {
+          "wind": 30.99869849299496,
+          "yTransfer": 0.3364075777983093
+        },
+        {
+          "wind": 31.46546415906974,
+          "yTransfer": 0.3291246831299315
+        },
+        {
+          "wind": 31.932230298826425,
+          "yTransfer": 0.3218082399413098
+        },
+        {
+          "wind": 32.398996912265005,
+          "yTransfer": 0.3144582482324443
+        },
+        {
+          "wind": 32.8657625783398,
+          "yTransfer": 0.30717535356406644
+        },
+        {
+          "wind": 33.332530139142165,
+          "yTransfer": 0.29975826481471324
+        },
+        {
+          "wind": 33.79929391048938,
+          "yTransfer": 0.29260956422731077
+        },
+        {
+          "wind": 34.26606241865554,
+          "yTransfer": 0.2851253784374699
+        },
+        {
+          "wind": 34.732827611048435,
+          "yTransfer": 0.2778760322893361
+        },
+        {
+          "wind": 34.987409840474854,
+          "yTransfer": 0.27512349047908735
+        }
+      ]
+    },
+    {
+      "line": "F",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.812214090475891
+        },
+        {
+          "wind": 0.6589330402250155,
+          "yTransfer": 0.8095944401214051
+        },
+        {
+          "wind": 1.1256357066077172,
+          "yTransfer": 0.8067734986454562
+        },
+        {
+          "wind": 1.5923388466723054,
+          "yTransfer": 0.8039190086492636
+        },
+        {
+          "wind": 2.0590405656912125,
+          "yTransfer": 0.8011651642138025
+        },
+        {
+          "wind": 2.525743232073914,
+          "yTransfer": 0.7983442227378537
+        },
+        {
+          "wind": 2.992445424774715,
+          "yTransfer": 0.7955568297821486
+        },
+        {
+          "wind": 3.459147617475516,
+          "yTransfer": 0.7927694368264436
+        },
+        {
+          "wind": 3.925850757540104,
+          "yTransfer": 0.789914946830251
+        },
+        {
+          "wind": 4.392552476559011,
+          "yTransfer": 0.7871611023947898
+        },
+        {
+          "wind": 4.859254669259812,
+          "yTransfer": 0.7843737094390848
+        },
+        {
+          "wind": 5.325965388234735,
+          "yTransfer": 0.7809824431189909
+        },
+        {
+          "wind": 5.792677528255339,
+          "yTransfer": 0.7774905312381655
+        },
+        {
+          "wind": 6.259390141957837,
+          "yTransfer": 0.7739650708370963
+        },
+        {
+          "wind": 6.726102755660342,
+          "yTransfer": 0.7704396104360272
+        },
+        {
+          "wind": 7.192814895680947,
+          "yTransfer": 0.7669476985552018
+        },
+        {
+          "wind": 7.659526562019657,
+          "yTransfer": 0.7634893351946203
+        },
+        {
+          "wind": 8.12624012308595,
+          "yTransfer": 0.7598967777530634
+        },
+        {
+          "wind": 8.592952263106554,
+          "yTransfer": 0.7564048658722379
+        },
+        {
+          "wind": 9.059664403127158,
+          "yTransfer": 0.7529129539914127
+        },
+        {
+          "wind": 9.526377016829663,
+          "yTransfer": 0.7493874935903434
+        },
+        {
+          "wind": 9.993093419987325,
+          "yTransfer": 0.7455936450273237
+        },
+        {
+          "wind": 10.45982166519238,
+          "yTransfer": 0.7409610834582082
+        },
+        {
+          "wind": 10.926553226170697,
+          "yTransfer": 0.7360936822473858
+        },
+        {
+          "wind": 11.393284787149014,
+          "yTransfer": 0.7312262810365635
+        },
+        {
+          "wind": 11.860015874445438,
+          "yTransfer": 0.726392428345985
+        },
+        {
+          "wind": 12.326747435423755,
+          "yTransfer": 0.721525027135163
+        },
+        {
+          "wind": 12.793478522720179,
+          "yTransfer": 0.7166911744445843
+        },
+        {
+          "wind": 13.260210083698496,
+          "yTransfer": 0.7118237732337621
+        },
+        {
+          "wind": 13.726941644676813,
+          "yTransfer": 0.7069563720229398
+        },
+        {
+          "wind": 14.193673205655145,
+          "yTransfer": 0.7020889708121174
+        },
+        {
+          "wind": 14.66040381926966,
+          "yTransfer": 0.6972886666417829
+        },
+        {
+          "wind": 15.12713964338505,
+          "yTransfer": 0.6921193287487661
+        },
+        {
+          "wind": 15.593879730637468,
+          "yTransfer": 0.6866480541735551
+        },
+        {
+          "wind": 16.06062171261749,
+          "yTransfer": 0.6810425855173685
+        },
+        {
+          "wind": 16.527362273551816,
+          "yTransfer": 0.6755377624219134
+        },
+        {
+          "wind": 16.994104255531852,
+          "yTransfer": 0.6699322937657272
+        },
+        {
+          "wind": 17.460845763829965,
+          "yTransfer": 0.6643603736297845
+        },
+        {
+          "wind": 17.927587272128093,
+          "yTransfer": 0.6587884534938419
+        },
+        {
+          "wind": 18.394328306744313,
+          "yTransfer": 0.653250081878143
+        },
+        {
+          "wind": 18.861070288724335,
+          "yTransfer": 0.6476446132219564
+        },
+        {
+          "wind": 19.32781179702245,
+          "yTransfer": 0.6420726930860139
+        },
+        {
+          "wind": 19.794553305320576,
+          "yTransfer": 0.6365007729500712
+        },
+        {
+          "wind": 20.26129812939196,
+          "yTransfer": 0.6306940131724219
+        },
+        {
+          "wind": 20.72804200609957,
+          "yTransfer": 0.6249543504352599
+        },
+        {
+          "wind": 21.194787777534742,
+          "yTransfer": 0.6190804936171229
+        },
+        {
+          "wind": 21.661533075288034,
+          "yTransfer": 0.6132401853192296
+        },
+        {
+          "wind": 22.128277899359418,
+          "yTransfer": 0.6074334255415803
+        },
+        {
+          "wind": 22.595023670794603,
+          "yTransfer": 0.6015595687234432
+        },
+        {
+          "wind": 23.06176944222979,
+          "yTransfer": 0.5956857119053061
+        },
+        {
+          "wind": 23.52851284525549,
+          "yTransfer": 0.589979597688388
+        },
+        {
+          "wind": 23.995259090372556,
+          "yTransfer": 0.5840721923500072
+        },
+        {
+          "wind": 24.462004861807756,
+          "yTransfer": 0.5781983355318701
+        },
+        {
+          "wind": 24.92875110692482,
+          "yTransfer": 0.5722909301934891
+        },
+        {
+          "wind": 25.39550208886085,
+          "yTransfer": 0.5660480396526699
+        },
+        {
+          "wind": 25.862253544478776,
+          "yTransfer": 0.5597716005916068
+        },
+        {
+          "wind": 26.329005473778608,
+          "yTransfer": 0.5534616130103002
+        },
+        {
+          "wind": 26.795757403078426,
+          "yTransfer": 0.5471516254289933
+        },
+        {
+          "wind": 27.262509332378244,
+          "yTransfer": 0.5408416378476865
+        },
+        {
+          "wind": 27.72926220904185,
+          "yTransfer": 0.5344645532258918
+        },
+        {
+          "wind": 28.196013190977894,
+          "yTransfer": 0.5282216626850726
+        },
+        {
+          "wind": 28.6627660676415,
+          "yTransfer": 0.5218445780632783
+        },
+        {
+          "wind": 29.129516102213742,
+          "yTransfer": 0.5156687845629466
+        },
+        {
+          "wind": 29.59626945255924,
+          "yTransfer": 0.5092581514209082
+        },
+        {
+          "wind": 30.06302232922286,
+          "yTransfer": 0.5028810667991139
+        },
+        {
+          "wind": 30.529787047933866,
+          "yTransfer": 0.4956652691712238
+        },
+        {
+          "wind": 30.9965484508716,
+          "yTransfer": 0.4886843111850403
+        },
+        {
+          "wind": 31.46331316958259,
+          "yTransfer": 0.48146851355715015
+        },
+        {
+          "wind": 31.9300764672479,
+          "yTransfer": 0.4743533614899915
+        },
+        {
+          "wind": 32.396839291231316,
+          "yTransfer": 0.4672717579430765
+        },
+        {
+          "wind": 32.86360353626043,
+          "yTransfer": 0.4600895088354302
+        },
+        {
+          "wind": 33.33036683392574,
+          "yTransfer": 0.4529743567682716
+        },
+        {
+          "wind": 33.79712965790915,
+          "yTransfer": 0.4458927532213566
+        },
+        {
+          "wind": 34.26389390293825,
+          "yTransfer": 0.43871050411371026
+        },
+        {
+          "wind": 34.730657200603574,
+          "yTransfer": 0.43159535204655164
+        },
+        {
+          "wind": 35.19742428772403,
+          "yTransfer": 0.4242118118174425
+        },
+        {
+          "wind": 35.66419563798158,
+          "yTransfer": 0.41652633490613855
+        },
+        {
+          "wind": 36.1309679356029,
+          "yTransfer": 0.40877376095434714
+        },
+        {
+          "wind": 36.59773881217855,
+          "yTransfer": 0.40112183256328726
+        },
+        {
+          "wind": 37.064512057163654,
+          "yTransfer": 0.39330216157100817
+        },
+        {
+          "wind": 37.531281986375504,
+          "yTransfer": 0.38571733022043575
+        },
+        {
+          "wind": 37.998054757678716,
+          "yTransfer": 0.3779312077484005
+        },
+        {
+          "wind": 38.46482610793626,
+          "yTransfer": 0.370245730837097
+        },
+        {
+          "wind": 38.93159887923947,
+          "yTransfer": 0.3624596083650615
+        },
+        {
+          "wind": 39.398369755815125,
+          "yTransfer": 0.35480767997400187
+        },
+        {
+          "wind": 40,
+          "yTransfer": 0.34808046022136985
+        }
+      ]
+    },
+    {
+      "line": "G",
+      "points": [
+        {
+          "wind": 0,
+          "yTransfer": 0.9562043393623968
+        },
+        {
+          "wind": 0.6569009448936214,
+          "yTransfer": 0.9535175919674233
+        },
+        {
+          "wind": 1.1236031375944222,
+          "yTransfer": 0.9507301990117183
+        },
+        {
+          "wind": 1.5903067513409113,
+          "yTransfer": 0.9478421604952817
+        },
+        {
+          "wind": 2.0570084703598184,
+          "yTransfer": 0.9450883160598206
+        },
+        {
+          "wind": 2.523710663060619,
+          "yTransfer": 0.9423009231041156
+        },
+        {
+          "wind": 2.99041285576142,
+          "yTransfer": 0.9395135301484105
+        },
+        {
+          "wind": 3.457115048462221,
+          "yTransfer": 0.9367261371927056
+        },
+        {
+          "wind": 3.923818188526816,
+          "yTransfer": 0.9338716471965128
+        },
+        {
+          "wind": 4.390520381227617,
+          "yTransfer": 0.9310842542408079
+        },
+        {
+          "wind": 4.857222573928418,
+          "yTransfer": 0.928296861285103
+        },
+        {
+          "wind": 5.323930924493858,
+          "yTransfer": 0.9250733375662282
+        },
+        {
+          "wind": 5.790643064514462,
+          "yTransfer": 0.9215814256854028
+        },
+        {
+          "wind": 6.257353309807492,
+          "yTransfer": 0.9182237078855527
+        },
+        {
+          "wind": 6.7240645024643015,
+          "yTransfer": 0.914798893045215
+        },
+        {
+          "wind": 7.190775695121118,
+          "yTransfer": 0.9113740782048774
+        },
+        {
+          "wind": 7.657485940414141,
+          "yTransfer": 0.9080163604050272
+        },
+        {
+          "wind": 8.124197606752851,
+          "yTransfer": 0.9045579970444457
+        },
+        {
+          "wind": 8.590908799409668,
+          "yTransfer": 0.901133182204108
+        },
+        {
+          "wind": 9.05761904470269,
+          "yTransfer": 0.8977754644042578
+        },
+        {
+          "wind": 9.524331184723295,
+          "yTransfer": 0.8942835525234326
+        },
+        {
+          "wind": 9.991045693153382,
+          "yTransfer": 0.8906238980413881
+        },
+        {
+          "wind": 10.457774412040337,
+          "yTransfer": 0.8859577879520287
+        },
+        {
+          "wind": 10.924508815110016,
+          "yTransfer": 0.8808890956197435
+        },
+        {
+          "wind": 11.391242270815923,
+          "yTransfer": 0.8758875003279458
+        },
+        {
+          "wind": 11.857975252839921,
+          "yTransfer": 0.8709194535563921
+        },
+        {
+          "wind": 12.324708234863934,
+          "yTransfer": 0.8659514067848385
+        },
+        {
+          "wind": 12.791441690569826,
+          "yTransfer": 0.8609498114930407
+        },
+        {
+          "wind": 13.25817609363952,
+          "yTransfer": 0.8558811191607555
+        },
+        {
+          "wind": 13.724908601981625,
+          "yTransfer": 0.8509466209094456
+        },
+        {
+          "wind": 14.191642531369425,
+          "yTransfer": 0.8459114770974041
+        },
+        {
+          "wind": 14.658375513393423,
+          "yTransfer": 0.8409434303258505
+        },
+        {
+          "wind": 15.125110863826919,
+          "yTransfer": 0.8358076409530776
+        },
+        {
+          "wind": 15.59185000371555,
+          "yTransfer": 0.830403463418354
+        },
+        {
+          "wind": 16.058589617286103,
+          "yTransfer": 0.8249657373633867
+        },
+        {
+          "wind": 16.525328757174734,
+          "yTransfer": 0.8195615598286632
+        },
+        {
+          "wind": 16.992068370745287,
+          "yTransfer": 0.8141238337736959
+        },
+        {
+          "wind": 17.458807510633918,
+          "yTransfer": 0.8087196562389724
+        },
+        {
+          "wind": 17.92554712420447,
+          "yTransfer": 0.8032819301840051
+        },
+        {
+          "wind": 18.392285790411208,
+          "yTransfer": 0.7979113011695252
+        },
+        {
+          "wind": 18.85902540398176,
+          "yTransfer": 0.792473575114558
+        },
+        {
+          "wind": 19.325765491234193,
+          "yTransfer": 0.7870023005393468
+        },
+        {
+          "wind": 19.792505104804732,
+          "yTransfer": 0.7815645744843794
+        },
+        {
+          "wind": 20.25924898151233,
+          "yTransfer": 0.7758249117472177
+        },
+        {
+          "wind": 20.725995700311316,
+          "yTransfer": 0.769883957888593
+        },
+        {
+          "wind": 21.192742419110274,
+          "yTransfer": 0.7639430040299681
+        },
+        {
+          "wind": 21.659488664227354,
+          "yTransfer": 0.7580355986915873
+        },
+        {
+          "wind": 22.12623443566254,
+          "yTransfer": 0.7521617418734502
+        },
+        {
+          "wind": 22.592981154461512,
+          "yTransfer": 0.7462207880148255
+        },
+        {
+          "wind": 23.059727399578577,
+          "yTransfer": 0.7403133826764445
+        },
+        {
+          "wind": 23.52647364469567,
+          "yTransfer": 0.7344059773380636
+        },
+        {
+          "wind": 23.99322036349463,
+          "yTransfer": 0.728465023479439
+        },
+        {
+          "wind": 24.459966134929815,
+          "yTransfer": 0.7225911666613019
+        },
+        {
+          "wind": 24.926712380046894,
+          "yTransfer": 0.7166837613229209
+        },
+        {
+          "wind": 25.39345957252776,
+          "yTransfer": 0.7107092589440522
+        },
+        {
+          "wind": 25.86020534396293,
+          "yTransfer": 0.7048354021259152
+        },
+        {
+          "wind": 26.32695206276192,
+          "yTransfer": 0.6988944482672904
+        },
+        {
+          "wind": 26.793698781560877,
+          "yTransfer": 0.6929534944086657
+        },
+        {
+          "wind": 27.260445500359864,
+          "yTransfer": 0.6870125405500409
+        },
+        {
+          "wind": 27.72719174547693,
+          "yTransfer": 0.68110513521166
+        },
+        {
+          "wind": 28.193938464275902,
+          "yTransfer": 0.6751641813530352
+        },
+        {
+          "wind": 28.660685183074875,
+          "yTransfer": 0.6692232274944107
+        },
+        {
+          "wind": 29.127431901873848,
+          "yTransfer": 0.6632822736357857
+        },
+        {
+          "wind": 29.594177673309034,
+          "yTransfer": 0.6574084168176487
+        },
+        {
+          "wind": 30.060927707881277,
+          "yTransfer": 0.6512326233173171
+        },
+        {
+          "wind": 30.52768626872762,
+          "yTransfer": 0.6444529564525966
+        },
+        {
+          "wind": 30.994446250619674,
+          "yTransfer": 0.6375726440271448
+        },
+        {
+          "wind": 31.461206232511714,
+          "yTransfer": 0.630692331601693
+        },
+        {
+          "wind": 31.92796526703998,
+          "yTransfer": 0.6238791162167288
+        },
+        {
+          "wind": 32.394723827886324,
+          "yTransfer": 0.6170994493520082
+        },
+        {
+          "wind": 32.86148428346027,
+          "yTransfer": 0.6101855884063125
+        },
+        {
+          "wind": 33.32824379167042,
+          "yTransfer": 0.6033388245011044
+        },
+        {
+          "wind": 33.79500377356247,
+          "yTransfer": 0.5964585120756525
+        },
+        {
+          "wind": 34.26176138704503,
+          "yTransfer": 0.5897459422514197
+        },
+        {
+          "wind": 34.72852231630087,
+          "yTransfer": 0.5827985327854801
+        },
+        {
+          "wind": 35.19528371923859,
+          "yTransfer": 0.5758175747992968
+        },
+        {
+          "wind": 35.6620479642677,
+          "yTransfer": 0.5686353256916505
+        },
+        {
+          "wind": 36.1288122092968,
+          "yTransfer": 0.5614530765840042
+        },
+        {
+          "wind": 36.59557503328021,
+          "yTransfer": 0.5543714730370892
+        },
+        {
+          "wind": 37.06233927830931,
+          "yTransfer": 0.547189223929443
+        },
+        {
+          "wind": 37.529103997020314,
+          "yTransfer": 0.5399734263015527
+        },
+        {
+          "wind": 37.99586682100373,
+          "yTransfer": 0.5328918227546379
+        },
+        {
+          "wind": 38.462631539714735,
+          "yTransfer": 0.5256760251267478
+        },
+        {
+          "wind": 38.92939531106194,
+          "yTransfer": 0.5185273245393451
+        },
+        {
+          "wind": 39.39615860872725,
+          "yTransfer": 0.5114121724721867
+        },
+        {
+          "wind": 40,
+          "yTransfer": 0.50508380734912
+        }
+      ]
+    },
+    {
+      "line": "H",
+      "points": [
+        {
+          "wind": 13.171326518112423,
+          "yTransfer": 0.9976576867612537
+        },
+        {
+          "wind": 13.638059026454542,
+          "yTransfer": 0.9927231885099438
+        },
+        {
+          "wind": 14.104791061114753,
+          "yTransfer": 0.9878222387788778
+        },
+        {
+          "wind": 14.57152451682066,
+          "yTransfer": 0.9828206434870801
+        },
+        {
+          "wind": 15.038258446208445,
+          "yTransfer": 0.9777854996750387
+        },
+        {
+          "wind": 15.504995217687622,
+          "yTransfer": 0.9725490647415342
+        },
+        {
+          "wind": 15.971733410212465,
+          "yTransfer": 0.9672119842472984
+        },
+        {
+          "wind": 16.43847112905543,
+          "yTransfer": 0.9619084522733063
+        },
+        {
+          "wind": 16.905208847898393,
+          "yTransfer": 0.9566049202993144
+        },
+        {
+          "wind": 17.371945145695662,
+          "yTransfer": 0.9514020338860538
+        },
+        {
+          "wind": 17.838683811902413,
+          "yTransfer": 0.9460314048715741
+        },
+        {
+          "wind": 18.30542058338159,
+          "yTransfer": 0.9407949699380698
+        },
+        {
+          "wind": 18.772158775906433,
+          "yTransfer": 0.9354578894438338
+        },
+        {
+          "wind": 19.238895073703716,
+          "yTransfer": 0.9302550030305734
+        },
+        {
+          "wind": 19.705633739910454,
+          "yTransfer": 0.9248843740160937
+        },
+        {
+          "wind": 20.172374774526688,
+          "yTransfer": 0.9193460024003949
+        },
+        {
+          "wind": 20.639120072279965,
+          "yTransfer": 0.9135056941025016
+        },
+        {
+          "wind": 21.10586584371515,
+          "yTransfer": 0.9076318372843645
+        },
+        {
+          "wind": 21.57261208883223,
+          "yTransfer": 0.9017244319459836
+        },
+        {
+          "wind": 22.039357860267415,
+          "yTransfer": 0.8958505751278465
+        },
+        {
+          "wind": 22.506104579066374,
+          "yTransfer": 0.8899096212692218
+        },
+        {
+          "wind": 22.972848455773985,
+          "yTransfer": 0.8841699585320599
+        },
+        {
+          "wind": 23.439595174572943,
+          "yTransfer": 0.8782290046734351
+        },
+        {
+          "wind": 23.906340946008143,
+          "yTransfer": 0.8723551478552982
+        },
+        {
+          "wind": 24.373086717443314,
+          "yTransfer": 0.8664812910371611
+        },
+        {
+          "wind": 24.8398324888785,
+          "yTransfer": 0.8606074342190239
+        },
+        {
+          "wind": 25.30657683926799,
+          "yTransfer": 0.8548342229616184
+        },
+        {
+          "wind": 25.773321663339388,
+          "yTransfer": 0.8490274631839688
+        },
+        {
+          "wind": 26.24006554004697,
+          "yTransfer": 0.8432878004468072
+        },
+        {
+          "wind": 26.706808943072687,
+          "yTransfer": 0.8375816862298892
+        },
+        {
+          "wind": 27.17355376714407,
+          "yTransfer": 0.8317749264522397
+        },
+        {
+          "wind": 27.640298117533575,
+          "yTransfer": 0.8260017151948341
+        },
+        {
+          "wind": 28.107041994241172,
+          "yTransfer": 0.8202620524576723
+        },
+        {
+          "wind": 28.573786344630662,
+          "yTransfer": 0.8144888412002668
+        },
+        {
+          "wind": 29.040529747656365,
+          "yTransfer": 0.8087827269833487
+        },
+        {
+          "wind": 29.507274571727763,
+          "yTransfer": 0.8029759672056993
+        },
+        {
+          "wind": 29.974020343162934,
+          "yTransfer": 0.7971021103875622
+        },
+        {
+          "wind": 30.440772272462766,
+          "yTransfer": 0.7907921228062553
+        },
+        {
+          "wind": 30.907527043853946,
+          "yTransfer": 0.7842808441034856
+        },
+        {
+          "wind": 31.37428134156326,
+          "yTransfer": 0.7778031139209596
+        },
+        {
+          "wind": 31.84103611295444,
+          "yTransfer": 0.7712918352181898
+        },
+        {
+          "wind": 32.30778898961806,
+          "yTransfer": 0.7649147505963954
+        },
+        {
+          "wind": 32.77454328732736,
+          "yTransfer": 0.7584370204138693
+        },
+        {
+          "wind": 33.241298058718556,
+          "yTransfer": 0.7519257417110996
+        },
+        {
+          "wind": 33.70805235642786,
+          "yTransfer": 0.7454480115285737
+        },
+        {
+          "wind": 34.17480475940957,
+          "yTransfer": 0.739104475427023
+        },
+        {
+          "wind": 34.64155953080076,
+          "yTransfer": 0.732593196724253
+        },
+        {
+          "wind": 35.10831524955576,
+          "yTransfer": 0.7260148209809957
+        },
+        {
+          "wind": 35.5750752314478,
+          "yTransfer": 0.7191345085555437
+        },
+        {
+          "wind": 36.04183331861226,
+          "yTransfer": 0.7123883902110671
+        },
+        {
+          "wind": 36.50859282682241,
+          "yTransfer": 0.7055416263058591
+        },
+        {
+          "wind": 36.97535186135066,
+          "yTransfer": 0.6987284109208948
+        },
+        {
+          "wind": 37.442111369560806,
+          "yTransfer": 0.6918816470156868
+        },
+        {
+          "wind": 37.900389319224146,
+          "yTransfer": 0.684806805277829
+        },
+        {
+          "wind": 38.3756299122992,
+          "yTransfer": 0.6782216677255145
+        },
+        {
+          "wind": 38.842388473145576,
+          "yTransfer": 0.671442000860794
+        },
+        {
+          "wind": 39.30914750767381,
+          "yTransfer": 0.6646287854758297
+        },
+        {
+          "wind": 40,
+          "yTransfer": 0.6580168612123284
+        }
+      ]
+    }
+  ]
+}

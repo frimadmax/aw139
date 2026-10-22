@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v49-pac';
+const CACHE_NAME = 'aw139-companion-root-v50-pac';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -129,6 +129,8 @@ const PRECACHE = [
   "./shared/embedded-app.css",
   "./shared/embedded-skin.css",
   "./shared/landing-oei.js",
+  "./pac/",
+  "./pac/index.html",
   "./catb/",
   "./catb/index.html",
   "./catb/app-data.js",
