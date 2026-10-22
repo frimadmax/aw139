@@ -1,0 +1,26 @@
+/* Casca Omni dos apps do pacote MENU-AW139 */
+html,body{height:100%}
+body{margin:0}
+.embedded-shell{min-height:100%;display:flex;flex-direction:column}
+.embedded-topbar{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;gap:12px;
+  margin:calc(8px + env(safe-area-inset-top)) 8px 8px;
+  padding:10px 12px;border-radius:16px;
+}
+.embedded-topbar .nav-btn{
+  display:grid;place-items:center;width:44px;height:44px;border-radius:12px;
+  font-size:20px;font-weight:800;text-decoration:none;flex:0 0 auto;
+}
+.embedded-topbar .product-tag{display:flex;align-items:center;gap:10px;min-width:0}
+.embedded-topbar .product-icon img{width:36px;height:36px;display:block}
+.embedded-topbar .product-sub{font-size:18px}
+#app-frame{
+  flex:1 1 auto;
+  margin:0 8px calc(12px + env(safe-area-inset-bottom));
+  border-radius:16px;
+  overflow:hidden;
+  background:#f4f2ec;
+  color:#13202b;
+  box-shadow:0 0 0 1px rgba(91,196,241,.2), 0 18px 44px rgba(1,3,24,.55);
+}

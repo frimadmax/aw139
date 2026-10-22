@@ -69,8 +69,13 @@
     document.body.dataset.awOrientation = isPortrait ? 'portrait' : 'landscape';
   }
 
+  function isExtraApp(path){
+    return ['/catb/','/power-check/','/ndl/','/roc/','/consumo/','/teto-pairado/','/limitacoes/'].some((d) => path.includes(d));
+  }
+
   function serviceWorkerConfig(){
     const path = pagePath();
+    if (isExtraApp(path)) return { url: '../sw.js', scope: '../' };
     if (path.includes('/wat/')) return { url: 'sw.js', scope: './' };
     if (path.includes('/rto/')) return { url: 'sw.js', scope: './' };
     if (path.includes('/cata/') || path.includes('/adc/')) return { url: '../sw.js', scope: '../' };
@@ -160,7 +165,7 @@
 
   function launchIconPath(){
     const path = pagePath();
-    if (path.includes('/cata/') || path.includes('/adc/') || path.includes('/wat/') || path.includes('/rto/')) return '../assets/icon-192.png';
+    if (path.includes('/cata/') || path.includes('/adc/') || path.includes('/wat/') || path.includes('/rto/') || isExtraApp(path)) return '../assets/icon-192.png';
     return 'assets/icon-192.png';
   }
 
@@ -219,7 +224,7 @@
 
   function basePrefix(){
     const path = pagePath();
-    if (path.includes('/cata/') || path.includes('/adc/') || path.includes('/wat/') || path.includes('/rto/') || path.includes('/dropdown/') || path.includes('/pouso-offshore/') || path.includes('/decolagem-offshore/')) return '../';
+    if (path.includes('/cata/') || path.includes('/adc/') || path.includes('/wat/') || path.includes('/rto/') || path.includes('/dropdown/') || path.includes('/pouso-offshore/') || path.includes('/decolagem-offshore/') || isExtraApp(path)) return '../';
     return './';
   }
 

@@ -73,4 +73,41 @@
       <path d="M6.5 15.5h2M11 15.5h2M15.5 15.5h2"/>
     </g>
   </symbol>
+
+  <!-- CAT B: helicóptero sobre pista curta -->
+  <symbol id="i-catb" viewBox="0 0 24 24">
+    <g transform="translate(0 -2)"><use href="#i-heli"/></g>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M8 19v4M16 19v4"/></g>
+  </symbol>
+
+  <!-- Power Check: mostrador -->
+  <symbol id="i-gauge" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4-5"/><path d="M6.5 13.5l1 .6M12 9v1.2M17.5 13.5l-1 .6"/><path d="M3 20h18"/></g>
+  </symbol>
+
+  <!-- NDL: lua + convoo -->
+  <symbol id="i-moon" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3.5a7.5 7.5 0 1 0 5 12.5 6 6 0 0 1-5-12.5z"/><path d="M3 21h8"/></g>
+  </symbol>
+
+  <!-- ROC: seta de subida -->
+  <symbol id="i-climb" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19 10 12l3.5 3.5L21 8"/><path d="M15.5 8H21v5.5"/><path d="M3 21.5h18"/></g>
+  </symbol>
+
+  <!-- Consumo: gota de combustível -->
+  <symbol id="i-fuel" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></g>
+  </symbol>
+
+  <!-- Teto do pairado: helicóptero com teto tracejado -->
+  <symbol id="i-hover" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2.5M8 3h2.5M13.5 3H16M18.5 3H21"/></g>
+    <g transform="translate(0 2.5)"><use href="#i-heli"/></g>
+  </symbol>
+
+  <!-- Limitações: escudo com exclamação -->
+  <symbol id="i-limits" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 4.5 5.5v6c0 4.6 3.2 8 7.5 9.7 4.3-1.7 7.5-5.1 7.5-9.7v-6z"/><path d="M12 8v5"/><path d="M12 16.3v.2"/></g>
+  </symbol>
 </svg>
