@@ -365,3 +365,12 @@ html body .segment-option input:checked + span{
 }
 html body button:focus:not(:focus-visible){outline:none}
 html body button:focus-visible{outline:2px solid var(--omni-sky);outline-offset:2px}
+
+/* Landing OEI no Cat A */
+html body .ldg-panel .form-grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:8px}
+html body .ldg-panel .ldg-pull{width:100%;height:38px;border-radius:8px;cursor:pointer;margin-bottom:12px}
+html body .ldg-panel .ldg-total{margin-top:8px}
+html body .ldg-panel .ldg-total .result-value{color:var(--omni-sky)}
+html body .ldg-panel .result-band{margin-top:8px}
+html body .ldg-notice{margin-top:8px;padding:10px 12px;border-radius:10px;font-size:13px;background:rgba(217,164,65,.16);border:1px solid rgba(217,164,65,.5);color:#ffe7b0}
+html body .ldg-conditions{margin:10px 0 0;font-size:11px;line-height:1.45;color:var(--omni-muted)}

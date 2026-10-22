@@ -181,6 +181,49 @@
             </tbody>
           </table>
         </section>
+        <section id="ldgCard" class="panel result-panel ldg-panel">
+          <div class="panel-title-row compact">
+            <div>
+              <div class="panel-kicker">Landing OEI · Clear Area</div>
+              <h2>Landing Distance</h2>
+            </div>
+            <span id="ldgChip" class="status-chip warn">Aguardando dados</span>
+          </div>
+
+          <div class="form-grid form-grid-3 ldg-inputs">
+            <label class="field">
+              <span>Peso</span>
+              <input id="ldgWeight" type="text" inputmode="numeric" autocomplete="off" placeholder="6500">
+            </label>
+            <label class="field">
+              <span>PA (ft)</span>
+              <input id="ldgPa" type="text" inputmode="numeric" autocomplete="off" placeholder="0">
+            </label>
+            <label class="field">
+              <span>OAT (°C)</span>
+              <input id="ldgOat" type="text" inputmode="numeric" autocomplete="off" placeholder="25">
+            </label>
+          </div>
+          <button id="ldgPullBtn" class="ghost-btn ldg-pull" type="button">Usar dados do Cat A</button>
+
+          <div class="result-grid">
+            <div class="result-box">
+              <div class="result-label">Landing OEI</div>
+              <div class="result-value" id="ldgLanding">—</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Braking</div>
+              <div class="result-value" id="ldgBraking">—</div>
+            </div>
+          </div>
+          <div class="result-box ldg-total">
+            <div class="result-label">Distância total</div>
+            <div class="result-value" id="ldgTotal">—</div>
+          </div>
+          <div class="result-band" id="ldgBand">—</div>
+          <div class="ldg-notice" id="ldgNotice" hidden></div>
+          <p class="ldg-conditions">Clean Air Intake / EAPS OFF ou ON · Power 2.5 min OEI · Electrical Load 300 A · V<sub>LDP</sub> 50 KIAS · RoD &lt; 350 ft/min</p>
+        </section>
       </aside>
 
       <section id="viewerPane" class="viewer-pane is-empty">
@@ -230,6 +273,7 @@
     </div>
   </div>
 
+  <script src="../shared/landing-oei.js" defer></script>
   <script src="app.js?v=55"></script>
 <script src="../shared/pwa.js"></script>
 </body>

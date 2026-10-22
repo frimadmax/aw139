@@ -20,7 +20,7 @@ body{margin:0}
   margin:0 8px calc(12px + env(safe-area-inset-bottom));
   border-radius:16px;
   overflow:hidden;
-  background:#f4f2ec;
-  color:#13202b;
+  background:linear-gradient(180deg, rgba(10,15,68,.7), rgba(5,8,42,.85));
+  color:#eef3ff;
   box-shadow:0 0 0 1px rgba(91,196,241,.2), 0 18px 44px rgba(1,3,24,.55);
 }

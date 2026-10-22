@@ -11,12 +11,18 @@ window.AW = window.AW || (function(){
   };
 })();
 
-window.loadEmbeddedApp = function(container, app){
+window.loadEmbeddedApp = function(container, app, skinHref){
   const root = container.shadowRoot || container.attachShadow({ mode: 'open' });
   root.innerHTML = '';
   const styleEl = document.createElement('style');
   styleEl.textContent = app.style;
   root.appendChild(styleEl);
+  if (skinHref){
+    const skin = document.createElement('link');
+    skin.rel = 'stylesheet';
+    skin.href = skinHref;
+    root.appendChild(skin);
+  }
   const bodyWrap = document.createElement('div');
   bodyWrap.innerHTML = app.body;
   root.appendChild(bodyWrap);
