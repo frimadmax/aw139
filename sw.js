@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v52-efb';
+const CACHE_NAME = 'aw139-companion-root-v53-shortfield';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -132,6 +132,21 @@ const PRECACHE = [
   "./pac/",
   "./cat-a/",
   "./cat-a/index.html",
+  "./shortfield/",
+  "./shortfield/index.html",
+  "./shortfield/sf.css",
+  "./shortfield/sf-data.js",
+  "./shortfield/sf-engine.js",
+  "./shortfield/sf-ui.js",
+  "./shortfield/charts/4B-1.webp",
+  "./shortfield/charts/4B-2.webp",
+  "./shortfield/charts/4B-3.webp",
+  "./shortfield/charts/4B-3A.webp",
+  "./shortfield/charts/4B-4.webp",
+  "./shortfield/charts/4B-5.webp",
+  "./shortfield/charts/4B-6.webp",
+  "./shortfield/charts/4B-6A.webp",
+  "./shortfield/charts/4B-7.webp",
   "./shared/tiles.css",
   "./pac/index.html",
   "./catb/",

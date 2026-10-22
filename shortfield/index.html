@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05082a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>AW139 — Short Field</title>
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../shared/pwa.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="sf.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="efb-bar">
+      <a class="efb-back nav-btn" id="backBtn" href="../cat-a/" aria-label="Voltar">⥢</a>
+      <a class="efb-id" href="../cat-a/">
+        <svg class="aw-icon" aria-hidden="true"><use href="../assets/icons.svg#p-short"/></svg>
+        <span><b>SHORT FIELD</b><small>CAT A · <em>RFM Supl. 12</em> · até 6400 kg</small></span>
+      </a>
+    </header>
+
+    <p class="sf-status bad" role="note">Em conferência: resultados ainda sendo validados contra as cartas do RFM. Não usar para planejamento real até a liberação.</p>
+
+    <section class="sf-panel" aria-labelledby="inHead">
+      <h2 class="sf-kicker" id="inHead">Configuração e dados</h2>
+      <div class="sf-config" role="radiogroup" aria-label="Configuração da entrada de ar">
+        <label><input type="radio" name="config" value="clean" checked><span>Clean</span></label>
+        <label><input type="radio" name="config" value="eapsOff"><span>EAPS OFF</span></label>
+        <label><input type="radio" name="config" value="eapsOn"><span>EAPS ON</span></label>
+        <label><input type="radio" name="config" value="ibf"><span>IBF</span></label>
+      </div>
+      <div class="sf-inputs">
+        <label class="sf-field"><span>Altitude pressão <small>ft</small></span><input id="inPa" type="number" inputmode="numeric" step="100" value="0"></label>
+        <label class="sf-field"><span>OAT <small>°C</small></span><input id="inOat" type="number" inputmode="decimal" step="1" value="15"></label>
+        <label class="sf-field"><span>Peso (GW) <small>kg</small></span><input id="inGw" type="number" inputmode="numeric" step="10" value="6000"></label>
+        <label class="sf-field"><span>TDP <small>ft AGL · 35 a 400</small></span><input id="inTdp" type="number" inputmode="numeric" step="5" min="35" max="400" value="35"></label>
+        <label class="sf-field"><span>Vento de proa <small>kt</small></span><input id="inHw" type="number" inputmode="numeric" step="1" min="0" value="0"></label>
+        <label class="sf-field is-optional"><span>Pista disponível <small>m · opcional</small></span><input id="inField" type="number" inputmode="numeric" step="10" placeholder="—"></label>
+      </div>
+      <p class="sf-hint">Vento de cauda é proibido (Supl. 12, Seção 1B). Componente de través máxima 20 kt.</p>
+    </section>
+
+    <section class="sf-panel sf-diagram" aria-labelledby="diaHead">
+      <h2 class="sf-kicker" id="diaHead">Perfil <em>Short Field</em></h2>
+      <svg id="diagram" viewBox="0 0 640 262" role="img" aria-label="Diagrama do perfil Short Field"></svg>
+      <p class="sf-diagram-cap">Falha antes do TDP: rejeita (RTO, tracejado laranja). No TDP ou depois: continua (CTO, verde), altura mínima TDP − 20 ft.</p>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="resHead">
+      <h2 class="sf-kicker" id="resHead">Resultados</h2>
+      <div class="sf-results">
+        <article class="sf-res" id="resWat"></article>
+        <article class="sf-res" id="resRto"></article>
+        <article class="sf-res" id="resCto"></article>
+      </div>
+      <div class="sf-status" id="fieldStatus" hidden></div>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="chartHead">
+      <h2 class="sf-kicker" id="chartHead">Carta do RFM <em>com a leitura</em></h2>
+      <div class="sf-tabs" role="tablist">
+        <button type="button" role="tab" data-tab="wat" aria-selected="true">W.A.T.</button>
+        <button type="button" role="tab" data-tab="rto" aria-selected="false">RTO</button>
+        <button type="button" role="tab" data-tab="cto" aria-selected="false">CTO</button>
+      </div>
+      <p class="sf-chart-cap" id="chartCap"></p>
+      <div class="sf-chart-wrap"><div class="sf-chart" id="chart"><img id="chartImg" alt=""><svg id="chartSvg" aria-hidden="true"></svg></div></div>
+      <div class="sf-chart-tools"><span>Linha magenta: caminho da leitura feito pelo app.</span><button type="button" id="zoomBtn">Ampliar</button></div>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="noteHead">
+      <h2 class="sf-kicker" id="noteHead">Base e limites</h2>
+      <ul class="sf-notes">
+        <li>Fonte: <b>AW139 RFM Rev 30, Suplemento 12, Parte B</b> (Fig. 4B-1 a 4B-7). As curvas foram extraídas do PDF vetorial, sem leitura por imagem.</li>
+        <li>Entre duas curvas o app interpola linearmente, como na leitura manual. A linha MAX OAT LIMIT é ISA+35 °C.</li>
+        <li>W.A.T.: crédito de vento de proa pela seção inferior da carta, até 20 kt (limite do gráfico). Peso máximo do perfil: 6400 kg.</li>
+        <li>RTO: sem correção de vento na carta. Pesos abaixo de 4400 kg usam a curva de 4400 kg (conservador).</li>
+        <li>CTO (Fig. 4B-7 vale para Clean, EAPS ON/OFF e IBF): a correção de vento já vem fatorada em 50% pelo RFM e é multiplicada pelo vento de proa informado.</li>
+        <li>V<sub>TOSS</sub> 40 KIAS. Altitude máxima para decolagem CAT A: 14000 ft Hp ou Hd, o que vier primeiro.</li>
+        <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
+      </ul>
+    </section>
+  </main>
+  <script src="sf-data.js"></script>
+  <script src="sf-engine.js"></script>
+  <script src="sf-ui.js"></script>
+  <script src="../shared/pwa.js"></script>
+</body>
+</html>
