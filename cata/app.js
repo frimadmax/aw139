@@ -1,0 +1,2695 @@
+const SHARED_KEY = 'aw139_companion_shared_context_v1';
+const KG_TO_LBS = 2.20462;
+const LBS_TO_KG = 1 / KG_TO_LBS;
+let weightUnit = 'kg';
+
+function weightToKg(value, unit) {
+  return unit === 'lbs' ? Math.round(value * LBS_TO_KG) : value;
+}
+function weightFromKg(kg, unit) {
+  return unit === 'lbs' ? Math.round(kg * KG_TO_LBS) : kg;
+}
+
+const AERODROME_DB = {
+  SBCB: { elevationFt: 23,  magVar: -22, runways: { RWY_10_28: { '10': 100, '28': 280 } } },
+  SBME: { elevationFt: 7,   magVar: -22, runways: { RWY_05_23: { '05': 50, '23': 230 }, RWY_06_24: { '06': 60, '24': 240 } } },
+  SBGL: { elevationFt: 29,  magVar: -22, runways: { RWY_10_28: { '10': 100, '28': 280 }, RWY_15_33: { '15': 150, '33': 330 } } },
+  SBNF: { elevationFt: 21,  magVar: -20, runways: { RWY_08_26: { '08': 80,  '26': 260 } } },
+  SBRJ: { elevationFt: 11,  magVar: -22, runways: { RWY_02L_20R: { '02L': 20, '20R': 200 }, RWY_02R_20L: { '02R': 20, '20L': 200 } } },
+  SBVT: { elevationFt: 11,  magVar: -22, runways: { RWY_06_24: { '06': 60, '24': 240 }, RWY_02_20: { '02': 20, '20': 200 } } },
+  SBJR: { elevationFt: 16,  magVar: -22, runways: { RWY_03_21: { '03': 30, '21': 210 } } },
+  SBMI: { elevationFt: 13,  magVar: -22, runways: { RWY_09_27: { '09': 90, '27': 270 } } },
+  SBFS: { elevationFt: 7,   magVar: -21, runways: { RWY_15_33: { '15': 150, '33': 330 } } },
+};
+const adcFrame = document.getElementById('adcFrame');
+const watFrame = document.getElementById('watFrame');
+const rtoFrame = document.getElementById('rtoFrame');
+const frameMap = { adc: adcFrame, wat: watFrame, rto: rtoFrame };
+const adcPreviewState = { payload: null };
+const imageCache = new Map();
+const vizRuntime = { renderSeq: 0, adcSyncSeq: 0, adcDecisionSeq: 0, adcDirty: false, modeDirty: { adc: false, wat: false, rto: false } };
+
+const els = {
+  base: document.getElementById('baseSelect'),
+  departure: document.getElementById('departureEndSelect'),
+  aircraftSet: document.getElementById('aircraftSetSelect'),
+  config: document.getElementById('configurationSelect'),
+  qnh: document.getElementById('qnh'),
+  oat: document.getElementById('oat'),
+  oatNegativeBtn: document.getElementById('oatNegativeBtn'),
+  weight: document.getElementById('actualWeight'),
+  weightUnitBtn: document.getElementById('weightUnitBtn'),
+  windDir: document.getElementById('windDir'),
+  windSpeed: document.getElementById('windSpeed'),
+  metarBtn: document.getElementById('metarBtn'),
+  metarInfoLine: document.getElementById('metarInfoLine'),
+  calcPaDisplay: document.getElementById('calcPaDisplay'),
+  calcHwDisplay: document.getElementById('calcHwDisplay'),
+  runBtn: document.getElementById('runBtn'),
+  sharePdfBtn: document.getElementById('sharePdfBtn'),
+  resetBtn: document.getElementById('resetBtn'),
+  visualSelect: document.getElementById('visualSelect'),
+  registration: document.getElementById('aircraftRegistration'),
+  statusChip: document.getElementById('statusChip'),
+  resultCard: document.getElementById('resultCard'),
+  watMax: document.getElementById('watMaxMetric'),
+  watBox: document.getElementById('watBox'),
+  watSummary: document.getElementById('watSummary'),
+  watMarginSummary: document.getElementById('watMarginSummary'),
+  rtoBox: document.getElementById('rtoBox'),
+  rtoMetric: document.getElementById('rtoMetric'),
+  rtoSummary: document.getElementById('rtoSummary'),
+  decisionBody: document.getElementById('decisionTableBody'),
+  vizSubtitle: document.getElementById('vizSubtitle'),
+  vizPlaceholder: document.getElementById('vizPlaceholder'),
+  openWATBtn: document.getElementById('openWATBtn'),
+  openRTOBtn: document.getElementById('openRTOBtn'),
+  openADCBtn: document.getElementById('openADCBtn'),
+  viewerPane: document.getElementById('viewerPane'),
+  sidebarToggleBtn: document.getElementById('sidebarToggleBtn'),
+  viewerMeta: document.getElementById('viewerMeta'),
+  vizLegend: document.getElementById('vizLegend'),
+  vizFacts: document.getElementById('vizFacts'),
+  vizPreviewCanvas: document.getElementById('vizPreviewCanvas'),
+  vizWrap: document.getElementById('vizWrap'),
+};
+
+function loadCtx() { try { return JSON.parse(localStorage.getItem(SHARED_KEY) || '{}'); } catch { return {}; } }
+function saveCtx(patch) { localStorage.setItem(SHARED_KEY, JSON.stringify({ ...loadCtx(), ...patch, updatedAt: new Date().toISOString(), lastModule: 'cata' })); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function nextFrame(count = 1) {
+  const steps = Math.max(1, Number(count || 1));
+  return new Promise(resolve => {
+    const tick = (n) => {
+      const raf = window.requestAnimationFrame || ((cb) => setTimeout(cb, 16));
+      raf(() => (n <= 1 ? resolve() : tick(n - 1)));
+    };
+    tick(steps);
+  });
+}
+
+
+function setWeightUnit(unit, convert = true) {
+  const prev = weightUnit;
+  weightUnit = (unit === 'lbs') ? 'lbs' : 'kg';
+  if (els.weightUnitBtn) els.weightUnitBtn.textContent = weightUnit;
+  if (els.weight) {
+    els.weight.placeholder = weightUnit === 'lbs' ? '14330' : '6500';
+    if (convert && prev !== weightUnit && els.weight.value !== '') {
+      const raw = Number(els.weight.value) || 0;
+      const kg = weightToKg(raw, prev);
+      els.weight.value = String(weightFromKg(kg, weightUnit));
+    }
+  }
+  try { localStorage.setItem('aw139_weight_unit', weightUnit); } catch { /* quota */ }
+}
+
+function setMetarInfoLine(text) {
+  if (els.metarInfoLine) els.metarInfoLine.textContent = text;
+}
+
+function modeLoadingCopy(mode, reason = '') {
+  const titleMap = {
+    adc: 'Atualizando carta ADC',
+    wat: 'Atualizando gráfico WAT',
+    rto: 'Atualizando gráfico RTO'
+  };
+  const defaultSubMap = {
+    adc: 'Aguarde a carta ADC ser atualizada.',
+    wat: 'Aguarde o gráfico WAT ser atualizado.',
+    rto: 'Aguarde o gráfico RTO ser atualizado.'
+  };
+  let sub = defaultSubMap[mode] || 'Aguarde a visualização ser atualizada.';
+  if (reason) {
+    if (/recal|par[aâ]metr|c[aá]lcul/i.test(reason)) {
+      sub = 'Aplicando o cálculo mais recente.';
+    } else if (/base|cabeceira/i.test(reason)) {
+      sub = 'Aplicando a seleção mais recente.';
+    } else if (/troca|visualiza/i.test(reason)) {
+      sub = 'Abrindo a visualização atual.';
+    }
+  }
+  return { title: titleMap[mode] || 'Atualizando visualização', sub };
+}
+
+function showModeLoading(mode, reason = '') {
+  if (!mode) return;
+  const copy = modeLoadingCopy(mode, reason);
+  setViewerLoading(copy.title, copy.sub);
+}
+
+function setModeDirty(mode, reason = '') {
+  if (!mode || !vizRuntime.modeDirty) return;
+  vizRuntime.modeDirty[mode] = true;
+  if ((els.visualSelect.value || '') === mode) showModeLoading(mode, reason);
+}
+
+function markCalculationDirty(reason = 'o cálculo') {
+  ['adc', 'wat', 'rto'].forEach(mode => setModeDirty(mode, reason));
+}
+
+function clearModeDirty(mode) {
+  if (!mode || !vizRuntime.modeDirty) return;
+  vizRuntime.modeDirty[mode] = false;
+}
+
+function clearAllModeDirty() {
+  ['adc', 'wat', 'rto'].forEach(clearModeDirty);
+}
+
+function setViewerLoading(title = 'Atualizando visualização', sub = 'Aguarde a carta ser atualizada.') {
+  if (els.viewerPane) els.viewerPane.classList.remove('is-empty');
+  if (els.vizPlaceholder) {
+    restoreViewerPlaceholder();
+  els.vizPlaceholder.hidden = false;
+    els.vizPlaceholder.innerHTML = `
+      <div class="placeholder-title">${escapeHtml(title)}</div>
+      <div class="placeholder-sub">${escapeHtml(sub)}</div>
+    `;
+  }
+  if (els.vizPreviewCanvas) els.vizPreviewCanvas.hidden = true;
+  syncViewerStageHeight(null);
+}
+
+function restoreViewerPlaceholder() {
+  if (!els.vizPlaceholder) return;
+  els.vizPlaceholder.innerHTML = `
+    <div class="placeholder-title">Visualização em branco</div>
+    <div class="placeholder-sub">A carta aparece após preencher e calcular, ou ao escolher uma visualização.</div>
+  `;
+}
+
+function markAdcDirty(reason = '') {
+  vizRuntime.adcDirty = true;
+  setModeDirty('adc', reason || 'a carta ADC');
+}
+
+function clearAdcDirty() {
+  vizRuntime.adcDirty = false;
+  clearModeDirty('adc');
+}
+
+function resolveFrameAssetSrc(frame, src) {
+  if (!src) return '';
+  if (/^(?:[a-z]+:)?\/\//i.test(src) || /^(?:data|blob):/i.test(src)) return src;
+  try {
+    const baseHref = frame?.contentWindow?.location?.href || frame?.src || window.location.href;
+    return new URL(src, baseHref).href;
+  } catch {
+    return src;
+  }
+}
+
+function chartKey(src) {
+  const raw = String(src || '').trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw, window.location.href);
+    return url.pathname.split('/').pop() || raw;
+  } catch {
+    return raw.split('?')[0].split('#')[0].split('/').pop() || raw;
+  }
+}
+
+async function waitForAdcChartMatch(expectedSrc = '', timeoutMs = 1800) {
+  try {
+    const bridge = adcFrame.contentWindow?.__adcBridge;
+    if (!bridge) return null;
+    const expectedKey = chartKey(expectedSrc);
+    if (bridge.waitForChart) {
+      const info = await bridge.waitForChart(expectedSrc, timeoutMs);
+      const canvasReady = (info?.canvasWidth || 0) > 32 && (info?.canvasHeight || 0) > 32;
+      const loadedKey = info?.loadedKey || '';
+      if ((!expectedKey || loadedKey === expectedKey) && canvasReady) return info;
+      return null;
+    }
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      const info = bridge.getRenderInfo ? bridge.getRenderInfo() : null;
+      const loadedKey = info?.loadedKey || '';
+      const canvasReady = (info?.canvasWidth || 0) > 32 && (info?.canvasHeight || 0) > 32;
+      if ((!expectedKey || loadedKey === expectedKey) && canvasReady) return info;
+      await sleep(60);
+    }
+  } catch {}
+  return null;
+}
+
+async function loadImage(src) {
+  if (!src) return null;
+  if (imageCache.has(src)) return imageCache.get(src);
+  const p = new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  }).catch(() => null);
+  imageCache.set(src, p);
+  return p;
+}
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function pointAlongRunway(runway, metersFromRef) {
+  const len = Number(runway?.lengthM || 0) || 1;
+  const t = Math.max(0, Math.min(1, Number(metersFromRef || 0) / len));
+  const a = runway?.pavementRef || runway?.thresholdRef;
+  const b = runway?.pavementOpp || runway?.thresholdOpp;
+  if (!a || !b) return { x: 0, y: 0 };
+  return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) };
+}
+function runwayGeometry(runway) {
+  const pRef = runway?.pavementRef || runway?.thresholdRef;
+  const pOpp = runway?.pavementOpp || runway?.thresholdOpp;
+  const dx = (pOpp?.x || 0) - (pRef?.x || 0);
+  const dy = (pOpp?.y || 0) - (pRef?.y || 0);
+  const len = Math.max(1, Math.hypot(dx, dy));
+  return { pRef, pOpp, dx, dy, len, ux: dx / len, uy: dy / len, px: -dy / len, py: dx / len };
+}
+function pointAtMetersFromRef(runway, metersFromRef) {
+  return pointAlongRunway(runway, metersFromRef);
+}
+function oppositeEnd(runway) {
+  const ref = String(runway?.referenceEnd || '');
+  return (runway?.ends || []).find(end => String(end) !== ref) || (runway?.ends || [])[0] || '';
+}
+function displayTaxiLabel(name = '') {
+  const raw = String(name || '').trim();
+  return raw.replace(/^TWY\s+/i, '') || raw;
+}
+function measureLabeledBox(ctx, lines, scale = 1) {
+  const useScale = Math.max(1, Number(scale || 1));
+  const padX = Math.round(14 * useScale);
+  const padY = Math.round(11 * useScale);
+  const fontSize = Math.round(20 * useScale);
+  const lineH = Math.round(31 * useScale);
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Inter, Arial, sans-serif`;
+  const minWidth = Math.round(82 * useScale);
+  const width = Math.max(...lines.map(line => ctx.measureText(line).width), minWidth) + padX * 2;
+  const height = lines.length * lineH + padY * 2 - Math.round(8 * useScale);
+  ctx.restore();
+  return { w: width, h: height };
+}
+function drawLabeledBox(ctx, x, y, lines, ok = true, opts = {}) {
+  const scale = Math.max(1, Number(opts.scale || 1));
+  const padX = Math.round(14 * scale);
+  const padY = Math.round(11 * scale);
+  const fontSize = Math.round(20 * scale);
+  const lineH = Math.round(31 * scale);
+  const textBase = Math.round(20 * scale);
+  const boxX = x + (opts.dx || 0);
+  const boxY = y + (opts.dy || 0);
+  const measured = measureLabeledBox(ctx, lines, scale);
+  const width = measured.w;
+  const height = measured.h;
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Inter, Arial, sans-serif`;
+  ctx.strokeStyle = ok ? '#7CFC00' : '#ef4444';
+  ctx.fillStyle = '#0f1b2a';
+  ctx.lineWidth = Math.max(4, Math.round(4 * scale));
+  const radius = Math.round(16 * scale);
+  ctx.beginPath();
+  const w = width, h = height;
+  const rx = boxX, ry = boxY;
+  ctx.moveTo(rx + radius, ry);
+  ctx.arcTo(rx + w, ry, rx + w, ry + h, radius);
+  ctx.arcTo(rx + w, ry + h, rx, ry + h, radius);
+  ctx.arcTo(rx, ry + h, rx, ry, radius);
+  ctx.arcTo(rx, ry, rx + w, ry, radius);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = ok ? '#7CFC00' : '#ef4444';
+  lines.forEach((line, idx) => ctx.fillText(line, boxX + padX, boxY + padY + textBase + idx * lineH));
+  ctx.restore();
+  return { x: boxX, y: boxY, w: width, h: height };
+}
+function nearestPointOnBox(box, anchor) {
+  return {
+    x: Math.max(box.x, Math.min(anchor.x, box.x + box.w)),
+    y: Math.max(box.y, Math.min(anchor.y, box.y + box.h))
+  };
+}
+function boxesOverlap(a, b, margin = 10) {
+  return !(a.x + a.w + margin < b.x || b.x + b.w + margin < a.x || a.y + a.h + margin < b.y || b.y + b.h + margin < a.y);
+}
+function drawLeaderLine(ctx, anchor, box, color, scale = 1) {
+  const edge = nearestPointOnBox(box, anchor);
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = Math.max(3, Math.round(3 * Math.min(scale, 1.6)));
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(anchor.x, anchor.y);
+  ctx.lineTo(edge.x, edge.y);
+  ctx.stroke();
+  ctx.restore();
+}
+function drawCalloutLabel(ctx, textLines, anchor, candidates, ok, scale, occupied, bounds) {
+  const color = ok ? '#7CFC00' : '#ef4444';
+  const size = measureLabeledBox(ctx, textLines, scale);
+  const fits = (box) => box.x >= 6 && box.y >= 6 && box.x + box.w <= bounds.w - 6 && box.y + box.h <= bounds.h - 6;
+  const candidateBoxes = (candidates || []).map(candidate => {
+    const align = candidate.align === 'right' ? 'right' : 'left';
+    return {
+      ...candidate,
+      x: align === 'right' ? Math.round(candidate.x - size.w) : Math.round(candidate.x),
+      y: Math.round(candidate.y),
+      w: size.w,
+      h: size.h,
+      align
+    };
+  });
+  let chosen = candidateBoxes.find(box => fits(box) && !(occupied || []).some(other => boxesOverlap(box, other, Math.round(12 * Math.min(scale, 1.5)))));
+  if (!chosen) chosen = candidateBoxes.find(box => fits(box)) || candidateBoxes[0] || { x: anchor.x + 20, y: anchor.y - 20, w: size.w, h: size.h, align: 'left' };
+  const rendered = drawLabeledBox(ctx, chosen.x, chosen.y, textLines, ok, { scale, dx: 0, dy: 0 });
+  drawLeaderLine(ctx, anchor, rendered, color, scale);
+  occupied?.push(rendered);
+  return rendered;
+}
+function anchorMetersFromToken(runway, dep, token, features = {}) {
+  const raw = String(token || '').trim();
+  if (!raw) return null;
+  const [kind, target] = raw.split(':');
+  const ref = String(runway?.referenceEnd || '');
+  const opp = String(oppositeEnd(runway) || '');
+  if (kind === 'PAV' || kind === 'THR') return String(target) === ref ? 0 : Number(runway?.lengthM || 0);
+  if (kind === 'INT') {
+    const it = (runway?.intersections || []).find(item => String(item.id) === String(target));
+    return it ? Number(it.metersFromRef || 0) : null;
+  }
+  if (kind === 'OP') {
+    const op = Number(features?.[target]?.operationalStartM || features?.operationalStartM || 0);
+    if (!(op > 0)) return null;
+    return String(target) === ref ? Math.min(Number(runway?.lengthM || 0), op) : Math.max(0, Number(runway?.lengthM || 0) - op);
+  }
+  return null;
+}
+async function renderAdcPreviewToCanvas(out) {
+  const payload = adcPreviewState.payload;
+  if (!payload?.chart?.src || !payload?.runway) return false;
+  const imgSrc = resolveFrameAssetSrc(adcFrame, payload.chart.src);
+  const img = await loadImage(imgSrc);
+  if (!img) return false;
+  const canonicalWidth = Number(payload.chart.size?.width || 0);
+  const canonicalHeight = Number(payload.chart.size?.height || 0);
+  const width = canonicalWidth > 0 ? canonicalWidth : (img.naturalWidth || 1000);
+  const height = canonicalHeight > 0 ? canonicalHeight : (img.naturalHeight || 1400);
+  const bounds = { w: width, h: height };
+  const labelScale = Math.max(1.18, Math.min(2.45, width / 980));
+  out.width = width;
+  out.height = height;
+  const ctx = out.getContext('2d');
+  ctx.clearRect(0, 0, width, height);
+  ctx.drawImage(img, 0, 0, width, height);
+  const runway = payload.runway;
+  const analysis = payload.analysis || {};
+  const rows = [...(analysis.rows || [])];
+  const fullRow = rows.find(row => row.id === 'FULL') || rows[0] || null;
+  const g = runwayGeometry(runway);
+  const occupied = [];
+
+  const drawRequiredArrow = () => {
+    const rto = Math.round(Number(payload.rto || 0));
+    const available = Number(analysis.metrics?.asda?.fullLength || fullRow?.availableAsda || runway.lengthM || 0);
+    const startMeters = Number(analysis.metrics?.asda?.startMeters);
+    const endMeters = Number(analysis.metrics?.asda?.endMeters);
+    const hasMetrics = Number.isFinite(startMeters) && Number.isFinite(endMeters);
+    const startBase = hasMetrics ? startMeters : (Number(analysis.meta?.fullLengthMetersFromRef));
+    const endBase = hasMetrics ? endMeters : Number(runway.lengthM || 0);
+    const usable = Math.max(0, available);
+    const req = Math.max(0, Math.min(usable, rto));
+    const dep = String(payload.departureEnd || '');
+    const depIsOpp = dep === String(oppositeEnd(runway) || '');
+    const startMRef = depIsOpp ? startBase - Math.max(0, usable - req) : startBase + Math.max(0, usable - req);
+    const endMRef = endBase;
+    const s = pointAtMetersFromRef(runway, startMRef);
+    const e = pointAtMetersFromRef(runway, endMRef);
+    ctx.save();
+    ctx.strokeStyle = rto <= usable ? '#7CFC00' : '#ef4444';
+    ctx.fillStyle = rto <= usable ? '#7CFC00' : '#ef4444';
+    ctx.lineWidth = Math.max(5, runway.widthPx * 0.18);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(e.x, e.y);
+    ctx.stroke();
+    const len = Math.max(1, Math.hypot(e.x - s.x, e.y - s.y));
+    const ux = (e.x - s.x) / len, uy = (e.y - s.y) / len, px = -uy, py = ux;
+    const ah = 16, aw = 10;
+    ctx.beginPath();
+    ctx.moveTo(e.x, e.y);
+    ctx.lineTo(e.x - ux * ah + px * aw, e.y - uy * ah + py * aw);
+    ctx.lineTo(e.x - ux * ah - px * aw, e.y - uy * ah - py * aw);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+    const anchor = { x: s.x + (e.x - s.x) * 0.28, y: s.y + (e.y - s.y) * 0.28 };
+    const side = depIsOpp ? -1 : 1;
+    drawCalloutLabel(ctx, ['RTO', `${rto} m`], anchor, [
+      { x: anchor.x + g.px * 108 * side, y: anchor.y + g.py * 108 * side - 28, align: (g.px * side) > 0 ? 'left' : 'right' },
+      { x: anchor.x + g.px * 126 * side, y: anchor.y + g.py * 126 * side - 4, align: (g.px * side) > 0 ? 'left' : 'right' },
+      { x: anchor.x - g.px * 96 * side, y: anchor.y - g.py * 96 * side - 18, align: (g.px * side) > 0 ? 'right' : 'left' }
+    ], rto <= usable, labelScale, occupied, bounds);
+  };
+
+  const drawOperationalRestriction = () => {
+    const visual = analysis.visual || {};
+    const features = analysis.features || runway.endFeatures?.[payload.departureEnd] || {};
+    const dep = String(payload.departureEnd || '');
+    const defaultStart = `PAV:${dep}`;
+    const defaultEnd = `OP:${dep}`;
+    const startToken = visual?.restrictedSegment?.start || defaultStart;
+    const endToken = visual?.restrictedSegment?.end || defaultEnd;
+    const featureMap = runway.endFeatures || { [dep]: features };
+    const startMeters = anchorMetersFromToken(runway, dep, startToken, featureMap);
+    const endMeters = anchorMetersFromToken(runway, dep, endToken, featureMap);
+    if (!Number.isFinite(startMeters) || !Number.isFinite(endMeters) || Math.abs(endMeters - startMeters) < 1) return;
+    const aM = Math.min(startMeters, endMeters);
+    const bM = Math.max(startMeters, endMeters);
+    const s1 = pointAtMetersFromRef(runway, aM);
+    const s2 = pointAtMetersFromRef(runway, bM);
+    const bandHalf = Math.max(runway.widthPx * 0.72, 12);
+    ctx.save();
+    ctx.fillStyle = visual?.restrictedBandColor || 'rgba(239,68,68,0.96)';
+    ctx.beginPath();
+    ctx.moveTo(s1.x + g.px * bandHalf, s1.y + g.py * bandHalf);
+    ctx.lineTo(s2.x + g.px * bandHalf, s2.y + g.py * bandHalf);
+    ctx.lineTo(s2.x - g.px * bandHalf, s2.y - g.py * bandHalf);
+    ctx.lineTo(s1.x - g.px * bandHalf, s1.y - g.py * bandHalf);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+    const opPoint = pointAtMetersFromRef(runway, endMeters);
+    const half = Math.max(runway.widthPx * 1.9, 28);
+    ctx.save();
+    ctx.strokeStyle = visual?.restrictedBarColor || '#ef4444';
+    ctx.lineWidth = Math.max(10, runway.widthPx * 0.42);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(opPoint.x + g.px * half, opPoint.y + g.py * half);
+    ctx.lineTo(opPoint.x - g.px * half, opPoint.y - g.py * half);
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  const drawGateBar = () => {
+    const gate = pointAtMetersFromRef(runway, Number(analysis.gateMetersFromRef || 0));
+    const half = runway.widthPx * 1.12;
+    ctx.save();
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(gate.x + g.px * half, gate.y + g.py * half);
+    ctx.lineTo(gate.x - g.px * half, gate.y - g.py * half);
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  const drawStatusBarAtPoint = (metersFromRef, label, valueMeters, ok, dep, labelPoint = null, style = null) => {
+    const axisPoint = pointAtMetersFromRef(runway, metersFromRef);
+    const styleMode = style === 'twy' ? 'twy' : 'default';
+    const halfMultiplier = styleMode === 'twy' ? 0.60 : 0.95;
+    const minHalf = styleMode === 'twy' ? 7 : 14;
+    const half = Math.max(runway.widthPx * halfMultiplier, minHalf);
+    ctx.save();
+    ctx.strokeStyle = ok ? '#7CFC00' : '#ef4444';
+    ctx.lineWidth = styleMode === 'twy' ? Math.max(1.8, runway.widthPx * 0.072) : Math.max(4, runway.widthPx * 0.18);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(axisPoint.x + g.px * half, axisPoint.y + g.py * half);
+    ctx.lineTo(axisPoint.x - g.px * half, axisPoint.y - g.py * half);
+    ctx.stroke();
+    ctx.restore();
+    const side = dep === String(oppositeEnd(runway) || '') ? 1 : -1;
+    const preferred = labelPoint || { x: axisPoint.x + g.px * side * 84, y: axisPoint.y + g.py * side * 84 };
+    const alignPref = preferred.x >= axisPoint.x ? 'left' : 'right';
+    drawCalloutLabel(ctx, [label, `${Math.round(valueMeters || 0)} m`], axisPoint, [
+      { x: preferred.x + (alignPref === 'left' ? 10 : -10), y: preferred.y - 32, align: alignPref },
+      { x: preferred.x + (alignPref === 'left' ? 14 : -14), y: preferred.y + 4, align: alignPref },
+      { x: axisPoint.x + g.px * side * 104, y: axisPoint.y + g.py * side * 104 - 18, align: side * g.px >= 0 ? 'left' : 'right' },
+      { x: axisPoint.x - g.px * side * 104, y: axisPoint.y - g.py * side * 104 - 18, align: side * g.px >= 0 ? 'right' : 'left' }
+    ], ok, labelScale, occupied, bounds);
+  };
+
+  drawOperationalRestriction();
+  drawRequiredArrow();
+  drawGateBar();
+
+  if (fullRow) {
+    const dep = String(payload.departureEnd || '');
+    const startPoint = analysis.metrics?.asda?.startPoint || pointAtMetersFromRef(runway, Number(analysis.meta?.fullLengthMetersFromRef || 0));
+    const depLabelPoint = dep === String(oppositeEnd(runway) || '')
+      ? { x: startPoint.x + g.px * 58 + g.ux * 12, y: startPoint.y + g.py * 58 + g.uy * 12 }
+      : { x: startPoint.x - g.px * 58 - g.ux * 12, y: startPoint.y - g.py * 58 - g.uy * 12 };
+    drawStatusBarAtPoint(Number(analysis.meta?.fullLengthMetersFromRef || fullRow.metersFromRef || 0), String(analysis.meta?.startLabel || fullRow.name || dep).trim(), Number(fullRow.availableAsda || 0), fullRow.go !== false, dep, depLabelPoint, 'default');
+  }
+
+  const dep = String(payload.departureEnd || '');
+  const sorted = rows.filter(row => row.id !== 'FULL').sort((a, b) => Number(a.distStart || 0) - Number(b.distStart || 0));
+  sorted.forEach(row => {
+    drawStatusBarAtPoint(Number(row.metersFromRef || 0), displayTaxiLabel(row.name || row.id || ''), Number(row.availableAsda || 0), row.go !== false, dep, row.labelPoint || null, 'twy');
+  });
+  return true;
+}
+function setField(doc, id, value) {
+  const el = doc.getElementById(id);
+  if (!el) return false;
+  el.value = value ?? '';
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  return true;
+}
+function setRadio(doc, name, value) {
+  const el = doc.querySelector(`input[name="${name}"][value="${value}"]`);
+  if (!el) return false;
+  el.checked = true;
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  return true;
+}
+function clickField(doc, id) { const el = doc.getElementById(id); if (!el) return false; el.click(); return true; }
+function text(doc, id) { return (doc.getElementById(id)?.textContent || '').trim(); }
+function parseLocaleNumber(raw) {
+  const normalized = String(raw || '').trim().replace(/\s+/g, '');
+  if (!normalized) return null;
+  const tokenMatch = normalized.match(/-?[\d.,]+/);
+  if (!tokenMatch) return null;
+  let token = tokenMatch[0];
+
+  const hasDot = token.includes('.');
+  const hasComma = token.includes(',');
+
+  if (hasDot && hasComma) {
+    const lastDot = token.lastIndexOf('.');
+    const lastComma = token.lastIndexOf(',');
+    if (lastComma > lastDot) {
+      token = token.replace(/\./g, '').replace(',', '.');
+    } else {
+      token = token.replace(/,/g, '');
+    }
+  } else if (hasDot) {
+    const parts = token.split('.');
+    if (parts.length > 1 && parts[parts.length - 1].length === 3) {
+      token = parts.join('');
+    }
+  } else if (hasComma) {
+    const parts = token.split(',');
+    if (parts.length > 1 && parts[parts.length - 1].length === 3) {
+      token = parts.join('');
+    } else {
+      token = token.replace(',', '.');
+    }
+  }
+
+  const value = Number(token);
+  return Number.isFinite(value) ? value : null;
+}
+
+function numberFromText(value) {
+  return parseLocaleNumber(value);
+}
+function parseDepartureSelection(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return { token: '', runwayId: '', dep: '' };
+  if (raw.includes('::')) {
+    const [runwayId, dep] = raw.split('::');
+    return { token: raw, runwayId: runwayId || '', dep: dep || '' };
+  }
+  return { token: raw, runwayId: '', dep: raw };
+}
+
+function selectDepartureOption(select, preferredToken = '', preferredDep = '') {
+  if (!select) return '';
+  const options = [...select.options];
+  const token = String(preferredToken || '').trim();
+  const dep = String(preferredDep || '').trim();
+  let match = token ? options.find(opt => opt.value === token) : null;
+  if (!match && dep) {
+    match = options.find(opt => String(opt.value || '').split('::')[1] === dep || String(opt.textContent || '').trim() === dep);
+  }
+  if (!match) match = options[0] || null;
+  if (match) select.value = match.value;
+  return match?.value || '';
+}
+function mapRtoConfig(config) {
+  return ({ standard: 'standard', eaps_off: 'eapsOff', eaps_on: 'eapsOn', ibf: 'ibfInstalled' })[config] || 'standard';
+}
+function mapVizLabel(v) { return ({ adc: 'Carta ADC', wat: 'Carta WAT', rto: 'Carta RTO', '': 'Em branco' })[v] || 'Em branco'; }
+
+function sanitizeDigitsInput(el, maxLen = null) {
+  const allowNegative = el === els.oat;
+  let raw = String(el.value ?? '').trim();
+  let negative = '';
+  if (allowNegative && raw.startsWith('-')) negative = '-';
+  const digits = raw.replace(/[^0-9]/g, '');
+  el.value = negative + (maxLen ? digits.slice(0, maxLen) : digits);
+}
+
+function toggleSignedInput(el, maxLen = null) {
+  const raw = String(el.value ?? '').trim();
+  const wantsNegative = !raw.startsWith('-');
+  const digits = raw.replace(/[^0-9]/g, '');
+  el.value = `${wantsNegative ? '-' : ''}${maxLen ? digits.slice(0, maxLen) : digits}`;
+  el.focus();
+  const caret = el.value.length;
+  try { el.setSelectionRange(caret, caret); } catch {}
+}
+
+function digitsOnlyLength(el) {
+  return String(el.value ?? '').replace(/[^0-9]/g, '').length;
+}
+
+function isIPadLikeDevice() {
+  try {
+    const ua = navigator.userAgent || '';
+    const platform = navigator.platform || '';
+    return /iPad/i.test(ua) || (platform === 'MacIntel' && Number(navigator.maxTouchPoints || 0) > 1);
+  } catch {
+    return false;
+  }
+}
+
+function focusNext(target, options = {}) {
+  if (!target) return;
+  const { delay = 0, openPicker = false } = options || {};
+  const apply = () => {
+    if (!target || typeof target.focus !== 'function') return;
+    if (target === els.runBtn) { els.runBtn.focus(); return; }
+    target.focus();
+    if (typeof target.select === 'function' && target.tagName !== 'SELECT') target.select();
+    if (openPicker && target.tagName === 'SELECT') {
+      try { target.showPicker?.(); } catch {}
+    }
+  };
+  if (delay > 0) {
+    window.setTimeout(apply, delay);
+    return;
+  }
+  apply();
+}
+
+
+async function waitForIframe(frame, ids = []) {
+  for (let i = 0; i < 120; i++) {
+    try {
+      const doc = frame.contentWindow?.document;
+      if (doc && (!ids.length || ids.every(id => doc.getElementById(id)))) return doc;
+    } catch {}
+    await sleep(60);
+  }
+  throw new Error('iframe não ficou pronto: ' + frame.id);
+}
+
+async function waitForTruthy(readFn, timeoutMs = 5000) {
+  const end = Date.now() + timeoutMs;
+  while (Date.now() < end) {
+    const value = readFn();
+    if (value) return value;
+    await sleep(40);
+  }
+  return null;
+}
+
+async function waitForFieldValue(doc, id, expected, timeoutMs = 3000) {
+  const end = Date.now() + timeoutMs;
+  const normalize = (value) => String(value ?? '').trim();
+  while (Date.now() < end) {
+    const el = doc.getElementById(id);
+    if (el && normalize(el.value) === normalize(expected)) return true;
+    await sleep(25);
+  }
+  return false;
+}
+
+async function waitForNoPendingRto(doc, timeoutMs = 4000) {
+  const end = Date.now() + timeoutMs;
+  while (Date.now() < end) {
+    const pending = /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusDetail')) || /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusText'));
+    if (!pending) return true;
+    await sleep(25);
+  }
+  return false;
+}
+
+async function populateBaseOptions() {
+  const doc = await waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']);
+  const baseSelect = doc.getElementById('baseSelect');
+  const depSelect = doc.getElementById('departureEndSelect');
+  els.base.innerHTML = baseSelect.innerHTML;
+  els.departure.innerHTML = depSelect.innerHTML;
+  if (!els.base.value) els.base.value = baseSelect.value;
+  if (!els.departure.value) els.departure.value = depSelect.value;
+}
+
+async function syncAdcSelection({ renderPreviewIfActive = false } = {}) {
+  const syncSeq = ++vizRuntime.adcSyncSeq;
+  const activeAdc = (els.visualSelect.value || '') === 'adc';
+  if (renderPreviewIfActive && activeAdc) {
+    setViewerLoading('Atualizando carta ADC', 'Sincronizando base, cabeceira e RTO atuais.');
+  }
+
+  const doc = await waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']);
+  const baseSelect = doc.getElementById('baseSelect');
+  const depSelect = doc.getElementById('departureEndSelect');
+  const desired = parseDepartureSelection(els.departure.value);
+  const bridge = adcFrame.contentWindow?.__adcBridge;
+  let selectedToken = desired.token;
+
+  if (bridge?.analyzeFromBridge) {
+    const payload = await bridge.analyzeFromBridge({
+      baseId: els.base.value,
+      runwayId: desired.runwayId || undefined,
+      departureEnd: desired.dep || undefined,
+      departureToken: desired.token || undefined,
+      rto: numberFromText(els.rtoMetric.textContent) ?? loadCtx().rtoMeters ?? 0,
+    });
+    if (syncSeq !== vizRuntime.adcSyncSeq) return selectedToken;
+    adcPreviewState.payload = payload || null;
+  } else {
+    setField(doc, 'baseSelect', els.base.value);
+    await sleep(80);
+    selectedToken = selectDepartureOption(depSelect, desired.token, desired.dep);
+    if (selectedToken) setField(doc, 'departureEndSelect', selectedToken);
+    await sleep(80);
+    try { doc.defaultView?.analyze?.(); } catch { clickField(doc, 'analyzeBtn'); }
+  }
+
+  if (syncSeq !== vizRuntime.adcSyncSeq) return selectedToken;
+
+  els.base.innerHTML = baseSelect.innerHTML;
+  if (baseSelect.value) els.base.value = baseSelect.value;
+  els.departure.innerHTML = depSelect.innerHTML;
+  selectedToken = selectDepartureOption(els.departure, depSelect.value || desired.token, desired.dep);
+
+  if (renderPreviewIfActive && (els.visualSelect.value || '') === 'adc') {
+    const renderSeq = ++vizRuntime.renderSeq;
+    await prepareEmbeddedView('adc');
+    if (syncSeq !== vizRuntime.adcSyncSeq || renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== 'adc') return selectedToken;
+    await renderPreview('adc');
+    if (syncSeq !== vizRuntime.adcSyncSeq || renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== 'adc') return selectedToken;
+    renderVisualizationMeta('adc');
+  }
+
+  clearAdcDirty();
+  pushSharedContext(collectInputs());
+  return selectedToken;
+}
+
+function calcPressureAltitude(qnh, elevationFt) {
+  return Math.round(elevationFt + (1013.25 - qnh) * 30);
+}
+
+function calcHeadwindComponent(windDirMag, windSpeedKt, runwayMagHeading) {
+  const angleDiff = (runwayMagHeading - windDirMag) * Math.PI / 180;
+  return Math.round(windSpeedKt * Math.cos(angleDiff));
+}
+
+function getRunwayMagHeading(baseId, runwayId, departureEnd) {
+  const db = AERODROME_DB[baseId];
+  if (!db) return null;
+  const rwy = db.runways[runwayId];
+  if (!rwy) return null;
+  if (rwy[departureEnd] != null) return rwy[departureEnd];
+  const plain = String(departureEnd).replace(/[LRC]/g, '');
+  return rwy[plain] ?? null;
+}
+
+function updateCalcDisplay() {
+  const baseId = els.base?.value;
+  const departure = parseDepartureSelection(els.departure?.value);
+  const dbEntry = AERODROME_DB[baseId];
+  const qnh = Number(els.qnh?.value || 0);
+  if (els.calcPaDisplay) {
+    if (qnh >= 800 && qnh <= 1100 && dbEntry) {
+      els.calcPaDisplay.textContent = `${calcPressureAltitude(qnh, dbEntry.elevationFt)} ft`;
+    } else {
+      els.calcPaDisplay.textContent = '—';
+    }
+  }
+  const windDirVal = els.windDir?.value;
+  const windSpeedKt = Number(els.windSpeed?.value || 0);
+  if (els.calcHwDisplay) {
+    const rwyHeading = departure.runwayId ? getRunwayMagHeading(baseId, departure.runwayId, departure.dep) : null;
+    if (rwyHeading != null && windDirVal !== '' && windSpeedKt >= 0) {
+      const hw = calcHeadwindComponent(Number(windDirVal || 0), windSpeedKt, rwyHeading);
+      els.calcHwDisplay.textContent = hw >= 0 ? `${hw} kt` : `${Math.abs(hw)} kt (cauda)`;
+    } else {
+      els.calcHwDisplay.textContent = '—';
+    }
+  }
+}
+
+function parseRawMetar(text) {
+  const raw = text.trim();
+  const wind = raw.match(/(?:^|\s)(VRB|\d{3})(\d{2,3})(?:G\d{2,3})?KT(?:\s|$)/);
+  const temp = raw.match(/(?:^|\s)(M?\d{2})\/(M?\d{2})(?:\s|$)/);
+  const qnh  = raw.match(/\bQ(\d{4})\b/);
+  const alt  = raw.match(/\bA(\d{4})\b/);
+  const parseDeg = (s) => s.startsWith('M') ? -parseInt(s.slice(1), 10) : parseInt(s, 10);
+  return {
+    rawOb: raw,
+    reportType: /^SPECI\b/i.test(raw) ? 'SPECI' : 'METAR',
+    wdir:  wind ? (wind[1] === 'VRB' ? 0 : parseInt(wind[1], 10)) : null,
+    wspd:  wind ? parseInt(wind[2], 10) : null,
+    temp:  temp ? parseDeg(temp[1]) : null,
+    altim: qnh  ? parseInt(qnh[1], 10)
+         : alt  ? Math.round(parseInt(alt[1], 10) / 100 * 33.8639)
+         : null,
+  };
+}
+
+async function fetchFromVatsim(icao) {
+  const resp = await fetch(
+    `https://metar.vatsim.net/metar.php?id=${encodeURIComponent(icao)}`,
+    { signal: AbortSignal.timeout(6000) }
+  );
+  if (!resp.ok) throw new Error(`VATSIM HTTP ${resp.status}`);
+  const text = (await resp.text()).trim();
+  if (!text || text.toLowerCase().includes('no metar')) throw new Error('Sem METAR VATSIM');
+  const parsed = parseRawMetar(text);
+  if (parsed.altim == null && parsed.temp == null) throw new Error('VATSIM parse failed');
+  return parsed;
+}
+
+async function fetchFromAviationWeather(icao, useProxy) {
+  const base = `https://aviationweather.gov/api/data/metar?ids=${encodeURIComponent(icao)}&format=json&hoursBeforeNow=2&mostRecent=true`;
+  const url = useProxy ? `https://corsproxy.io/?${encodeURIComponent(base)}` : base;
+  const resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
+  if (!resp.ok) throw new Error(`AWC HTTP ${resp.status}`);
+  const data = await resp.json();
+  const metar = Array.isArray(data) ? data[0] : (Array.isArray(data?.data) ? data.data[0] : data);
+  if (!metar || typeof metar !== 'object') throw new Error('Sem METAR disponível');
+  const rawText = String(metar.rawOb || metar.raw_text || metar.raw || '');
+  if (!metar.reportType) {
+    metar.reportType = /^SPECI\b/i.test(rawText) ? 'SPECI' : (metar.receiptType || 'METAR');
+  }
+  return metar;
+}
+
+async function fetchMetarData(icao) {
+  return Promise.any([
+    fetchFromVatsim(icao),
+    fetchFromAviationWeather(icao, false),
+    fetchFromAviationWeather(icao, true),
+  ]);
+}
+
+async function handleMetarFetch() {
+  const icao = els.base?.value;
+  if (!icao) return;
+  const btn = els.metarBtn;
+  const origText = btn.textContent;
+  btn.textContent = 'Buscando…';
+  btn.disabled = true;
+  try {
+    const metar = await fetchMetarData(icao);
+    if (metar.altim != null && els.qnh) els.qnh.value = String(Math.round(metar.altim));
+    if (metar.temp != null && els.oat) els.oat.value = String(Math.round(metar.temp));
+    if (metar.wdir && els.windDir) {
+      els.windDir.value = String(Math.round(metar.wdir) || 360);
+    }
+    if (metar.wspd != null && els.windSpeed) els.windSpeed.value = String(Math.round(metar.wspd));
+    updateCalcDisplay();
+    markCalculationDirty('METAR atualizado');
+    const rawMetar = String(metar.rawOb || metar.raw_text || metar.raw || '').trim();
+    const reportLabel = metar.reportType || 'METAR';
+    if (rawMetar) {
+      setMetarInfoLine(`${reportLabel} ${icao}: ${rawMetar}`);
+    } else {
+      const metarTime = String(metar.obsTime || metar.observationTime || metar.reportTime || metar.receiptTime || '—');
+      setMetarInfoLine(`${reportLabel} ${icao}: Hora ${metarTime} • QNH ${Math.round(Number(metar.altim || 0)) || "—"} • OAT ${Math.round(Number(metar.temp || 0)) || "—"}°C • Vento ${Math.round(Number(metar.wdir || 0)) || "---"}/${Math.round(Number(metar.wspd || 0)) || "--"}kt`);
+    }
+    btn.textContent = 'METAR OK ✓';
+    setTimeout(() => { if (btn.textContent === 'METAR OK ✓') btn.textContent = origText; }, 3000);
+  } catch (e) {
+    setMetarInfoLine(`METAR ${icao}: falha na consulta (${e?.message || 'erro desconhecido'}).`);
+    btn.textContent = 'Erro — tentar novamente';
+    setTimeout(() => { if (btn.textContent === 'Erro — tentar novamente') btn.textContent = origText; }, 4000);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function collectInputs() {
+  const departure = parseDepartureSelection(els.departure.value);
+  const baseId = els.base.value;
+  const dbEntry = AERODROME_DB[baseId];
+  const qnh = Number(els.qnh?.value || 0);
+  const windDirMag = Number(els.windDir?.value || 0);
+  const windSpeedKt = Number(els.windSpeed?.value || 0);
+  let pressureAltitudeFt = 0;
+  if (qnh >= 800 && qnh <= 1100 && dbEntry) {
+    pressureAltitudeFt = calcPressureAltitude(qnh, dbEntry.elevationFt);
+  }
+  let headwindKt = 0;
+  if (departure.runwayId && els.windDir?.value !== '') {
+    const rwyHeading = getRunwayMagHeading(baseId, departure.runwayId, departure.dep);
+    if (rwyHeading != null) headwindKt = calcHeadwindComponent(windDirMag, windSpeedKt, rwyHeading);
+  }
+  return {
+    base: baseId,
+    departureToken: departure.token,
+    runwayId: departure.runwayId,
+    departureEnd: departure.dep || els.departure.options[els.departure.selectedIndex]?.text || '',
+    aircraftSet: els.aircraftSet.value || '7000',
+    configuration: els.config.value,
+    qnh,
+    windDirMag,
+    windSpeedKt,
+    pressureAltitudeFt,
+    oatC: Number(els.oat.value || 0),
+    weightKg: weightToKg(Number(els.weight.value || 0), weightUnit),
+    headwindKt,
+    registration: ''
+  };
+}
+
+function pushSharedContext(input, patch = {}) {
+  const merged = {
+    pressureAltitudeFt: input.pressureAltitudeFt,
+    oatC: input.oatC,
+    weightKg: input.weightKg,
+    headwindKt: input.headwindKt,
+    qnh: input.qnh,
+    windDirMag: input.windDirMag,
+    windSpeedKt: input.windSpeedKt,
+    adcBase: input.base,
+    adcDepartureEnd: input.departureEnd,
+    adcDepartureToken: input.departureToken || '',
+    adcRunwayId: input.runwayId || '',
+    cataAircraftSet: input.aircraftSet,
+    cataConfiguration: input.configuration,
+    aircraftRegistration: input.registration || '',
+    cataProcedure: 'clear',
+    cataWeightUnit: weightUnit,
+    cataWeightRaw: Number(els.weight.value || 0),
+    ...patch
+  };
+  saveCtx(merged);
+}
+
+function restoreInputsFromContext() {
+  const ctx = loadCtx();
+  if (ctx.adcBase) els.base.value = ctx.adcBase;
+  selectDepartureOption(els.departure, ctx.adcDepartureToken || ctx.adcDepartureEnd || '', ctx.adcDepartureEnd || '');
+  if (ctx.cataAircraftSet) els.aircraftSet.value = ctx.cataAircraftSet;
+  if (ctx.cataConfiguration) els.config.value = ctx.cataConfiguration;
+  if (ctx.aircraftRegistration && els.registration) els.registration.value = ctx.aircraftRegistration;
+  if (ctx.qnh != null && els.qnh) els.qnh.value = String(ctx.qnh);
+  if (ctx.oatC != null) els.oat.value = String(ctx.oatC);
+  if (ctx.cataWeightUnit) setWeightUnit(ctx.cataWeightUnit, false);
+  if (ctx.cataWeightRaw != null) {
+    els.weight.value = String(ctx.cataWeightRaw);
+  } else if (ctx.weightKg != null) {
+    els.weight.value = String(weightFromKg(ctx.weightKg, weightUnit));
+  }
+  if (ctx.windDirMag != null && els.windDir) els.windDir.value = String(ctx.windDirMag);
+  if (ctx.windSpeedKt != null && els.windSpeed) els.windSpeed.value = String(ctx.windSpeedKt);
+  if (ctx.cataVizMode) els.visualSelect.value = ctx.cataVizMode;
+  updateCalcDisplay();
+}
+
+async function runWAT(input) {
+  const doc = await waitForIframe(watFrame, ['procedure', 'configuration', 'pressureAltitude', 'oat', 'actualWeight', 'headwind', 'runBtn', 'maxWeight', 'margin']);
+  setRadio(doc, 'aircraftSet', input.aircraftSet || '6800');
+  setField(doc, 'procedure', 'clear');
+  setField(doc, 'configuration', input.configuration);
+  await waitForFieldValue(doc, 'procedure', 'clear');
+  await waitForFieldValue(doc, 'configuration', input.configuration);
+  setField(doc, 'headwind', input.headwindKt);
+  setField(doc, 'pressureAltitude', input.pressureAltitudeFt);
+  setField(doc, 'oat', input.oatC);
+  setField(doc, 'actualWeight', input.weightKg);
+  await waitForFieldValue(doc, 'pressureAltitude', input.pressureAltitudeFt);
+  await waitForFieldValue(doc, 'oat', input.oatC);
+  await waitForFieldValue(doc, 'actualWeight', input.weightKg);
+  await waitForFieldValue(doc, 'headwind', input.headwindKt);
+  await nextFrame(1);
+  try { await doc.defaultView?.runCalculation?.(); } catch { clickField(doc, 'runBtn'); }
+
+  const maxText = await waitForTruthy(() => {
+    const t = text(doc, 'maxWeight');
+    const summary = text(doc, 'statusText');
+    const pending = /recalculando|aguardando|loading|carregando/i.test(summary);
+    return t && t !== '—' && !pending ? t : null;
+  }, 7000);
+  const marginText = text(doc, 'margin');
+  const summary = text(doc, 'statusText');
+  const result = {
+    maxText: maxText || text(doc, 'maxWeight'),
+    marginText,
+    maxWeightKg: numberFromText(maxText || text(doc, 'maxWeight')),
+    marginKg: numberFromText(marginText),
+    summary
+  };
+  pushSharedContext(input, { watMaxWeightKg: result.maxWeightKg, watMarginKg: result.marginKg });
+  return result;
+}
+
+async function runRTO(input) {
+  const doc = await waitForIframe(rtoFrame, ['configuration', 'pressureAltitude', 'oat', 'actualWeight', 'headwind', 'runBtn', 'finalMetric']);
+  const metricEl = doc.getElementById('finalMetric');
+  const metricFtEl = doc.getElementById('finalMetricFt');
+  const statusDetailEl = doc.getElementById('statusDetail');
+  const statusTextEl = doc.getElementById('statusText');
+  const previousMetric = text(doc, 'finalMetric');
+  if (metricEl) metricEl.textContent = '—';
+  if (metricFtEl) metricFtEl.textContent = '—';
+  if (statusDetailEl) statusDetailEl.textContent = 'Recalculando…';
+  if (statusTextEl) statusTextEl.textContent = 'Aguardando nova leitura.';
+
+  const mappedConfig = mapRtoConfig(input.configuration);
+  setField(doc, 'configuration', mappedConfig);
+  await waitForFieldValue(doc, 'configuration', mappedConfig, 3500);
+  try {
+    await doc.defaultView?.ensureEffectiveProfileLoaded?.({ preserveInputs: true, autoRun: false });
+  } catch {}
+  await waitForNoPendingRto(doc, 2500);
+  try { await doc.defaultView?.clearResultsOnly?.(); } catch {}
+
+  setField(doc, 'weightUnit', 'kg');
+  setField(doc, 'headwind', input.headwindKt);
+  setField(doc, 'pressureAltitude', input.pressureAltitudeFt);
+  setField(doc, 'oat', input.oatC);
+  setField(doc, 'actualWeight', input.weightKg);
+
+  await waitForFieldValue(doc, 'pressureAltitude', input.pressureAltitudeFt);
+  await waitForFieldValue(doc, 'oat', input.oatC);
+  await waitForFieldValue(doc, 'actualWeight', input.weightKg);
+  await waitForFieldValue(doc, 'headwind', input.headwindKt);
+  await nextFrame(1);
+
+  try { await doc.defaultView?.refreshWeightSensitiveProfileIfNeeded?.(); } catch {}
+  try { await doc.defaultView?.ensureEffectiveProfileLoaded?.({ preserveInputs: true, autoRun: false }); } catch {}
+  await waitForNoPendingRto(doc, 2500);
+
+  try {
+    await doc.defaultView?.runCalculation?.();
+  } catch {
+    clickField(doc, 'runBtn');
+  }
+
+  let metricText = await waitForTruthy(() => {
+    const t = text(doc, 'finalMetric');
+    const pending = /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusDetail')) || /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusText'));
+    return /\d/.test(t) && t !== '—' && !pending && (t !== previousMetric || previousMetric === '—') ? t : null;
+  }, 8000);
+
+  if (!metricText) {
+    try { await doc.defaultView?.runCalculation?.(); } catch { clickField(doc, 'runBtn'); }
+    metricText = await waitForTruthy(() => {
+      const t = text(doc, 'finalMetric');
+      const pending = /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusDetail')) || /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusText'));
+      return /\d/.test(t) && t !== '—' && !pending ? t : null;
+    }, 6000);
+  }
+
+  metricText = metricText || text(doc, 'finalMetric');
+  const summary = text(doc, 'statusDetail') || text(doc, 'statusText');
+  const result = {
+    metricText,
+    rtoMeters: numberFromText(metricText),
+    summary
+  };
+  pushSharedContext(input, { rtoMeters: result.rtoMeters });
+  return result;
+}
+
+async function runADC(input, rtoResult) {
+  const doc = await waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect', 'rtoInput', 'analyzeBtn', 'decisionTable']);
+  const bridge = adcFrame.contentWindow?.__adcBridge;
+  if (bridge?.analyzeFromBridge) {
+    const payload = await bridge.analyzeFromBridge({
+      baseId: input.base,
+      runwayId: input.runwayId || undefined,
+      departureEnd: input.departureEnd,
+      departureToken: input.departureToken || undefined,
+      rto: rtoResult?.rtoMeters ?? 0,
+    });
+    adcPreviewState.payload = payload;
+    const rows = (payload?.analysis?.rows || []).map(row => ({
+      id: row.id || '',
+      point: row.name,
+      rtoOk: row.rtoOk ? 'OK' : 'NO',
+      decision: row.go ? 'PODE' : 'NO GO',
+      go: !!row.go,
+      availableAsda: Number(row.availableAsda || 0),
+      availableMeters: Number(row.availableAsda || 0)
+    }));
+    const fullRow = rows.find(row => row.id === 'FULL') || rows[0] || null;
+    return {
+      gateText: fullRow ? `${Math.round(fullRow.availableAsda)} m` : '—',
+      fullText: fullRow ? `${Math.round(fullRow.availableAsda)} m` : '—',
+      rows,
+      basisMetric: payload?.analysis?.basisMetric || payload?.analysis?.meta?.basisMetric || 'ASDA',
+      primaryPoint: payload?.analysis?.meta?.startLabel || fullRow?.point || input?.departureEnd || '',
+      payload
+    };
+  }
+
+  const table = doc.getElementById('decisionTable');
+  if (table) table.innerHTML = '';
+  setField(doc, 'baseSelect', input.base);
+  await sleep(120);
+  setField(doc, 'departureEndSelect', input.departureEnd);
+  if (rtoResult?.rtoMeters != null) setField(doc, 'rtoInput', rtoResult.rtoMeters);
+  await sleep(60);
+  try { doc.defaultView?.analyze?.(); } catch { clickField(doc, 'analyzeBtn'); }
+  await waitForTruthy(() => doc.querySelectorAll('#decisionTable tr').length > 0, 4500);
+
+  const rows = [...doc.querySelectorAll('#decisionTable tr')].map(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length < 3) return null;
+    const point = tds[0].textContent.trim();
+    const asdaText = (tds[1]?.textContent || '').trim();
+    const rtoOkText = (tds[tds.length - 1]?.textContent || '').trim();
+    const go = /^OK$/i.test(rtoOkText);
+    const availableAsda = numberFromText(asdaText) || 0;
+    return { id: /^(full|pista|full length|pav|thr)/i.test(point) ? 'FULL' : point, point, rtoOk: rtoOkText, decision: go ? 'PODE' : 'NO GO', go, availableAsda, availableMeters: availableAsda };
+  }).filter(Boolean);
+
+  const fullRow = rows.find(row => row.id === 'FULL') || rows[0] || null;
+  return {
+    gateText: fullRow ? `${Math.round(fullRow.availableAsda)} m` : text(doc, 'gateMetric'),
+    fullText: fullRow ? `${Math.round(fullRow.availableAsda)} m` : text(doc, 'fullLengthMetric'),
+    rows,
+    basisMetric: 'ASDA',
+    primaryPoint: fullRow?.point || input?.departureEnd || ''
+  };
+}
+
+function renderResults(wat, rto, adc) {
+  els.resultCard.classList.remove('pending');
+  const decisionRows = adc?.rows || [];
+  const basisMetric = adc?.basisMetric || 'ASDA';
+  const watOk = wat?.marginKg != null ? wat.marginKg >= 0 : false;
+  const badPoints = decisionRows.filter(row => !row.go && row.id !== 'FULL').map(row => row.point);
+  const fullRunwayRow = decisionRows.find(row => row.id === 'FULL')
+    || decisionRows.find(row => /^(full|pista|full length|pav|thr)/i.test(String(row.point || '').trim()))
+    || decisionRows.reduce((best, row) => {
+      if (row?.availableAsda == null) return best;
+      if (!best || row.availableAsda > best.availableAsda) return row;
+      return best;
+    }, null);
+  const runwayAsdaOk = fullRunwayRow ? fullRunwayRow.go : false;
+  const tailwindNoGo = Number.isFinite(Number(adc?.input?.headwindKt)) && Number(adc?.input?.headwindKt) < 0;
+  const overallOk = watOk && runwayAsdaOk && !tailwindNoGo;
+
+  if (wat?.maxWeightKg != null) {
+    els.watMax.textContent = `${weightFromKg(wat.maxWeightKg, weightUnit)} ${weightUnit}`;
+  } else {
+    els.watMax.textContent = wat?.maxText || '—';
+  }
+  els.rtoMetric.textContent = rto?.metricText || '—';
+
+  if (wat?.marginKg == null) {
+    els.watSummary.textContent = wat?.summary || 'Sem cálculo ainda.';
+    els.watMarginSummary.textContent = '—';
+  } else if (watOk) {
+    const marginDisp = weightFromKg(Math.round(wat.marginKg), weightUnit);
+    els.watSummary.textContent = 'GO — peso dentro do limite WAT.';
+    els.watMarginSummary.textContent = `+${marginDisp} ${weightUnit} de margem`;
+  } else {
+    const marginDisp = weightFromKg(Math.abs(Math.round(wat.marginKg)), weightUnit);
+    els.watSummary.textContent = 'NO GO — item negativo: WAT abaixo do peso requerido.';
+    els.watMarginSummary.textContent = `${marginDisp} ${weightUnit} acima do limite`;
+  }
+
+  if (tailwindNoGo) {
+    els.rtoSummary.textContent = 'NO GO — vento de cauda na cabeceira selecionada. Selecione a cabeceira oposta.';
+  } else if (!decisionRows.length) {
+    els.rtoSummary.textContent = rto?.summary || 'Sem cálculo ainda.';
+  } else if (runwayAsdaOk) {
+    els.rtoSummary.textContent = badPoints.length
+      ? `GO — ${basisMetric} da pista comporta o RTO. Restrição por ponto: ${badPoints.join(', ')}.`
+      : `GO — ${basisMetric} da pista comporta o RTO.`;
+  } else {
+    const refPoint = adc?.primaryPoint || fullRunwayRow?.point || '';
+    const refSuffix = refPoint ? ` (${refPoint})` : '';
+    els.rtoSummary.textContent = `NO GO — item negativo: RTO maior que a ${basisMetric} disponível da pista${refSuffix}.`;
+  }
+
+  els.watBox.classList.remove('ok', 'bad');
+  els.rtoBox.classList.remove('ok', 'bad');
+  if (wat?.marginKg != null) els.watBox.classList.add(watOk ? 'ok' : 'bad');
+  if (decisionRows.length) els.rtoBox.classList.add(runwayAsdaOk ? 'ok' : 'bad');
+
+  els.statusChip.textContent = overallOk ? 'OK para decolagem' : 'NO GO / revisar limites';
+  els.statusChip.className = 'status-chip ' + (overallOk ? 'ok' : 'bad');
+  els.resultCard.classList.remove('result-ok', 'result-bad', 'pending');
+  els.resultCard.classList.add(overallOk ? 'result-ok' : 'result-bad');
+
+  if (!decisionRows.length) {
+    els.decisionBody.innerHTML = '<tr><td colspan="2" class="muted-cell">Sem análise ainda.</td></tr>';
+    return;
+  }
+  els.decisionBody.innerHTML = decisionRows.map(row => `
+    <tr>
+      <td>${row.point}</td>
+      <td class="${row.go ? 'td-ok' : 'td-bad'}">${row.go ? 'OK' : 'NO'}</td>
+    </tr>
+  `).join('');
+}
+
+function saveResultSnapshot(input, wat, rto, adc) {
+  pushSharedContext(input, {
+    cataLastResults: {
+      input,
+      wat: wat || null,
+      rto: rto || null,
+      adc: adc || null,
+      savedAt: new Date().toISOString()
+    }
+  });
+}
+
+function getSavedResultsSnapshot() {
+  return loadCtx()?.cataLastResults || null;
+}
+
+function sameCalcInputsExceptAdc(current, saved = {}) {
+  return [
+    current.aircraftSet === saved.aircraftSet,
+    current.configuration === saved.configuration,
+    Number(current.pressureAltitudeFt || 0) === Number(saved.pressureAltitudeFt || 0),
+    Number(current.oatC || 0) === Number(saved.oatC || 0),
+    Number(current.weightKg || 0) === Number(saved.weightKg || 0),
+    Number(current.headwindKt || 0) === Number(saved.headwindKt || 0)
+  ].every(Boolean);
+}
+
+function invalidateAdcDecisionPanel(reason = 'seleção alterada') {
+  const detail = /base/i.test(reason) ? 'base selecionada' : /cabeceira/i.test(reason) ? 'cabeceira selecionada' : 'seleção atual';
+  els.statusChip.textContent = 'Atualizando decisão';
+  els.statusChip.className = 'status-chip pending';
+  els.resultCard.classList.remove('result-ok', 'result-bad');
+  els.resultCard.classList.add('pending');
+  els.rtoBox.classList.remove('ok', 'bad');
+  els.rtoSummary.textContent = `Atualizando decisão para a ${detail}.`;
+  els.decisionBody.innerHTML = '<tr><td colspan="2" class="muted-cell">Atualizando decisão…</td></tr>';
+}
+
+async function refreshAdcDecisionForSelection(reason = 'seleção alterada') {
+  const seq = ++vizRuntime.adcDecisionSeq;
+  const isBaseChange = /base/i.test(String(reason || ''));
+
+  markAdcDirty(reason);
+  invalidateAdcDecisionPanel(reason);
+  pushSharedContext(collectInputs());
+
+  if (isBaseChange) {
+    try {
+      await syncAdcSelection({ renderPreviewIfActive: true });
+    } catch (error) {
+      console.warn('Falha ao sincronizar a ADC após trocar a base.', error);
+    }
+    if (seq !== vizRuntime.adcDecisionSeq) return;
+  }
+
+  const input = collectInputs();
+  const snap = getSavedResultsSnapshot();
+  const canReuse = !!(snap?.wat && snap?.rto && sameCalcInputsExceptAdc(input, snap.input || {}));
+  pushSharedContext(input);
+
+  if (!canReuse) {
+    if (!isBaseChange) syncAdcSelection({ renderPreviewIfActive: true }).catch(console.warn);
+    els.statusChip.textContent = 'Recalcular para atualizar decisão';
+    els.statusChip.className = 'status-chip pending';
+    els.rtoSummary.textContent = 'A decisão depende de novo cálculo com os parâmetros atuais.';
+    els.decisionBody.innerHTML = '<tr><td colspan="2" class="muted-cell">Recalcule para atualizar a tabela de decisão.</td></tr>';
+    return;
+  }
+
+  try {
+    const adc = await runADC(input, snap.rto);
+    if (seq !== vizRuntime.adcDecisionSeq) return;
+    renderResults(snap.wat, snap.rto, adc);
+    saveResultSnapshot(input, snap.wat, snap.rto, adc);
+    clearAdcDirty();
+    clearModeDirty('adc');
+    if ((els.visualSelect.value || '') === 'adc') {
+      const renderSeq = ++vizRuntime.renderSeq;
+      await prepareEmbeddedView('adc');
+      if (seq !== vizRuntime.adcDecisionSeq || renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== 'adc') return;
+      await renderPreview('adc');
+      if (seq !== vizRuntime.adcDecisionSeq || renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== 'adc') return;
+      renderVisualizationMeta('adc');
+    }
+  } catch (error) {
+    console.warn('Falha ao atualizar a decisão ADC após trocar seleção.', error);
+    if (seq !== vizRuntime.adcDecisionSeq) return;
+    syncAdcSelection({ renderPreviewIfActive: true }).catch(console.warn);
+  }
+}
+
+function restoreSavedResults() {
+  const ctx = loadCtx();
+  const snap = ctx?.cataLastResults;
+  if (!snap?.wat || !snap?.rto || !snap?.adc) return false;
+  const current = collectInputs();
+  const saved = snap.input || {};
+  const sameInput = [
+    current.base === saved.base,
+    current.departureEnd === saved.departureEnd,
+    current.runwayId === saved.runwayId,
+    current.aircraftSet === saved.aircraftSet,
+    current.configuration === saved.configuration,
+    Number(current.pressureAltitudeFt || 0) === Number(saved.pressureAltitudeFt || 0),
+    Number(current.oatC || 0) === Number(saved.oatC || 0),
+    Number(current.weightKg || 0) === Number(saved.weightKg || 0),
+    Number(current.headwindKt || 0) === Number(saved.headwindKt || 0)
+  ].every(Boolean);
+  if (!sameInput) return false;
+  adcPreviewState.payload = snap?.adc?.payload || null;
+  renderResults(snap.wat, snap.rto, snap.adc);
+  return true;
+}
+
+function toggleVizFullscreen(force = null) {
+  if (force === false) { closeFullscreenChart(); return; }
+  const activeMode = els.visualSelect.value || document.querySelector('.viewer-tab.active')?.dataset.viz;
+  if (!activeMode) return;
+  openFullscreenChart(activeMode);
+}
+window.toggleCataVizFullscreen = toggleVizFullscreen;
+
+function setSidebarCollapsed(force = null) {
+  const on = force == null ? !document.body.classList.contains('sidebar-collapsed') : !!force;
+  document.body.classList.toggle('sidebar-collapsed', on);
+}
+
+function addFullscreenClick(doc, selector) {
+  const target = doc.querySelector(selector);
+  if (!target || target.dataset.cataFullscreenBound === '1') return;
+  target.dataset.cataFullscreenBound = '1';
+  target.addEventListener('click', () => parent.toggleCataVizFullscreen?.(), { passive: true });
+}
+
+function applyUnifiedChartView(doc, mode) {
+  if (doc.getElementById('cataEmbedStyleUnified')) return;
+
+  if (mode === 'wat') {
+    doc.getElementById('chartPanel')?.classList.remove('hidden');
+    const main = doc.querySelector('main.app-shell');
+    const section = doc.getElementById('chartPanel')?.closest('section');
+    if (!main || !section) return;
+    [...main.children].forEach(el => { el.style.display = el === section ? '' : 'none'; });
+    section.style.padding = '0';
+    section.style.margin = '0';
+    section.style.border = '0';
+    section.style.borderRadius = '0';
+    section.style.background = '#000';
+    const style = doc.createElement('style');
+    style.id = 'cataEmbedStyleUnified';
+    style.textContent = `
+      html,body{height:100%;margin:0;background:#000!important}
+      body{overflow:hidden}
+      main.app-shell{padding:0!important;display:block!important}
+      #chartPanel{display:block!important;padding:0!important;margin:0!important}
+      .card-title-row,.toolbar-row,.legend,#chartHint,#chartReference,.hero,.topbar,.form-card,.status,.interp-box,#interpSection,.top-embed-bar,.back-chip,.home-chip{display:none!important}
+      .chart-stage{margin:0!important;display:block!important;overflow:hidden!important;background:#000!important;border-radius:0!important;padding:0!important;height:auto!important;min-height:0!important}
+      #chartBaseImage{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important}
+      #chartCanvas{width:100%!important;height:auto!important;display:block!important}
+    `;
+    doc.head.appendChild(style);
+    addFullscreenClick(doc, '.chart-stage');
+    return;
+  }
+
+  if (mode === 'rto') {
+    doc.getElementById('chartPanel')?.classList.remove('hidden');
+    const main = doc.querySelector('main.app-shell');
+    const section = doc.getElementById('chartPanel')?.closest('section');
+    if (!main || !section) return;
+    [...main.children].forEach(el => { el.style.display = el === section || el.id === 'chartFullscreen' ? '' : 'none'; });
+    section.style.padding = '0';
+    section.style.margin = '0';
+    section.style.border = '0';
+    section.style.borderRadius = '0';
+    section.style.background = '#000';
+    const style = doc.createElement('style');
+    style.id = 'cataEmbedStyleUnified';
+    style.textContent = `
+      html,body{height:100%;margin:0;background:#000!important}
+      body{overflow:hidden}
+      main.app-shell{padding:0!important;display:block!important}
+      #chartPanel{display:block!important;padding:0!important;margin:0!important}
+      .card-title-row,.toolbar-row,.legend,#chartHint,#chartReference,.hero,.topbar,.form-card,.status,.compact,#interpSection,.pill,.top-embed-bar,.back-chip,.home-chip{display:none!important}
+      .chart-stage{margin:0!important;display:block!important;overflow:hidden!important;background:#000!important;border-radius:0!important;cursor:zoom-in;padding:0!important;height:auto!important;min-height:0!important}
+      #chartCanvas{width:100%!important;height:auto!important;max-width:100%!important;display:block!important}
+    `;
+    doc.head.appendChild(style);
+    addFullscreenClick(doc, '.chart-stage');
+    return;
+  }
+
+  if (mode === 'adc') {
+    const style = doc.createElement('style');
+    style.id = 'cataEmbedStyleUnified';
+    style.textContent = `
+      html,body{margin:0;background:#000!important;height:auto!important;min-height:0!important}
+      body{overflow:hidden}
+      .shell{padding:0!important;gap:0!important;display:block!important;grid-template-columns:1fr!important;min-height:0!important;height:auto!important}
+      .left{display:none!important}
+      .right{display:block!important;border:0!important;border-radius:0!important;box-shadow:none!important;min-height:0!important;height:auto!important;background:#000!important}
+      .viz-head,.legend,.capture-banner,.topbar,.top-embed-bar,.back-chip,.home-chip{display:none!important}
+      .viz-wrap{background:#000!important;cursor:zoom-in;display:block!important;overflow:hidden!important;height:auto!important;min-height:0!important;line-height:0!important;flex:none!important}
+      #vizCanvas{width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;background:#000!important;display:block!important;vertical-align:top}
+      .right,.shell{height:auto!important;min-height:0!important;align-items:flex-start!important}
+      .chart-close{display:none!important}
+    `;
+    doc.head.appendChild(style);
+    addFullscreenClick(doc, '#vizWrap');
+  }
+}
+
+async function refreshEmbeddedSizing(mode, doc = null) {
+  const frame = frameMap[mode];
+  if (!frame) return;
+  try {
+    const targetDoc = doc || frame.contentDocument || frame.contentWindow?.document;
+    const win = frame.contentWindow || targetDoc?.defaultView;
+    if (mode === 'adc') {
+      const viewerRect = els.viewerPane?.getBoundingClientRect?.();
+      const stageWidth = Math.max(360, Math.round((viewerRect?.width || 0) - 2) || 390);
+      frame.style.width = `${stageWidth}px`;
+      if (!frame.style.height) frame.style.height = '1800px';
+      frame.style.visibility = 'visible';
+      frame.style.opacity = '0';
+      await nextFrame(1);
+      try { win?.resizeCanvas?.(); } catch {}
+      try { win?.draw?.(); } catch {}
+      await nextFrame(1);
+      resizeActiveFrame(mode);
+      try { win?.resizeCanvas?.(); } catch {}
+      try { win?.draw?.(); } catch {}
+      return;
+    }
+    try { win?.dispatchEvent?.(new Event('resize')); } catch {}
+    await nextFrame(1);
+    resizeActiveFrame(mode);
+  } catch (error) {
+    console.warn('Falha ao reajustar visualização', mode, error);
+  }
+}
+
+async function prepareEmbeddedView(mode) {
+  try {
+    const doc = await waitForIframe(frameMap[mode]);
+    applyUnifiedChartView(doc, mode);
+    await refreshEmbeddedSizing(mode, doc);
+    return doc;
+  } catch (error) {
+    console.warn('Falha ao preparar visualização', mode, error);
+    return null;
+  }
+}
+
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;' }[ch]));
+}
+
+function parseReferenceHtml(html) {
+  if (!html) return [];
+  const lines = String(html).split(/<br\s*\/?>(?:\s*)/i).map(line => line.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()).filter(Boolean);
+  return lines.map(line => {
+    const idx = line.indexOf(':');
+    if (idx > -1) return { label: line.slice(0, idx).trim(), value: line.slice(idx + 1).trim() };
+    return { label: 'Info', value: line.trim() };
+  });
+}
+
+function getLegendForMode(mode) {
+  if (mode === 'wat') return [
+    { color: '#ffffff', label: 'Max weight interpolado' },
+    { color: '#52a8ff', label: 'Peso atual' },
+    { color: '#62FF9C', label: 'Dentro' },
+    { color: '#FF4040', label: 'Fora' },
+  ];
+  if (mode === 'rto') return [
+    { color: '#f3b447', label: 'PA / curvas OAT usadas' },
+    { color: '#3dd9ff', label: 'Transferência' },
+    { color: '#62FF9C', label: 'Curvas de peso usadas' },
+    { color: '#ff66cc', label: 'Correction / Reference line' },
+  ];
+  if (mode === 'adc') return [
+    { color: '#7CFC00', label: 'OK / disponível' },
+    { color: '#ef4444', label: 'Não OK' },
+    { color: '#f59e0b', label: 'Gate operacional' },
+  ];
+  return [];
+}
+
+function getVisualizationMeta(mode) {
+  if (!mode) return { legend: [], facts: [] };
+  if (mode === 'adc') {
+    const baseText = els.base.options[els.base.selectedIndex]?.text || els.base.value || '—';
+    const depText = els.departure.options[els.departure.selectedIndex]?.text || els.departure.value || '—';
+    return {
+      legend: getLegendForMode('adc'),
+      facts: [
+        { label: 'Gráfico', value: 'ADC' },
+        { label: 'Página', value: 'Page 1' },
+        { label: 'Base', value: baseText },
+        { label: 'Cabeceira', value: depText },
+      ]
+    };
+  }
+
+  const frame = frameMap[mode];
+  const doc = frame?.contentDocument;
+  const refHtml = doc?.getElementById('chartReference')?.innerHTML || '';
+  const facts = parseReferenceHtml(refHtml);
+  return {
+    legend: getLegendForMode(mode),
+    facts
+  };
+}
+
+function renderVisualizationMeta(mode) {
+  const meta = getVisualizationMeta(mode);
+  if (!mode) {
+    els.viewerMeta.hidden = true;
+    els.vizLegend.innerHTML = '';
+    els.vizFacts.innerHTML = '';
+    return;
+  }
+  els.viewerMeta.hidden = false;
+  els.vizLegend.innerHTML = (meta.legend || []).map(item => `
+    <span class="viz-legend-item"><span class="viz-swatch" style="background:${escapeHtml(item.color)}"></span>${escapeHtml(item.label)}</span>
+  `).join('');
+  els.vizFacts.innerHTML = (meta.facts || []).map(item => `
+    <div class="viz-fact">
+      <span class="viz-fact-label">${escapeHtml(item.label)}</span>
+      <span class="viz-fact-value">${escapeHtml(item.value)}</span>
+    </div>
+  `).join('');
+}
+
+
+function getModeContentHeight(doc, mode) {
+  if (!doc) return 0;
+  const byRect = (el) => el ? Math.ceil(el.getBoundingClientRect().height) : 0;
+  if (mode === 'adc') {
+    return Math.ceil(doc.defaultView?.__cataEmbedContentHeight || 0) || byRect(doc.getElementById('vizCanvas')) || byRect(doc.getElementById('vizWrap'));
+  }
+  if (mode === 'wat') {
+    return Math.max(byRect(doc.getElementById('chartBaseImage')), byRect(doc.getElementById('chartCanvas')), 0);
+  }
+  if (mode === 'rto') {
+    return byRect(doc.getElementById('chartCanvas')) || byRect(doc.getElementById('chartStage'));
+  }
+  const body = doc.body;
+  const html = doc.documentElement;
+  return Math.max(body?.scrollHeight || 0, body?.offsetHeight || 0, html?.scrollHeight || 0, html?.offsetHeight || 0);
+}
+
+
+function getSourceCanvas(mode) {
+  try {
+    if (mode === 'adc') return adcFrame.contentDocument?.getElementById('vizCanvas') || null;
+    if (mode === 'wat') return watFrame.contentDocument?.getElementById('chartCanvas') || null;
+    if (mode === 'rto') return rtoFrame.contentDocument?.getElementById('chartCanvas') || null;
+  } catch {}
+  return null;
+}
+
+function getCanvasCrop(source, mode = '') {
+  if (!source) return null;
+  try {
+    if (mode === 'adc') {
+      const rect = adcFrame.contentWindow?.__cataEmbedSourceRect;
+      if (rect && rect.w > 0 && rect.h > 0) return rect;
+    }
+  } catch {}
+  const tmp = document.createElement('canvas');
+  tmp.width = source.width;
+  tmp.height = source.height;
+  const tctx = tmp.getContext('2d', { willReadFrequently: true });
+  tctx.drawImage(source, 0, 0);
+  const data = tctx.getImageData(0, 0, tmp.width, tmp.height).data;
+  let minX = tmp.width, minY = tmp.height, maxX = -1, maxY = -1;
+  for (let y = 0; y < tmp.height; y++) {
+    for (let x = 0; x < tmp.width; x++) {
+      const i = (y * tmp.width + x) * 4;
+      const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+      if (a < 8) continue;
+      const isDarkBg = (r < 20 && g < 30 && b < 45);
+      if (isDarkBg) continue;
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < 0 || maxY < 0) return { x: 0, y: 0, w: tmp.width, h: tmp.height };
+  const pad = 12;
+  minX = Math.max(0, minX - pad);
+  minY = Math.max(0, minY - pad);
+  maxX = Math.min(tmp.width - 1, maxX + pad);
+  maxY = Math.min(tmp.height - 1, maxY + pad);
+  return { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 };
+}
+
+function syncViewerStageHeight(px = null) {
+  if (!els.vizWrap) return;
+  if (px == null) {
+    els.vizWrap.style.height = '';
+    els.vizWrap.style.minHeight = '';
+    return;
+  }
+  const h = Math.max(120, Math.round(px));
+  els.vizWrap.style.height = `${h}px`;
+  els.vizWrap.style.minHeight = `${h}px`;
+}
+
+async function renderPreview(mode) {
+  const out = els.vizPreviewCanvas;
+
+  const stageWidth = Math.max(320, els.viewerPane.getBoundingClientRect().width - 2);
+  if (mode === 'adc') {
+    await refreshEmbeddedSizing(mode);
+    const expectedSrc = adcPreviewState.payload?.chart?.src ? resolveFrameAssetSrc(adcFrame, adcPreviewState.payload.chart.src) : '';
+    const expectedKey = chartKey(expectedSrc);
+
+    let source = getSourceCanvas('adc');
+    let sourceReady = !!source && source.width > 48 && source.height > 48;
+    let renderInfo = adcFrame.contentWindow?.__adcBridge?.getRenderInfo ? adcFrame.contentWindow.__adcBridge.getRenderInfo() : null;
+    let loadedKey = renderInfo?.loadedKey || '';
+    let sourceMatchesExpected = !expectedKey || loadedKey === expectedKey;
+
+    if ((!sourceReady || !sourceMatchesExpected) && expectedSrc) {
+      const expectedInfo = await waitForAdcChartMatch(expectedSrc, 3200);
+      source = getSourceCanvas('adc');
+      sourceReady = !!source && source.width > 48 && source.height > 48;
+      renderInfo = adcFrame.contentWindow?.__adcBridge?.getRenderInfo ? adcFrame.contentWindow.__adcBridge.getRenderInfo() : null;
+      loadedKey = renderInfo?.loadedKey || expectedInfo?.loadedKey || '';
+      sourceMatchesExpected = !expectedKey || loadedKey === expectedKey;
+    }
+
+    if (sourceReady) {
+      const crop = getCanvasCrop(source, 'adc');
+      const scale = stageWidth / crop.w;
+      const displayHeight = Math.round(crop.h * scale);
+      out.width = crop.w;
+      out.height = crop.h;
+      out.style.width = stageWidth + 'px';
+      out.style.height = displayHeight + 'px';
+      const ctx = out.getContext('2d');
+      ctx.clearRect(0, 0, out.width, out.height);
+      ctx.drawImage(source, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
+      out.hidden = false;
+      out.dataset.mode = mode;
+      if (els.vizPlaceholder) els.vizPlaceholder.hidden = true;
+      restoreViewerPlaceholder();
+      syncViewerStageHeight(displayHeight);
+      return true;
+    }
+
+    out.hidden = true;
+    if (els.vizPlaceholder) els.vizPlaceholder.hidden = false;
+    syncViewerStageHeight(null);
+    return false;
+  }
+
+  const source = getSourceCanvas(mode);
+  const sourceReady = !!source && source.width > 48 && source.height > 48;
+  if (sourceReady) {
+    const crop = getCanvasCrop(source, mode);
+    const scale = stageWidth / crop.w;
+    const displayHeight = Math.round(crop.h * scale);
+    out.width = crop.w;
+    out.height = crop.h;
+    out.style.width = stageWidth + 'px';
+    out.style.height = displayHeight + 'px';
+    const ctx = out.getContext('2d');
+    ctx.clearRect(0, 0, out.width, out.height);
+    ctx.drawImage(source, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
+    out.hidden = false;
+    out.dataset.mode = mode;
+    if (els.vizPlaceholder) els.vizPlaceholder.hidden = true;
+    restoreViewerPlaceholder();
+    syncViewerStageHeight(displayHeight);
+    return true;
+  }
+
+  out.hidden = true;
+  if (els.vizPlaceholder) els.vizPlaceholder.hidden = false;
+  syncViewerStageHeight(null);
+  return false;
+}
+
+function resizeActiveFrame(mode) {
+  const frame = frameMap[mode];
+  if (!frame) return;
+  try {
+    const doc = frame.contentDocument || frame.contentWindow?.document;
+    if (!doc) return;
+    const h = getModeContentHeight(doc, mode);
+    if (h > 0) frame.style.height = `${h}px`;
+  } catch (error) {
+    console.warn('Falha ao ajustar altura do frame', mode, error);
+  }
+}
+
+function clearVisualization() {
+  Object.values(frameMap).forEach(frame => frame.classList.remove('active'));
+  document.querySelectorAll('.viewer-tab').forEach(btn => btn.classList.remove('active'));
+  els.viewerPane.classList.add('is-empty');
+  restoreViewerPlaceholder();
+  els.vizPlaceholder.hidden = false;
+  els.vizPreviewCanvas.hidden = true;
+  syncViewerStageHeight(null);
+  adcPreviewState.payload = null;
+  els.vizSubtitle.textContent = mapVizLabel('');
+  els.visualSelect.value = '';
+  saveCtx({ cataVizMode: '' });
+  renderVisualizationMeta('');
+}
+
+const fullscreenEls = {
+  overlay: document.getElementById('chartFullscreenOverlay'),
+  viewport: document.getElementById('chartFullscreenViewport'),
+  canvas: document.getElementById('chartFullscreenCanvas'),
+  close: document.getElementById('chartFullscreenClose'),
+};
+const fullscreenState = { active: false, scale: 1, minScale: 1, maxScale: 4, x: 0, y: 0, startX: 0, startY: 0, dragging: false, moved: false };
+
+
+function drawFullscreenSource(mode) {
+  const out = fullscreenEls.canvas;
+  const ctx = out.getContext('2d');
+
+  const preview = els.vizPreviewCanvas;
+  if (preview && !preview.hidden && preview.width > 1 && preview.height > 1 && (preview.dataset.mode || els.visualSelect.value) === mode) {
+    out.width = preview.width;
+    out.height = preview.height;
+    ctx.clearRect(0, 0, out.width, out.height);
+    ctx.drawImage(preview, 0, 0, preview.width, preview.height, 0, 0, preview.width, preview.height);
+    return true;
+  }
+
+  const source = getSourceCanvas(mode);
+  if (!source) return false;
+  const crop = getCanvasCrop(source, mode);
+  out.width = crop.w;
+  out.height = crop.h;
+  ctx.clearRect(0,0,out.width,out.height);
+  ctx.drawImage(source, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
+  return true;
+}
+
+
+function clampFullscreenPan() {
+  const vp = fullscreenEls.viewport;
+  const c = fullscreenEls.canvas;
+  const scaledW = c.width * fullscreenState.scale;
+  const scaledH = c.height * fullscreenState.scale;
+  const minX = Math.min(0, vp.clientWidth - scaledW);
+  const minY = Math.min(0, vp.clientHeight - scaledH);
+  const maxX = Math.max(0, vp.clientWidth - scaledW);
+  const maxY = Math.max(0, vp.clientHeight - scaledH);
+  if (scaledW <= vp.clientWidth) {
+    fullscreenState.x = (vp.clientWidth - scaledW) / 2;
+  } else {
+    fullscreenState.x = Math.min(maxX, Math.max(minX, fullscreenState.x));
+  }
+  if (scaledH <= vp.clientHeight) {
+    fullscreenState.y = (vp.clientHeight - scaledH) / 2;
+  } else {
+    fullscreenState.y = Math.min(maxY, Math.max(minY, fullscreenState.y));
+  }
+}
+
+function applyFullscreenTransform() {
+  clampFullscreenPan();
+  fullscreenEls.canvas.style.transform = `translate(${fullscreenState.x}px, ${fullscreenState.y}px) scale(${fullscreenState.scale})`;
+}
+
+function fitFullscreenCanvas() {
+  const vp = fullscreenEls.viewport;
+  const c = fullscreenEls.canvas;
+  const scale = Math.min(vp.clientWidth / c.width, vp.clientHeight / c.height);
+  fullscreenState.scale = scale;
+  fullscreenState.minScale = scale;
+  fullscreenState.maxScale = Math.max(4, scale * 4);
+  fullscreenState.x = (vp.clientWidth - c.width * scale) / 2;
+  fullscreenState.y = (vp.clientHeight - c.height * scale) / 2;
+  applyFullscreenTransform();
+}
+
+function zoomFullscreen(nextScale, cx = null, cy = null) {
+  const vp = fullscreenEls.viewport;
+  const prevScale = fullscreenState.scale;
+  const clamped = Math.max(fullscreenState.minScale, Math.min(fullscreenState.maxScale, nextScale));
+  if (Math.abs(clamped - prevScale) < 0.001) return;
+  if (cx == null) cx = vp.clientWidth / 2;
+  if (cy == null) cy = vp.clientHeight / 2;
+  const worldX = (cx - fullscreenState.x) / prevScale;
+  const worldY = (cy - fullscreenState.y) / prevScale;
+  fullscreenState.scale = clamped;
+  fullscreenState.x = cx - worldX * clamped;
+  fullscreenState.y = cy - worldY * clamped;
+  applyFullscreenTransform();
+}
+
+function closeFullscreenChart() {
+  fullscreenState.active = false;
+  fullscreenState.dragging = false;
+  fullscreenState.moved = false;
+  fullscreenEls.overlay.hidden = true;
+  document.body.classList.remove('fullscreen-body');
+}
+
+function openFullscreenChart(mode) {
+  if (!drawFullscreenSource(mode)) return;
+  fullscreenState.active = true;
+  fullscreenState.moved = false;
+  fullscreenEls.overlay.hidden = false;
+  document.body.classList.add('fullscreen-body');
+  fitFullscreenCanvas();
+}
+
+function buildPdfBlobFromCanvas(canvas) {
+  const jpegData = canvas.toDataURL('image/jpeg', 0.92);
+  const base64 = jpegData.split(',')[1];
+  const imageBytes = atob(base64);
+  const pageWidth = 595.28;
+  const pageHeight = pageWidth * canvas.height / canvas.width;
+  const pdfParts = [];
+  const encoder = new TextEncoder();
+  const push = (s) => pdfParts.push(typeof s === 'string' ? s : s);
+  const offset = () => pdfParts.reduce((n, part) => n + (typeof part === 'string' ? encoder.encode(part).length : part.length), 0);
+  const bin = Uint8Array.from(imageBytes, c => c.charCodeAt(0));
+  push(`%PDF-1.4
+`);
+  const offsets = [];
+  offsets[1] = offset(); push(`1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+`);
+  offsets[2] = offset(); push(`2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+`);
+  offsets[3] = offset(); push(`3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth.toFixed(2)} ${pageHeight.toFixed(2)}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>
+endobj
+`);
+  offsets[4] = offset(); push(`4 0 obj
+<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bin.length} >>
+stream
+`); push(bin); push(`
+endstream
+endobj
+`);
+  const content = `q
+${pageWidth.toFixed(2)} 0 0 ${pageHeight.toFixed(2)} 0 0 cm
+/Im0 Do
+Q
+`;
+  offsets[5] = offset(); push(`5 0 obj
+<< /Length ${encoder.encode(content).length} >>
+stream
+${content}endstream
+endobj
+`);
+  const xrefStart = offset();
+  push(`xref
+0 6
+0000000000 65535 f 
+`);
+  for (let i = 1; i <= 5; i++) push(`${String(offsets[i]).padStart(10, '0')} 00000 n 
+`);
+  push(`trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+${xrefStart}
+%%EOF`);
+  return new Blob(pdfParts, { type: 'application/pdf' });
+}
+
+async function shareOrDownloadPdfBlob(blob, fileName) {
+  const file = new File([blob], fileName, { type: 'application/pdf' });
+  if (navigator.canShare && navigator.share) {
+    try {
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'AW139 Cat A PDF', text: 'PDF do fluxo documentado.' });
+        return;
+      }
+    } catch (err) {
+      if (err?.name === 'AbortError') return;
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isiOS) {
+    const opened = window.open(url, '_blank');
+    if (opened) {
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      return;
+    }
+  }
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+async function shareOrDownloadPdfFromCanvas(canvas, fileName) {
+  const blob = buildPdfBlobFromCanvas(canvas);
+  await shareOrDownloadPdfBlob(blob, fileName);
+}
+
+function updateSharePdfButtonLabel() {
+  if (!els.sharePdfBtn) return;
+  if (navigator.canShare && navigator.share) {
+    try {
+      const probe = new File([new Blob(['x'], { type: 'application/pdf' })], 'x.pdf', { type: 'application/pdf' });
+      if (navigator.canShare({ files: [probe] })) {
+        els.sharePdfBtn.textContent = 'Compartilhar PDF';
+        return;
+      }
+    } catch {}
+  }
+  els.sharePdfBtn.textContent = 'Baixar PDF';
+}
+
+function getModeSnapshotCanvas(mode) {
+  try {
+    const preview = els.vizPreviewCanvas;
+    if (preview && !preview.hidden && preview.width > 16 && preview.height > 16 && (preview.dataset.mode || els.visualSelect.value) === mode) {
+      const tmp = document.createElement('canvas');
+      tmp.width = preview.width;
+      tmp.height = preview.height;
+      tmp.getContext('2d').drawImage(preview, 0, 0);
+      return tmp;
+    }
+    const src = getSourceCanvas(mode);
+    if (!src || src.width <= 16 || src.height <= 16) return null;
+    const crop = getCanvasCrop(src, mode);
+    if (!crop?.w || !crop?.h) return null;
+    const tmp = document.createElement('canvas');
+    tmp.width = crop.w;
+    tmp.height = crop.h;
+    tmp.getContext('2d').drawImage(src, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
+    return tmp;
+  } catch {
+    return null;
+  }
+}
+
+
+function getModePdfCanvas(mode) {
+  try {
+    if (mode === 'wat') {
+      const bridgeCanvas = watFrame.contentWindow?.__cataWatBridge?.getPdfCanvas?.();
+      if (bridgeCanvas && bridgeCanvas.width > 16 && bridgeCanvas.height > 16) {
+        const tmp = document.createElement('canvas');
+        tmp.width = bridgeCanvas.width;
+        tmp.height = bridgeCanvas.height;
+        tmp.getContext('2d').drawImage(bridgeCanvas, 0, 0);
+        return tmp;
+      }
+    }
+    const src = getSourceCanvas(mode);
+    if (src && src.width > 16 && src.height > 16) {
+      const crop = getCanvasCrop(src, mode);
+      if (crop?.w && crop?.h) {
+        const tmp = document.createElement('canvas');
+        tmp.width = crop.w;
+        tmp.height = crop.h;
+        tmp.getContext('2d').drawImage(src, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
+        return tmp;
+      }
+    }
+  } catch {}
+  return getModeSnapshotCanvas(mode);
+}
+
+function buildPdfBlobFromCanvases(canvases) {
+  const valid = (canvases || []).filter(c => c && c.width > 0 && c.height > 0);
+  if (!valid.length) return buildPdfBlobFromCanvas(createCataPdfCanvas());
+  const pageWidth = 595.28;
+  const pageHeight = 841.89;
+  const encoder = new TextEncoder();
+  const pdfParts = [];
+  const push = (s) => pdfParts.push(typeof s === 'string' ? s : s);
+  const offset = () => pdfParts.reduce((n, part) => n + (typeof part === 'string' ? encoder.encode(part).length : part.length), 0);
+  push(`%PDF-1.4
+`);
+  const pageCount = valid.length;
+  const imageObjStart = 3 + pageCount * 2;
+  const contentObjStart = imageObjStart + pageCount;
+  const totalObjs = contentObjStart + pageCount - 1;
+  const offsets = [];
+
+  offsets[1] = offset(); push(`1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+`);
+  const kids = Array.from({ length: pageCount }, (_, i) => `${3 + i} 0 R`).join(' ');
+  offsets[2] = offset(); push(`2 0 obj
+<< /Type /Pages /Kids [${kids}] /Count ${pageCount} >>
+endobj
+`);
+
+  valid.forEach((canvas, idx) => {
+    const pageObj = 3 + idx;
+    const imageObj = imageObjStart + idx;
+    const contentObj = contentObjStart + idx;
+    offsets[pageObj] = offset();
+    push(`${pageObj} 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth.toFixed(2)} ${pageHeight.toFixed(2)}] /Resources << /XObject << /Im0 ${imageObj} 0 R >> >> /Contents ${contentObj} 0 R >>
+endobj
+`);
+  });
+
+  valid.forEach((canvas, idx) => {
+    const jpegData = canvas.toDataURL('image/jpeg', 0.97);
+    const base64 = jpegData.split(',')[1];
+    const imageBytes = atob(base64);
+    const bin = Uint8Array.from(imageBytes, c => c.charCodeAt(0));
+    const imageObj = imageObjStart + idx;
+    offsets[imageObj] = offset();
+    push(`${imageObj} 0 obj
+<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bin.length} >>
+stream
+`);
+    push(bin);
+    push(`
+endstream
+endobj
+`);
+  });
+
+  valid.forEach((canvas, idx) => {
+    const contentObj = contentObjStart + idx;
+    const fitScale = Math.min(pageWidth / canvas.width, pageHeight / canvas.height);
+    const drawW = canvas.width * fitScale;
+    const drawH = canvas.height * fitScale;
+    const x = (pageWidth - drawW) / 2;
+    const y = (pageHeight - drawH) / 2;
+    const content = `q
+${drawW.toFixed(2)} 0 0 ${drawH.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm
+/Im0 Do
+Q
+`;
+    offsets[contentObj] = offset();
+    push(`${contentObj} 0 obj
+<< /Length ${encoder.encode(content).length} >>
+stream
+${content}endstream
+endobj
+`);
+  });
+
+  const xrefStart = offset();
+  push(`xref
+0 ${totalObjs + 1}
+0000000000 65535 f 
+`);
+  for (let i = 1; i <= totalObjs; i++) push(`${String(offsets[i]).padStart(10, '0')} 00000 n 
+`);
+  push(`trailer
+<< /Size ${totalObjs + 1} /Root 1 0 R >>
+startxref
+${xrefStart}
+%%EOF`);
+  return new Blob(pdfParts, { type: 'application/pdf' });
+}
+
+function createCataPdfModulePageCanvas(mode, title, srcCanvas) {
+  const inputs = collectInputs();
+  const width = 1800;
+  const height = 2546;
+  const margin = 72;
+  const headerH = 220;
+  const metaH = 240;
+  const footerH = 80;
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  const roundRect = (x, y, w, h, r = 22) => {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  };
+  const text = (str, x, y, size = 28, color = '#102033', weight = '600', align = 'left') => {
+    ctx.fillStyle = color;
+    ctx.font = `${weight} ${size}px Inter, Arial, sans-serif`;
+    ctx.textAlign = align;
+    ctx.fillText(String(str || ''), x, y);
+  };
+  const drawMeta = (label, value, x, y) => {
+    text(label, x, y, 18, '#6c7b90', '700');
+    text(value || '—', x, y + 30, 28, '#102033', '700');
+  };
+
+  ctx.fillStyle = '#eef3f9';
+  ctx.fillRect(0, 0, width, height);
+  text('AW139 Companion — CAT A Clear Area', margin, margin + 12, 40, '#102033', '800');
+  text(`Exportação do fluxo — ${title}`, margin, margin + 58, 24, '#4e637c', '700');
+  text(new Date().toLocaleString('pt-BR'), width - margin, margin + 58, 20, '#6f7f93', '600', 'right');
+
+  const metaY = margin + 90;
+  ctx.fillStyle = '#ffffff';
+  roundRect(margin, metaY, width - margin * 2, metaH, 28);
+  ctx.fill();
+  ctx.strokeStyle = '#d6deea';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  drawMeta('Base', inputs.base || '—', margin + 28, metaY + 48);
+  drawMeta('Cabeceira', inputs.departureEnd || '—', margin + 330, metaY + 48);
+  drawMeta('PA', `${inputs.pressureAltitudeFt || 0} ft`, margin + 560, metaY + 48);
+  drawMeta('OAT', `${inputs.oatC || 0} °C`, margin + 760, metaY + 48);
+  drawMeta('Peso', weightUnit === 'lbs' ? `${weightFromKg(inputs.weightKg || 0, 'lbs')} lbs` : `${inputs.weightKg || 0} kg`, margin + 980, metaY + 48);
+  drawMeta('Headwind', `${inputs.headwindKt || 0} kt`, margin + 1230, metaY + 48);
+  drawMeta('Configuração', els.config.options[els.config.selectedIndex]?.text || inputs.configuration || '—', margin + 28, metaY + 136);
+  drawMeta('Status', els.statusChip.textContent || '—', margin + 560, metaY + 136);
+  drawMeta('WAT', els.watMax.textContent || '—', margin + 900, metaY + 136);
+  drawMeta('RTO', els.rtoMetric.textContent || '—', margin + 1170, metaY + 136);
+
+  const cardY = metaY + metaH + 28;
+  const cardW = width - margin * 2;
+  const cardH = height - cardY - footerH - margin;
+  ctx.fillStyle = '#ffffff';
+  roundRect(margin, cardY, cardW, cardH, 30);
+  ctx.fill();
+  ctx.strokeStyle = '#d6deea';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  text(title, margin + 28, cardY + 42, 30, '#102033', '800');
+
+  if (srcCanvas && srcCanvas.width > 16 && srcCanvas.height > 16) {
+    const pad = 26;
+    const maxW = cardW - pad * 2;
+    const maxH = cardH - 86;
+    const scale = Math.min(maxW / srcCanvas.width, maxH / srcCanvas.height);
+    const drawW = Math.round(srcCanvas.width * scale);
+    const drawH = Math.round(srcCanvas.height * scale);
+    const drawX = margin + Math.round((cardW - drawW) / 2);
+    const drawY = cardY + 60 + Math.round((maxH - drawH) / 2);
+    ctx.fillStyle = '#0f1a28';
+    roundRect(drawX - 10, drawY - 10, drawW + 20, drawH + 20, 18);
+    ctx.fill();
+    ctx.drawImage(srcCanvas, drawX, drawY, drawW, drawH);
+  } else {
+    text('Carta indisponível para exportação.', margin + 28, cardY + 120, 24, '#6a7a8e', '600');
+  }
+
+  text('PDF em alta resolução por módulo.', margin, height - margin + 6, 18, '#6f7f93', '600');
+  return canvas;
+}
+
+function createCataPdfCanvas() {
+  const inputs = collectInputs();
+  const adcCanvas = getModeSnapshotCanvas('adc');
+  const watCanvas = getModeSnapshotCanvas('wat');
+  const rtoCanvas = getModeSnapshotCanvas('rto');
+
+  const decisionRows = [...els.decisionBody.querySelectorAll('tr')].map(tr => {
+    const cells = [...tr.querySelectorAll('td')].map(td => td.textContent.trim());
+    return cells.length >= 2 ? { point: cells[0], result: cells[1] } : null;
+  }).filter(Boolean);
+
+  const width = 1600;
+  const margin = 48;
+  const gap = 22;
+  const contentW = width - margin * 2;
+  const colGap = 20;
+  const colW = Math.floor((contentW - colGap) / 2);
+  const metaH = 230;
+  const decisionRowH = 40;
+  const decisionH = 88 + Math.max(1, decisionRows.length) * decisionRowH;
+  const cardTitleH = 54;
+  const cardPad = 18;
+
+  const fitSize = (canvas, maxW, maxH) => {
+    if (!canvas || !canvas.width || !canvas.height) return { w: 0, h: 0 };
+    const scale = Math.min(maxW / canvas.width, maxH / canvas.height);
+    return { w: Math.round(canvas.width * scale), h: Math.round(canvas.height * scale) };
+  };
+  const topMaxH = 520;
+  const adcFit = fitSize(adcCanvas, colW - cardPad * 2, topMaxH - cardTitleH - cardPad * 2);
+  const watFit = fitSize(watCanvas, colW - cardPad * 2, topMaxH - cardTitleH - cardPad * 2);
+  const topCardH = Math.max(220, cardTitleH + cardPad * 2 + Math.max(adcFit.h, watFit.h));
+  const rtoMaxH = 520;
+  const rtoFit = fitSize(rtoCanvas, contentW - cardPad * 2, rtoMaxH - cardTitleH - cardPad * 2);
+  const rtoCardH = Math.max(220, cardTitleH + cardPad * 2 + rtoFit.h);
+
+  const height = margin + 74 + gap + metaH + gap + topCardH + gap + rtoCardH + gap + decisionH + margin;
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  const roundRect = (x, y, w, h, r = 22) => {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  };
+  const fillCard = (x, y, w, h) => {
+    ctx.fillStyle = '#ffffff';
+    roundRect(x, y, w, h, 24);
+    ctx.fill();
+    ctx.strokeStyle = '#d6deea';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  };
+  const text = (str, x, y, size = 28, color = '#102033', weight = '600', align = 'left') => {
+    ctx.fillStyle = color;
+    ctx.font = `${weight} ${size}px Inter, Arial, sans-serif`;
+    ctx.textAlign = align;
+    ctx.fillText(String(str || ''), x, y);
+  };
+  const rowText = (label, value, x, y) => {
+    text(label, x, y, 20, '#5f6f84', '600');
+    text(value || '—', x, y + 30, 28, '#102033', '700');
+  };
+  const drawVizCard = (title, srcCanvas, x, y, w, h) => {
+    fillCard(x, y, w, h);
+    text(title, x + 22, y + 36, 28, '#102033', '800');
+    if (!srcCanvas) {
+      text('Sem carta disponível.', x + 22, y + 96, 22, '#6a7a8e', '600');
+      return;
+    }
+    const maxW = w - cardPad * 2;
+    const maxH = h - cardTitleH - cardPad * 2;
+    const fit = fitSize(srcCanvas, maxW, maxH);
+    const drawX = x + Math.round((w - fit.w) / 2);
+    const drawY = y + cardTitleH + cardPad + Math.round((maxH - fit.h) / 2);
+    ctx.fillStyle = '#0f1a28';
+    roundRect(drawX - 8, drawY - 8, fit.w + 16, fit.h + 16, 16);
+    ctx.fill();
+    ctx.drawImage(srcCanvas, drawX, drawY, fit.w, fit.h);
+  };
+
+  ctx.fillStyle = '#eef3f9';
+  ctx.fillRect(0, 0, width, height);
+  text('AW139 Companion — CAT A Clear Area', margin, margin + 10, 36, '#102033', '800');
+  text('Resumo exportado do fluxo composto', margin, margin + 50, 20, '#5f6f84', '600');
+  text(new Date().toLocaleString('pt-BR'), width - margin, margin + 50, 18, '#6f7f93', '600', 'right');
+
+  let y = margin + 74;
+  fillCard(margin, y, contentW, metaH);
+  rowText('Base', inputs.base || '—', margin + 28, y + 42);
+  rowText('Cabeceira', inputs.departureEnd || '—', margin + 350, y + 42);
+  rowText('PA', `${inputs.pressureAltitudeFt || 0} ft`, margin + 700, y + 42);
+  rowText('OAT', `${inputs.oatC || 0} °C`, margin + 980, y + 42);
+  rowText('Configuração', els.config.options[els.config.selectedIndex]?.text || inputs.configuration || '—', margin + 28, y + 118);
+  rowText('Peso', weightUnit === 'lbs' ? `${weightFromKg(inputs.weightKg || 0, 'lbs')} lbs` : `${inputs.weightKg || 0} kg`, margin + 520, y + 118);
+  rowText('Headwind', `${inputs.headwindKt || 0} kt`, margin + 760, y + 118);
+  rowText('Status', els.statusChip.textContent || '—', margin + 28, y + 188);
+  rowText('WAT', els.watMax.textContent || '—', margin + 520, y + 188);
+  rowText('RTO', els.rtoMetric.textContent || '—', margin + 760, y + 188);
+
+  y += metaH + gap;
+  drawVizCard('ADC', adcCanvas, margin, y, colW, topCardH);
+  drawVizCard('WAT', watCanvas, margin + colW + colGap, y, colW, topCardH);
+
+  y += topCardH + gap;
+  drawVizCard('RTO', rtoCanvas, margin, y, contentW, rtoCardH);
+
+  y += rtoCardH + gap;
+  fillCard(margin, y, contentW, decisionH);
+  text('Tabela de decisão', margin + 28, y + 42, 28, '#102033', '800');
+  const col1 = margin + 28;
+  const col2 = width - margin - 110;
+  text('Ponto', col1, y + 82, 20, '#6a7a8e', '700');
+  text('RTO', col2, y + 82, 20, '#6a7a8e', '700', 'right');
+  let rowY = y + 118;
+  if (!decisionRows.length) {
+    text('Sem análise ainda.', col1, rowY, 20, '#6a7a8e', '600');
+  } else {
+    decisionRows.forEach((row, idx) => {
+      if (idx) {
+        ctx.strokeStyle = '#e2e8f1';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(margin + 24, rowY - 24);
+        ctx.lineTo(width - margin - 24, rowY - 24);
+        ctx.stroke();
+      }
+      text(row.point, col1, rowY, 22, '#102033', '700');
+      const ok = /^ok$/i.test(row.result);
+      text(row.result, col2, rowY, 22, ok ? '#1f8f57' : '#b53a3a', '800', 'right');
+      rowY += decisionRowH;
+    });
+  }
+
+  return canvas;
+}
+
+async function exportFlowPdf() {
+  const ctxState = loadCtx();
+  const snap = ctxState?.cataLastResults || null;
+  if (!snap?.wat || !snap?.rto || !snap?.adc) {
+    alert('Rode primeiro um cálculo válido para compartilhar o PDF do fluxo.');
+    return;
+  }
+  const previousMode = els.visualSelect.value || 'adc';
+  showModeLoading(previousMode, 'gerando PDF');
+  try {
+    await Promise.all(['adc', 'wat', 'rto'].map(async (mode) => {
+      try {
+        await prepareEmbeddedView(mode);
+        await nextFrame(2);
+      } catch {}
+    }));
+
+    const adcCanvas = getModePdfCanvas('adc');
+    const watCanvas = getModePdfCanvas('wat');
+    const rtoCanvas = getModePdfCanvas('rto');
+    const pages = [
+      createCataPdfModulePageCanvas('adc', 'ADC', adcCanvas),
+      createCataPdfModulePageCanvas('wat', 'WAT', watCanvas),
+      createCataPdfModulePageCanvas('rto', 'RTO', rtoCanvas),
+    ];
+    const blob = buildPdfBlobFromCanvases(pages);
+    const safeBase = String((collectInputs().base || 'base')).toLowerCase();
+    await shareOrDownloadPdfBlob(blob, `aw139-cata-${safeBase}.pdf`);
+  } finally {
+    setVisualization(previousMode, true);
+  }
+}
+
+function setVisualization(mode, forceShow = true) {
+  const renderSeq = ++vizRuntime.renderSeq;
+  if (!mode) {
+    clearVisualization();
+    return;
+  }
+  if (forceShow) {
+    els.viewerPane.classList.remove('is-empty');
+  }
+  showModeLoading(mode, 'troca de visualização');
+  Object.entries(frameMap).forEach(([key, frame]) => frame.classList.toggle('active', key === mode));
+  document.querySelectorAll('.viewer-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.viz === mode));
+  els.visualSelect.value = mode;
+  saveCtx({ cataVizMode: mode });
+  els.vizSubtitle.textContent = mapVizLabel(mode);
+  renderVisualizationMeta(mode);
+
+  (async () => {
+    if (mode === 'adc' && vizRuntime.adcDirty) {
+      showModeLoading('adc', 'base/cabeceira/cálculo');
+      await syncAdcSelection({ renderPreviewIfActive: false });
+      clearAdcDirty();
+      if (renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== mode) return;
+    }
+
+    if (vizRuntime.modeDirty?.[mode]) {
+      if (mode !== 'adc') return;
+      if (renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== mode) return;
+    }
+
+    await prepareEmbeddedView(mode);
+    if (renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== mode) return;
+    if (vizRuntime.modeDirty?.[mode] && mode !== 'adc') return;
+
+    await nextFrame(1);
+    if (renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== mode) return;
+    if (vizRuntime.modeDirty?.[mode] && mode !== 'adc') return;
+
+    await renderPreview(mode);
+    if (renderSeq !== vizRuntime.renderSeq || (els.visualSelect.value || '') !== mode) return;
+
+    clearModeDirty(mode);
+    renderVisualizationMeta(mode);
+  })().catch(error => {
+    console.warn('Falha ao atualizar visualização', mode, error);
+  });
+}
+
+
+function resetResultsPanel() {
+  els.statusChip.textContent = 'Aguardando cálculo';
+  els.statusChip.className = 'status-chip warn';
+  els.resultCard.classList.remove('result-ok', 'result-bad');
+  els.resultCard.classList.add('pending');
+  els.watMax.textContent = '—';
+  els.watSummary.textContent = 'Sem cálculo ainda.';
+  els.watMarginSummary.textContent = '—';
+  els.watBox.classList.remove('ok', 'bad');
+  els.rtoBox.classList.remove('ok', 'bad');
+  els.rtoMetric.textContent = '—';
+  els.rtoSummary.textContent = 'Sem cálculo ainda.';
+  els.decisionBody.innerHTML = '<tr><td colspan="2" class="muted-cell">Sem análise ainda.</td></tr>';
+}
+
+function resetFlowForm() {
+  clearAllModeDirty();
+  clearAdcDirty();
+  if (els.aircraftSet) els.aircraftSet.value = '7000';
+  if (els.config) els.config.value = 'standard';
+  if (els.registration) els.registration.value = '';
+  if (els.qnh) els.qnh.value = '';
+  if (els.oat) els.oat.value = '';
+  if (els.weight) els.weight.value = '';
+  setMetarInfoLine('METAR: aguardando consulta.');
+  if (els.windDir) els.windDir.value = '';
+  if (els.windSpeed) els.windSpeed.value = '';
+  if (els.calcPaDisplay) els.calcPaDisplay.textContent = '—';
+  if (els.calcHwDisplay) els.calcHwDisplay.textContent = '—';
+  if (els.base?.options?.length) els.base.selectedIndex = 0;
+  if (els.departure?.options?.length) els.departure.selectedIndex = 0;
+  resetResultsPanel();
+  clearVisualization();
+  const input = collectInputs();
+  pushSharedContext(input, { cataLastResults: null, watMaxWeightKg: null, watMarginKg: null, rtoMeters: null, ctoMeters: null });
+  syncAdcSelection({ renderPreviewIfActive: false }).catch(console.warn);
+}
+
+function setupAutoAdvance() {
+  const rules = [
+    { el: els.aircraftSet, next: els.config },
+    { el: els.config, next: els.base },
+    { el: els.base, next: els.departure },
+    { el: els.departure, next: els.qnh },
+    { el: els.qnh, next: els.oat, minDigits: 4, maxDigits: 4 },
+    { el: els.oat, next: els.windDir, minDigits: 2, maxDigits: 2 },
+    { el: els.windDir, next: els.windSpeed, minDigits: 3, maxDigits: 3 },
+    { el: els.windSpeed, next: els.weight, minDigits: 2, maxDigits: 2 },
+    { el: els.weight, next: els.runBtn, minDigits: null, maxDigits: null },
+  ];
+
+  rules.forEach((rule) => {
+    if (!rule.el) return;
+    if (rule.el.tagName === 'SELECT') {
+      rule.el.addEventListener('change', () => {
+        const nextIsSelect = rule.next?.tagName === 'SELECT';
+        const openNextPicker = nextIsSelect && !isIPadLikeDevice();
+        focusNext(rule.next, openNextPicker ? { delay: 120, openPicker: true } : { delay: 80 });
+      });
+      return;
+    }
+
+
+    rule.el.addEventListener('input', () => {
+      const effectiveMax = rule.el === els.weight ? (weightUnit === 'lbs' ? 5 : 4) : rule.maxDigits;
+      const effectiveMin = rule.el === els.weight ? (weightUnit === 'lbs' ? 5 : 4) : rule.minDigits;
+      sanitizeDigitsInput(rule.el, effectiveMax);
+      const digits = digitsOnlyLength(rule.el);
+      if (rule.el === els.oat ? digits === effectiveMin : digits >= effectiveMin) {
+        focusNext(rule.next);
+      }
+    });
+
+    rule.el.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      if (rule.next === els.runBtn) els.runBtn.click();
+      else focusNext(rule.next);
+    });
+  });
+
+  els.oatNegativeBtn?.addEventListener('click', () => toggleSignedInput(els.oat, 2));
+}
+
+async function runFlow() {
+  const input = collectInputs();
+  markCalculationDirty('o cálculo');
+  if (els.visualSelect.value) showModeLoading(els.visualSelect.value, 'recalculando');
+  pushSharedContext(input);
+  els.statusChip.textContent = 'Calculando…';
+  els.statusChip.className = 'status-chip warn';
+  els.resultCard.classList.remove('result-ok', 'result-bad');
+  try {
+    const tailwindNoGo = Number.isFinite(Number(input.headwindKt)) && Number(input.headwindKt) < 0;
+    const wat = await runWAT(input);
+    let rto;
+    let adc;
+
+    if (tailwindNoGo) {
+      rto = {
+        metricText: '—',
+        summary: 'NO GO — vento de cauda na cabeceira selecionada. Selecione a cabeceira oposta.'
+      };
+      adc = { input, rows: [], basisMetric: 'ASDA' };
+    } else {
+      rto = await runRTO(input);
+      adc = await runADC(input, rto);
+    }
+
+    clearAllModeDirty();
+    clearAdcDirty();
+    renderResults(wat, rto, adc);
+    saveResultSnapshot(input, wat, rto, adc);
+    setVisualization(els.visualSelect.value || 'adc');
+  } catch (error) {
+    console.error(error);
+    clearAdcDirty();
+    els.statusChip.textContent = 'Erro na integração';
+    els.statusChip.className = 'status-chip bad';
+    els.resultCard.classList.remove('result-ok');
+    els.resultCard.classList.add('result-bad');
+  }
+}
+
+function saveCurrentInputsForModuleOpen() {
+  const input = collectInputs();
+  pushSharedContext(input);
+  return input;
+}
+
+function bindEvents() {
+  els.runBtn.addEventListener('click', runFlow);
+  els.sharePdfBtn?.addEventListener('click', exportFlowPdf);
+  els.resetBtn?.addEventListener('click', resetFlowForm);
+  els.visualSelect.addEventListener('change', e => setVisualization(e.target.value, !!e.target.value));
+  document.querySelectorAll('.viewer-tab').forEach(btn => btn.addEventListener('click', () => setVisualization(btn.dataset.viz, true)));
+  els.base.addEventListener('change', () => { updateCalcDisplay(); refreshAdcDecisionForSelection('a base').catch(console.warn); });
+  els.departure.addEventListener('change', () => { updateCalcDisplay(); refreshAdcDecisionForSelection('a cabeceira').catch(console.warn); });
+  [els.aircraftSet, els.config, els.qnh, els.oat, els.weight, els.windDir, els.windSpeed].forEach(el => el?.addEventListener('change', () => { markCalculationDirty('parâmetros alterados'); }));
+  els.weightUnitBtn?.addEventListener('click', () => {
+    setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg');
+    markCalculationDirty('unidade de peso alterada');
+  });
+  [els.qnh, els.windDir, els.windSpeed].forEach(el => el?.addEventListener('input', updateCalcDisplay));
+  els.metarBtn?.addEventListener('click', handleMetarFetch);
+  els.openWATBtn?.addEventListener('click', () => {
+    saveCurrentInputsForModuleOpen();
+    location.href = '../wat/?back=1&return=' + encodeURIComponent('../cata/');
+  });
+  els.openRTOBtn?.addEventListener('click', () => {
+    saveCurrentInputsForModuleOpen();
+    location.href = '../rto/?back=1&return=' + encodeURIComponent('../cata/');
+  });
+  els.openADCBtn?.addEventListener('click', () => {
+    saveCurrentInputsForModuleOpen();
+    location.href = '../adc/?back=1&return=' + encodeURIComponent('../cata/');
+  });
+  els.sidebarToggleBtn?.addEventListener('click', () => setSidebarCollapsed());
+  els.vizPreviewCanvas.addEventListener('click', () => { const mode = els.vizPreviewCanvas.dataset.mode || els.visualSelect.value; if (mode) openFullscreenChart(mode); });
+  fullscreenEls.close.addEventListener('click', (event) => {
+    event.stopPropagation();
+    closeFullscreenChart();
+  });
+
+  fullscreenEls.viewport.addEventListener('click', (event) => {
+    if (event.target === fullscreenEls.close) return;
+    if (fullscreenState.scale <= fullscreenState.minScale + 0.01 && !fullscreenState.moved) closeFullscreenChart();
+    fullscreenState.moved = false;
+  });
+  fullscreenEls.viewport.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    const rect = fullscreenEls.viewport.getBoundingClientRect();
+    const cx = event.clientX - rect.left;
+    const cy = event.clientY - rect.top;
+    const factor = event.deltaY < 0 ? 1.15 : 0.87;
+    zoomFullscreen(fullscreenState.scale * factor, cx, cy);
+  }, { passive: false });
+  fullscreenEls.viewport.addEventListener('pointerdown', (event) => {
+    if (fullscreenState.scale <= fullscreenState.minScale + 0.01) {
+      fullscreenState.dragging = false;
+      fullscreenState.moved = false;
+      return;
+    }
+    fullscreenState.dragging = true;
+    fullscreenState.moved = false;
+    fullscreenState.startX = event.clientX - fullscreenState.x;
+    fullscreenState.startY = event.clientY - fullscreenState.y;
+    fullscreenEls.viewport.setPointerCapture?.(event.pointerId);
+  });
+  fullscreenEls.viewport.addEventListener('pointermove', (event) => {
+    if (!fullscreenState.dragging) return;
+    fullscreenState.x = event.clientX - fullscreenState.startX;
+    fullscreenState.y = event.clientY - fullscreenState.startY;
+    fullscreenState.moved = true;
+    applyFullscreenTransform();
+  });
+  const endDrag = (event) => {
+    fullscreenState.dragging = false;
+    if (event?.pointerId != null) fullscreenEls.viewport.releasePointerCapture?.(event.pointerId);
+  };
+  fullscreenEls.viewport.addEventListener('pointerup', endDrag);
+  fullscreenEls.viewport.addEventListener('pointercancel', endDrag);
+  let touchDist = null;
+  let touchScale = null;
+  let touchCenter = null;
+  fullscreenEls.viewport.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 2) {
+      const [a,b] = event.touches;
+      touchDist = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+      touchScale = fullscreenState.scale;
+      const rect = fullscreenEls.viewport.getBoundingClientRect();
+      touchCenter = { x: ((a.clientX+b.clientX)/2)-rect.left, y: ((a.clientY+b.clientY)/2)-rect.top };
+      fullscreenState.moved = true;
+    }
+  }, { passive: true });
+  fullscreenEls.viewport.addEventListener('touchmove', (event) => {
+    if (event.touches.length === 2 && touchDist) {
+      const [a,b] = event.touches;
+      const newDist = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+      zoomFullscreen(touchScale * (newDist / touchDist), touchCenter?.x, touchCenter?.y);
+      fullscreenState.moved = true;
+    }
+  }, { passive: true });
+  fullscreenEls.viewport.addEventListener('touchend', () => { touchDist = null; touchScale = null; touchCenter = null; });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && fullscreenState.active) closeFullscreenChart();
+  });
+  window.addEventListener('resize', () => { if (fullscreenState.active) fitFullscreenCanvas(); });
+}
+
+window.addEventListener('load', async () => {
+  try { const saved = localStorage.getItem('aw139_weight_unit'); if (saved === 'lbs') setWeightUnit('lbs', false); } catch { /* quota */ }
+  bindEvents();
+  setupAutoAdvance();
+  updateSharePdfButtonLabel();
+  clearVisualization();
+  try {
+    await Promise.all([
+      waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']),
+      waitForIframe(watFrame, ['procedure', 'configuration', 'runBtn']),
+      waitForIframe(rtoFrame, ['configuration', 'runBtn'])
+    ]);
+    await populateBaseOptions();
+    restoreInputsFromContext();
+    await syncAdcSelection({ renderPreviewIfActive: false });
+    clearAdcDirty();
+    const hadSavedResults = restoreSavedResults();
+    await Promise.all([prepareEmbeddedView('adc'), prepareEmbeddedView('wat'), prepareEmbeddedView('rto')]);
+    if (els.visualSelect.value) setVisualization(els.visualSelect.value, true);
+    else if (hadSavedResults) setVisualization('adc', true);
+  } catch (error) {
+    console.error('Falha ao inicializar integração', error);
+  }
+});

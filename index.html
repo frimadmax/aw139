@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AW139">
+  <title>AW139 Companion</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shared/pwa.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>AW139 Companion</h1>
+        <p class="subtitle">Dashboard operacional</p>
+      </div>
+      <div class="header-actions" aria-label="Status do sistema">
+        <span class="status-icon connected">●</span>
+      </div>
+    </header>
+
+    <section class="flow-section" aria-labelledby="flowsHeading">
+      <h2 id="flowsHeading" class="section-kicker">Escolha o fluxo</h2>
+      <div class="flow-list">
+        <a class="flow-card flow-primary" href="cata/">
+          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-cata"/></svg></span>
+          <span class="flow-text">
+            <span class="flow-title">Cat A Clear Area</span>
+            <span class="flow-desc">WAT, RTO e decisão de decolagem em um só cálculo</span>
+          </span>
+          <span class="flow-chevron" aria-hidden="true">›</span>
+        </a>
+        <a class="flow-card" href="decolagem-offshore/">
+          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-takeoff"/></svg></span>
+          <span class="flow-text">
+            <span class="flow-title">Decolagem Offshore</span>
+            <span class="flow-desc">WAT offshore e dropdown para decolar da UM</span>
+          </span>
+          <span class="flow-chevron" aria-hidden="true">›</span>
+        </a>
+        <a class="flow-card" href="pouso-offshore/">
+          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-landing"/></svg></span>
+          <span class="flow-text">
+            <span class="flow-title">Pouso Offshore</span>
+            <span class="flow-desc">WAT offshore e dropdown para pousar na UM</span>
+          </span>
+          <span class="flow-chevron" aria-hidden="true">›</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="flow-section" aria-labelledby="toolsHeading">
+      <h2 id="toolsHeading" class="section-kicker">Já tem o RTO?</h2>
+      <div class="flow-list">
+        <a class="flow-card" href="adc/?back=1&amp;return=../index.html">
+          <span class="flow-icon" aria-hidden="true"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-adc"/></svg></span>
+          <span class="flow-text">
+            <span class="flow-title">ADC</span>
+            <span class="flow-desc">Informe o RTO já calculado e confira a ASDA na carta</span>
+          </span>
+          <span class="flow-chevron" aria-hidden="true">›</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="install-panel">
+      <button id="installGuideBtn" class="quick-action" type="button">Instalar app</button>
+      <p id="installStatusText" class="utility-note">Instale pela Safari para abrir em tela cheia no iPhone e iPad.</p>
+    </section>
+  </main>
+
+  <nav class="app-tab-bar" aria-label="Navegação rápida">
+    <a href="#" class="tab-item active" aria-current="page">
+      <span class="tab-icon"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-home"/></svg></span>
+      <span class="tab-label">Home</span>
+    </a>
+    <a href="cata/" class="tab-item">
+      <span class="tab-icon"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-cata"/></svg></span>
+      <span class="tab-label">Cat A</span>
+    </a>
+    <a href="decolagem-offshore/" class="tab-item">
+      <span class="tab-icon"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-takeoff"/></svg></span>
+      <span class="tab-label">Decolagem Offshore</span>
+    </a>
+    <a href="pouso-offshore/" class="tab-item">
+      <span class="tab-icon"><svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-landing"/></svg></span>
+      <span class="tab-label">Pouso Offshore</span>
+    </a>
+  </nav>
+
+  <script src="shared/pwa.js"></script>
+  <script src="shared/home.js"></script>
+</body>
+</html>

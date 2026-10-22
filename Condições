@@ -1,0 +1,94 @@
+          <div class="section-label">Operação</div>
+          <div class="form-grid form-grid-2">
+            <label class="field">
+              <span>Aeronave</span>
+              <select id="aircraftSetSelect">
+                <option value="6800">6800 kg</option>
+                <option value="7000" selected>7000 kg / Sup 90</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Configuration</span>
+              <select id="configurationSelect">
+                <option value="standard" selected>Clean Air Intake</option>
+                <option value="eaps_off">EAPS OFF</option>
+                <option value="eaps_on">EAPS ON</option>
+                <option value="ibf">IBF Installed</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-grid form-grid-2">
+            <label class="field">
+              <span>Base</span>
+              <select id="baseSelect"></select>
+            </label>
+            <label class="field">
+              <span>Cabeceira</span>
+              <select id="departureEndSelect"></select>
+            </label>
+          </div>
+
+          <div class="is-hidden-field" aria-hidden="true">
+            <label class="field is-hidden-field" aria-hidden="true">
+              <span>Visualização</span>
+              <select id="visualSelect">
+                <option value="" selected>Em branco</option>
+                <option value="adc">ADC</option>
+                <option value="wat">WAT</option>
+                <option value="rto">RTO</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="section-label">Condições</div>
+          <div class="form-grid form-grid-2">
+            <label class="field">
+              <span>QNH (hPa)</span>
+              <input id="qnh" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="1013" maxlength="4">
+            </label>
+            <label class="field">
+              <span>OAT (°C)</span>
+              <div class="input-with-toggle">
+                <button id="oatNegativeBtn" type="button" class="sign-toggle" aria-label="Alternar sinal da temperatura">−</button>
+                <input id="oat" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="25" maxlength="3">
+              </div>
+            </label>
+          </div>
+
+          <div class="form-grid form-grid-2">
+            <label class="field">
+              <span>Dir Vento (°M)</span>
+              <input id="windDir" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="360" maxlength="3">
+            </label>
+            <label class="field">
+              <span>Vel Vento (kt)</span>
+              <input id="windSpeed" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="10" maxlength="2">
+            </label>
+          </div>
+
+          <div class="form-grid form-grid-2">
+            <label class="field">
+              <span>Weight</span>
+              <div class="input-with-toggle">
+                <input id="actualWeight" type="text" inputmode="numeric" enterkeyhint="go" autocomplete="off" placeholder="6500">
+                <button id="weightUnitBtn" type="button" class="unit-toggle" aria-label="Alternar unidade de peso">kg</button>
+              </div>
+            </label>
+            <button id="metarBtn" class="ghost-btn metar-btn" type="button">Buscar METAR</button>
+          </div>
+          <div id="metarInfoLine" class="metar-info-line">METAR: aguardando consulta.</div>
+
+
+          <div class="calc-band" id="calcBand">
+            <div class="calc-item">
+              <div class="calc-label">PA Calculada</div>
+              <div class="calc-value" id="calcPaDisplay">—</div>
+            </div>
+            <div class="calc-item">
+              <div class="calc-label">Vento de Frente</div>
+              <div class="calc-value" id="calcHwDisplay">—</div>
+            </div>
+          </div>
+
+          <div class="action-row">
