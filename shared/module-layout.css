@@ -6,7 +6,7 @@
   --aw-safe-left: env(safe-area-inset-left, 0px);
   --aw-radius: 18px;
   --aw-gap: 12px;
-  --aw-panel-bg: rgba(18,25,34,.92);
+  --aw-panel-bg: rgba(13,20,80,.92);
   --aw-panel-line: rgba(255,255,255,.12);
   --aw-panel-shadow: 0 18px 40px rgba(0,0,0,.28);
 }
@@ -70,7 +70,7 @@ body.module-shell-rto #visualCard{
   min-height:0;
   display:flex !important;
   flex-direction:column;
-  background:rgba(18,25,34,.92) !important;
+  background:rgba(13,20,80,.92) !important;
   overflow:hidden;
 }
 body.module-shell-rto #interpSection{display:none !important;}
@@ -115,7 +115,7 @@ body.module-shell-rto .chart-stage{
   min-height:320px;
   border-radius:18px !important;
   overflow:hidden;
-  background:#0f1722 !important;
+  background:#0a0f44 !important;
 }
 body.module-shell-wat #chartBaseImage{
   display:block;
@@ -135,7 +135,7 @@ body.module-shell-wat #chartCanvas{
 body.module-shell-rto #chartCanvas{
   width:100% !important;
   height:100% !important;
-  background:#0b1017 !important;
+  background:#05082a !important;
 }
 body.module-shell-wat .viewer-meta,
 body.module-shell-rto .viewer-meta{
@@ -451,7 +451,7 @@ body.module-shell-wat .viewer-card #chartReference{
   padding:12px 14px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.08);
-  background:#16212d;
+  background:#0d1450;
   color:#dce8f5;
   font-size:12px;
   line-height:1.45;

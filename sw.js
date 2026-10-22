@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v44';
+const CACHE_NAME = 'aw139-companion-root-v45-omni';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -124,6 +124,7 @@ const PRECACHE = [
   "./shared/home.js",
   "./shared/module-bridge.js",
   "./shared/module-layout.css",
+  "./shared/omni-theme.css",
   "./shared/offshore-calc.js",
   "./shared/pwa.css",
   "./shared/pwa.js",

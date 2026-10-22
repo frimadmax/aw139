@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-wat-offline-v4-wat-visual-fix';
+const CACHE_NAME = 'aw139-wat-offline-v5-omni';
 const ASSETS = [
   "./",
   "../assets/icon-180.png",
@@ -10,6 +10,7 @@ const ASSETS = [
   "../offline.html",
   "../shared/module-bridge.js",
   "../shared/module-layout.css",
+  "../shared/omni-theme.css",
   "../shared/pwa.css",
   "../shared/pwa.js",
   "./README.md",

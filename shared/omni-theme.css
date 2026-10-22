@@ -1,0 +1,367 @@
+/* =========================================================
+   OMNI TÁXI AÉREO — tema aeronáutico do AW139 Companion
+   Carregado por último em todas as páginas: sobrescreve cores,
+   tipografia e botões sem mexer na lógica dos módulos.
+   ========================================================= */
+:root{
+  --omni-night:#03051c;
+  --omni-deep:#05082a;
+  --omni-indigo:#1d1a8f;
+  --omni-indigo-2:#2723a0;
+  --omni-royal:#2647a6;
+  --omni-sky:#5bc4f1;
+  --omni-sky-2:#3fb6ef;
+  --omni-magenta:#e6007e;
+  --omni-magenta-2:#ff2a95;
+  --omni-white:#ffffff;
+
+  --omni-surface:rgba(14,21,88,.86);
+  --omni-surface-2:rgba(20,30,112,.9);
+  --omni-line:rgba(91,196,241,.20);
+  --omni-line-strong:rgba(91,196,241,.42);
+  --omni-text:#eef3ff;
+  --omni-muted:#a9b7ea;
+  --omni-glow:0 0 0 1px rgba(91,196,241,.10), 0 18px 44px rgba(1,3,24,.55);
+  --omni-font:"Ubuntu",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+
+  /* variáveis já usadas pelos módulos */
+  --bg:var(--omni-deep);
+  --bg2:#0a0f44;
+  --shell:var(--omni-deep);
+  --shell-2:#0a0f44;
+  --text:var(--omni-text);
+  --muted:var(--omni-muted);
+  --accent:var(--omni-sky-2);
+  --accent-2:#7fd3f7;
+  --blue:var(--omni-sky-2);
+  --magenta:var(--omni-magenta-2);
+  --line:var(--omni-line);
+  --aw-panel-bg:var(--omni-surface);
+  --aw-panel-line:var(--omni-line);
+  --aw-panel-shadow:var(--omni-glow);
+}
+
+/* ---------- fundo: noite índigo + grade HUD + faixas da marca ---------- */
+html body{
+  font-family:var(--omni-font);
+  color:var(--omni-text);
+  background-color:var(--omni-night);
+  background-image:
+    radial-gradient(ellipse 90% 55% at 50% -12%, rgba(63,182,239,.26), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 105% 105%, rgba(230,0,126,.16), transparent 60%),
+    linear-gradient(rgba(91,196,241,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,196,241,.045) 1px, transparent 1px),
+    linear-gradient(180deg, #070b38 0%, var(--omni-deep) 45%, var(--omni-night) 100%);
+  background-size:auto, auto, 32px 32px, 32px 32px, auto;
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+html body::before{
+  /* faixas diagonais da identidade Omni no canto superior */
+  content:"";
+  position:fixed;
+  top:-120px; right:-120px;
+  width:340px; height:340px;
+  border-radius:50%;
+  background:repeating-linear-gradient(135deg, rgba(91,196,241,.16) 0 3px, transparent 3px 14px);
+  -webkit-mask:radial-gradient(circle, #000 55%, transparent 72%);
+          mask:radial-gradient(circle, #000 55%, transparent 72%);
+  pointer-events:none;
+  z-index:-1;
+}
+
+input,select,textarea,button{font-family:var(--omni-font)}
+.result-value,.metric strong,#finalMetric,input[type="number"],input[inputmode="numeric"]{font-variant-numeric:tabular-nums}
+
+/* ---------- cabeçalhos / topbar ---------- */
+html body .app-header,
+html body .topbar{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg, rgba(29,26,143,.92) 0%, rgba(13,20,80,.94) 70%) !important;
+  border:1px solid var(--omni-line) !important;
+  box-shadow:var(--omni-glow) !important;
+  backdrop-filter:blur(14px);
+}
+html body .app-header::before,
+html body .topbar::before{
+  content:"";
+  position:absolute; left:0; right:0; top:0; height:3px;
+  background:linear-gradient(90deg, var(--omni-magenta) 0%, var(--omni-magenta) 22%, var(--omni-sky) 22%, var(--omni-sky) 100%);
+}
+html body .app-header h1{
+  font-weight:700;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  font-size:24px;
+}
+html body .app-header h1::after{
+  content:"PERFORMANCE";
+  display:block;
+  margin-top:6px;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.42em;
+  color:var(--omni-sky);
+}
+html body .subtitle{color:var(--omni-muted);letter-spacing:.04em}
+html body .status-icon.connected{color:#2ff09a;text-shadow:0 0 10px rgba(47,240,154,.7)}
+
+.omni-brand{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--omni-white);
+  margin-bottom:10px;
+}
+.omni-brand i{
+  width:18px;height:12px;display:inline-block;
+  background:repeating-linear-gradient(115deg, var(--omni-sky) 0 3px, transparent 3px 6px);
+  transform:skewX(-20deg);
+}
+.omni-brand em{font-style:normal;color:var(--omni-magenta-2)}
+
+html body .product-line{letter-spacing:.18em;text-transform:uppercase;font-size:10px;color:var(--omni-sky);font-weight:700}
+html body .product-sub{font-weight:500;color:var(--omni-white)}
+html body .product-icon img{border-radius:10px;box-shadow:0 0 0 1px var(--omni-line-strong)}
+
+/* ---------- painéis e cards ---------- */
+html body .panel,
+html body .card,
+html body .viewer-pane,
+html body .result-panel,
+html body .entry-panel{
+  background:linear-gradient(180deg, rgba(20,30,112,.88) 0%, rgba(11,17,74,.92) 100%) !important;
+  border:1px solid var(--omni-line) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), var(--omni-glow) !important;
+}
+html body .panel h1, html body .panel h2,
+html body .card h2{font-weight:500;letter-spacing:.01em;color:var(--omni-white)}
+html body .panel-kicker,
+html body .section-kicker,
+html body .section-label,
+html body .viewer-meta-title,
+html body .result-label{
+  color:var(--omni-sky) !important;
+  opacity:1 !important;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+html body .section-kicker{display:flex;align-items:center;gap:10px;font-size:11px}
+html body .section-kicker::before{
+  content:"";width:14px;height:3px;border-radius:2px;background:var(--omni-magenta);
+  box-shadow:0 0 10px rgba(230,0,126,.7);
+}
+html body .section-kicker::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--omni-line-strong),transparent)}
+
+html body .result-box,
+html body .metric{
+  background:linear-gradient(180deg, rgba(5,8,42,.55), rgba(5,8,42,.25)) !important;
+  border:1px solid var(--omni-line) !important;
+}
+html body .result-value{color:var(--omni-white);font-weight:700}
+html body .result-band{border-left-color:var(--omni-magenta) !important}
+
+/* ---------- campos ---------- */
+html body input,
+html body select,
+html body textarea{
+  background-color:rgba(3,5,28,.72) !important;
+  border:1px solid rgba(91,196,241,.24) !important;
+  color:var(--omni-white) !important;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+html body input::placeholder{color:rgba(169,183,234,.55)}
+html body input:focus,
+html body select:focus,
+html body textarea:focus{
+  outline:none !important;
+  border-color:var(--omni-sky) !important;
+  box-shadow:0 0 0 3px rgba(91,196,241,.22), 0 0 18px rgba(91,196,241,.25) !important;
+}
+html body label span,
+html body .field > span{color:#c3cdf2;letter-spacing:.08em}
+html body select option{background:#0a0f44;color:#fff}
+
+/* ---------- botões ---------- */
+html body .run-btn,
+html body button.primary,
+html body .primary{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.18) !important;
+  background:linear-gradient(135deg, var(--omni-magenta-2) 0%, var(--omni-magenta) 48%, #a3006a 100%) !important;
+  color:#fff !important;
+  font-weight:700 !important;
+  letter-spacing:.14em !important;
+  text-transform:uppercase;
+  font-size:13px;
+  box-shadow:0 10px 26px rgba(230,0,126,.38), inset 0 1px 0 rgba(255,255,255,.28) !important;
+  transition:transform .12s ease, box-shadow .2s ease, filter .2s ease;
+}
+html body .run-btn::after,
+html body button.primary::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.22) 48%, transparent 66%);
+  transform:translateX(-120%);
+  transition:transform .6s ease;
+}
+html body .run-btn:hover::after,
+html body button.primary:hover::after{transform:translateX(120%)}
+html body .run-btn:hover,
+html body button.primary:hover{filter:brightness(1.08);box-shadow:0 14px 34px rgba(230,0,126,.5), inset 0 1px 0 rgba(255,255,255,.3) !important}
+html body .run-btn:active,
+html body button.primary:active{transform:translateY(1px) scale(.99)}
+
+html body .ghost-btn,
+html body button.ghost,
+html body .ghost,
+html body .quick-action,
+html body .ghost-link{
+  background:linear-gradient(180deg, rgba(38,71,166,.35), rgba(13,20,80,.55)) !important;
+  border:1px solid var(--omni-line-strong) !important;
+  color:#dff3fd !important;
+  font-weight:600;
+  letter-spacing:.06em;
+  transition:background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+html body .ghost-btn:hover,
+html body button.ghost:hover,
+html body .quick-action:hover,
+html body .ghost-link:hover{
+  border-color:var(--omni-sky) !important;
+  background:linear-gradient(180deg, rgba(63,182,239,.28), rgba(38,71,166,.45)) !important;
+  box-shadow:0 0 16px rgba(91,196,241,.28);
+}
+
+html body .nav-btn,
+html body .sign-toggle,
+html body .unit-toggle{
+  background:rgba(3,5,28,.6) !important;
+  border:1px solid var(--omni-line-strong) !important;
+  color:var(--omni-sky) !important;
+}
+html body .nav-btn:hover{border-color:var(--omni-sky) !important;box-shadow:0 0 14px rgba(91,196,241,.35)}
+
+/* abas do visualizador (ADC / WAT / RTO / Dropdown) */
+html body .viewer-tab{
+  background:rgba(3,5,28,.55) !important;
+  border:1px solid var(--omni-line) !important;
+  color:#c3cdf2 !important;
+  font-weight:600;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  font-size:12px;
+}
+html body .viewer-tab.active{
+  background:linear-gradient(180deg, #7fd3f7, var(--omni-sky-2)) !important;
+  border-color:var(--omni-sky) !important;
+  color:#06104a !important;
+  font-weight:800;
+  box-shadow:0 0 18px rgba(91,196,241,.45);
+}
+html body .viewer-pane.is-empty .viewer-tab.active{
+  background:rgba(3,5,28,.55) !important;
+  color:#c3cdf2 !important;
+  box-shadow:none;
+}
+html body .viewer-title{font-weight:500;color:#fff}
+
+/* chips de status: semântica operacional preservada (verde/vermelho/âmbar) */
+html body .status-chip,
+html body .mini-chip,
+html body .status-badge{letter-spacing:.1em;text-transform:uppercase;font-size:11px}
+
+/* ---------- home ---------- */
+html body .flow-card{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg, rgba(22,34,112,.92) 0%, rgba(11,17,74,.94) 100%) !important;
+  border:1px solid var(--omni-line) !important;
+  box-shadow:var(--omni-glow);
+  transition:transform .14s ease, border-color .18s ease, box-shadow .18s ease;
+}
+html body .flow-card::before{
+  content:"";
+  position:absolute; left:0; top:14px; bottom:14px; width:3px;
+  border-radius:0 3px 3px 0;
+  background:var(--omni-sky);
+  opacity:.75;
+}
+html body .flow-card:hover{border-color:var(--omni-line-strong) !important;box-shadow:0 0 0 1px rgba(91,196,241,.18), 0 22px 48px rgba(1,3,24,.6)}
+html body .flow-primary{
+  background:
+    repeating-linear-gradient(135deg, rgba(91,196,241,.07) 0 2px, transparent 2px 12px),
+    linear-gradient(135deg, rgba(39,35,160,.96) 0%, rgba(38,71,166,.9) 100%) !important;
+  border-color:rgba(230,0,126,.55) !important;
+  box-shadow:0 0 0 1px rgba(230,0,126,.18), 0 20px 46px rgba(1,3,24,.6), 0 0 34px rgba(230,0,126,.14) !important;
+}
+html body .flow-primary::before{background:var(--omni-magenta);opacity:1;box-shadow:0 0 12px rgba(230,0,126,.8)}
+html body .flow-icon{
+  background:rgba(3,5,28,.5) !important;
+  border:1px solid var(--omni-line-strong) !important;
+  color:var(--omni-sky) !important;
+}
+html body .flow-primary .flow-icon{
+  background:linear-gradient(135deg, var(--omni-magenta-2), var(--omni-magenta)) !important;
+  border-color:rgba(255,255,255,.25) !important;
+  color:#fff !important;
+  box-shadow:0 8px 20px rgba(230,0,126,.4);
+}
+html body .flow-title{font-weight:700;letter-spacing:.01em;color:#fff}
+html body .flow-desc{color:var(--omni-muted)}
+html body .flow-chevron{color:var(--omni-sky) !important}
+html body .flow-primary .flow-chevron{color:#fff !important}
+
+html body .app-tab-bar{
+  background:linear-gradient(180deg, rgba(13,20,80,.92), rgba(5,8,42,.96)) !important;
+  border:1px solid var(--omni-line-strong) !important;
+  box-shadow:0 -6px 30px rgba(1,3,24,.5), 0 0 0 1px rgba(91,196,241,.08) !important;
+}
+html body .tab-item{color:#a9b7ea;position:relative;transition:color .15s ease, background .15s ease}
+html body .tab-item.active{
+  background:linear-gradient(180deg, rgba(63,182,239,.22), rgba(63,182,239,.06)) !important;
+  color:#fff !important;
+}
+html body .tab-item.active::after{
+  content:"";position:absolute;left:28%;right:28%;bottom:2px;height:3px;border-radius:3px;
+  background:var(--omni-magenta);box-shadow:0 0 10px rgba(230,0,126,.9);
+}
+html body .tab-item.active .tab-icon{color:var(--omni-sky)}
+
+.omni-footer{
+  margin-top:6px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 4px 0;
+  border-top:1px solid var(--omni-line);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(169,183,234,.7);
+}
+.omni-footer b{color:var(--omni-sky);font-weight:700}
+
+/* tela de abertura do PWA */
+html body .pwa-launch-mask{
+  background:radial-gradient(ellipse at 50% 30%, rgba(63,182,239,.25), transparent 60%), var(--omni-deep) !important;
+}
+
+/* seletor segmentado (WAT: 6800 / 7000) */
+html body .segmented{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px}
+html body .segment-option span{
+  min-height:44px !important;
+  font-size:13px !important;
+  font-weight:700;
+  letter-spacing:.08em !important;
+  color:#c3cdf2 !important;
+  background:rgba(3,5,28,.6) !important;
+  border:1px solid var(--omni-line) !important;
+  border-radius:12px !important;
+  margin:0 !important;
+}
+html body .segment-option input:checked + span{
+  background:linear-gradient(180deg,#7fd3f7,var(--omni-sky-2)) !important;
+  border-color:var(--omni-sky) !important;
+  color:#06104a !important;
+  box-shadow:0 0 18px rgba(91,196,241,.4) !important;
+}
+html body button:focus:not(:focus-visible){outline:none}
+html body button:focus-visible{outline:2px solid var(--omni-sky);outline-offset:2px}

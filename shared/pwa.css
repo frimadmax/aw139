@@ -27,7 +27,7 @@ body.is-standalone .adc-module-topbar {
   z-index: 10050;
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at top, rgba(46, 135, 129, .22), transparent 40%), linear-gradient(180deg, #07111b 0%, #0b1220 100%);
+  background: radial-gradient(circle at top, rgba(46, 135, 129, .22), transparent 40%), linear-gradient(180deg, #07111b 0%, #05082a 100%);
   opacity: 1;
   transition: opacity .22s ease;
 }
@@ -41,7 +41,7 @@ body.is-standalone .adc-module-topbar {
   backdrop-filter: blur(16px);
   box-shadow: 0 20px 44px rgba(0,0,0,.36);
   text-align: center;
-  color: #e8eef7;
+  color: #eef3ff;
 }
 .pwa-launch-icon {
   width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 18px; overflow: hidden;
