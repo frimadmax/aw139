@@ -2159,7 +2159,7 @@ function createCataPdfModulePageCanvas(mode, title, srcCanvas) {
 
   ctx.fillStyle = '#eef3f9';
   ctx.fillRect(0, 0, width, height);
-  text('AW139 Companion — CAT A Clear Area', margin, margin + 12, 40, '#102033', '800');
+  text('AW139 — CAT A Clear Area', margin, margin + 12, 40, '#102033', '800');
   text(`Exportação do fluxo — ${title}`, margin, margin + 58, 24, '#4e637c', '700');
   text(new Date().toLocaleString('pt-BR'), width - margin, margin + 58, 20, '#6f7f93', '600', 'right');
 
@@ -2303,7 +2303,7 @@ function createCataPdfCanvas() {
 
   ctx.fillStyle = '#eef3f9';
   ctx.fillRect(0, 0, width, height);
-  text('AW139 Companion — CAT A Clear Area', margin, margin + 10, 36, '#102033', '800');
+  text('AW139 — CAT A Clear Area', margin, margin + 10, 36, '#102033', '800');
   text('Resumo exportado do fluxo composto', margin, margin + 50, 20, '#5f6f84', '600');
   text(new Date().toLocaleString('pt-BR'), width - margin, margin + 50, 18, '#6f7f93', '600', 'right');
 

@@ -1,4 +1,4 @@
-// AW139 Companion — Offshore Calculation Engine (shared)
+// AW139 — Offshore Calculation Engine (shared)
 // Pure calculation functions for WAT (offshore/enhanced) and Dropdown offshore
 // Extracted from wat/app.js and dropdown/app.js — no DOM dependencies
 

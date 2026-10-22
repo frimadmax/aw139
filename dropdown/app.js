@@ -1,4 +1,4 @@
-// AW139 Companion — Dropdown Module
+// AW139 — Dropdown Module
 // BUILD DD-V6 — real chart background + preliminary calibrated overlay
 
 const paEl = document.getElementById('pressureAltitude');

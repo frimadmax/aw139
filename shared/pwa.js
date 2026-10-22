@@ -156,7 +156,7 @@
   function createLaunchMask(){
     const mask = document.createElement('div');
     mask.className = 'pwa-launch-mask';
-    mask.innerHTML = '<div class="pwa-launch-card"><div class="pwa-launch-icon"><img src="'+launchIconPath()+'" alt=""></div><div class="pwa-launch-title">AW139 Companion</div><div class="pwa-launch-subtitle">Carregando ambiente operacional…</div></div>';
+    mask.innerHTML = '<div class="pwa-launch-card"><div class="pwa-launch-icon"><img src="'+launchIconPath()+'" alt=""></div><div class="pwa-launch-title">AW139</div><div class="pwa-launch-subtitle">Carregando ambiente operacional…</div></div>';
     document.addEventListener('DOMContentLoaded', () => {
       document.body.appendChild(mask);
     }, { once: true });
