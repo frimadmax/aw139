@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v78-pwc-calc';
+const CACHE_NAME = 'aw139-companion-root-v79-pwc-release';
 const PRECACHE = [
   "./shared/offline-status.js",
   "./dropdown/assets/dropdown-enhanced-7000.png",
