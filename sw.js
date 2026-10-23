@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v58-confined-ok';
+const CACHE_NAME = 'aw139-companion-root-v59-vertical';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -151,6 +151,16 @@ const PRECACHE = [
   "./confined/charts/4D-6.webp",
   "./confined/charts/4D-6A.webp",
   "./confined/charts/4D-9.webp",
+  "./vertical/",
+  "./vertical/index.html",
+  "./vertical/vt-data.js",
+  "./vertical/vt-engine.js",
+  "./vertical/vt-ui.js",
+  "./vertical/charts/4A-3.webp",
+  "./vertical/charts/4A-4.webp",
+  "./vertical/charts/4A-5.webp",
+  "./vertical/charts/4A-5A.webp",
+  "./vertical/charts/4A-6.webp",
   "./shortfield/",
   "./shortfield/index.html",
   "./shortfield/sf.css",

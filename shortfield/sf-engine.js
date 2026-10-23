@@ -36,7 +36,7 @@
   const lin = (c, v) => c.a * v + c.b;          // coordenada -> valor
   const inv = (c, v) => (v - c.b) / c.a;        // valor -> coordenada
   // cartas: Short Field (SF_CHARTS) e Back Up (BU_CHARTS) usam o mesmo formato
-  const chart = fig => ['SF_CHARTS', 'BU_CHARTS', 'CA_CHARTS'].map(k => root[k] && root[k][fig]).find(Boolean);
+  const chart = fig => ['SF_CHARTS', 'BU_CHARTS', 'CA_CHARTS', 'VT_CHARTS'].map(k => root[k] && root[k][fig]).find(Boolean);
   const isaMaxOat = paFt => Math.min(50, 50 - 1.98 * paFt / 1000); // ISA+35 (linha MAX OAT LIMIT)
 
   // Interpola numa família {v, pos}; devolve pos para o valor pedido ou null.

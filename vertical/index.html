@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05082a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>AW139 — Vertical</title>
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../shared/pwa.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="../shortfield/sf.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="efb-bar">
+      <a class="efb-back nav-btn" id="backBtn" href="../cat-a/" aria-label="Voltar">⥢</a>
+      <a class="efb-id" href="../cat-a/">
+        <svg class="aw-icon" aria-hidden="true"><use href="../assets/icons.svg#p-vertical"/></svg>
+        <span><b>VERTICAL</b><small>CAT A · <em>Heliponto/Helideck</em> · Supl. 12</small></span>
+      </a>
+    </header>
+
+    <p class="sf-status bad" role="note">Em conferência: resultados ainda sendo validados contra as cartas do RFM. Não usar para planejamento real até a liberação.</p>
+
+    <section class="sf-panel" aria-labelledby="inHead">
+      <h2 class="sf-kicker" id="inHead">Configuração e dados</h2>
+      <div class="sf-config" role="radiogroup" aria-label="Configuração da entrada de ar">
+        <label><input type="radio" name="config" value="clean" checked><span>Clean</span></label>
+        <label><input type="radio" name="config" value="eapsOff"><span>EAPS OFF</span></label>
+        <label><input type="radio" name="config" value="eapsOn"><span>EAPS ON</span></label>
+        <label><input type="radio" name="config" value="ibf"><span>IBF</span></label>
+      </div>
+      <div class="sf-inputs">
+        <label class="sf-field"><span>Altitude pressão <small>ft</small></span><input id="inPa" type="number" inputmode="numeric" step="100" value="0"></label>
+        <label class="sf-field"><span>OAT <small>°C</small></span><input id="inOat" type="number" inputmode="decimal" step="1" value="15"></label>
+        <label class="sf-field"><span>Peso (GW) <small>kg</small></span><input id="inGw" type="number" inputmode="numeric" step="10" value="6000"></label>
+        <label class="sf-field"><span>TDP / TDPE <small>ft ATS · 35 a 70</small></span><input id="inTdp" type="number" inputmode="numeric" step="5" min="35" max="70" value="35"></label>
+        <label class="sf-field"><span>Vento de proa <small>kt</small></span><input id="inHw" type="number" inputmode="numeric" step="1" min="0" value="0"></label>
+      </div>
+      <h3 class="sf-kicker sf-sub">Obstáculos <em>opcional</em></h3>
+      <div class="sf-inputs">
+        <label class="sf-field is-optional"><span>À frente: altura <small>ft ATS (HO)</small></span><input id="inAhH" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>Folga exigida <small>ft (HC)</small></span><input id="inAhC" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>À frente: distância <small>m do ponto de decolagem (DO)</small></span><input id="inAhD" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+      </div>
+      <p class="sf-hint">Vento de cauda é proibido (Supl. 12, Seção 1A). Componente de través máxima 20 kt. Heliponto/helideck mínimo 15 m x 15 m. Altitude máxima 14000 ft Hp ou Hd; com TDPE acima de 35 ft, 7000 ft Hp ou Hd.</p>
+    </section>
+
+    <section class="sf-panel sf-diagram" aria-labelledby="diaHead">
+      <h2 class="sf-kicker" id="diaHead">Perfil <em>Vertical</em></h2>
+      <svg id="diagram" viewBox="0 0 640 262" role="img" aria-label="Diagrama do perfil Vertical"></svg>
+      <p class="sf-diagram-cap">Subida vertical até o TDP (35 ft) ou TDPE (até 70 ft). Falha antes do TDP: desce e pousa no heliponto (tracejado laranja). No TDP ou depois: continua (CTO, verde), altura mínima 15 ft ou TDPE − 20 ft; no fim do CTO, altura do TDP.</p>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="resHead">
+      <h2 class="sf-kicker" id="resHead">Resultados</h2>
+      <div class="sf-results">
+        <article class="sf-res" id="resWat"></article>
+        <article class="sf-res" id="resCto"></article>
+        <article class="sf-res" id="resHgt"></article>
+      </div>
+      <div class="sf-status" id="obAlt" hidden></div>
+      <div class="sf-status" id="obAhead" hidden></div>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="chartHead">
+      <h2 class="sf-kicker" id="chartHead">Carta do RFM <em>com a leitura</em></h2>
+      <div class="sf-tabs" role="tablist">
+        <button type="button" role="tab" data-tab="wat" aria-selected="true">W.A.T.</button>
+        <button type="button" role="tab" data-tab="dist" aria-selected="false">CTO</button>
+        <button type="button" role="tab" data-tab="tab" aria-selected="false">Tabela 4A-7</button>
+      </div>
+      <p class="sf-chart-cap" id="chartCap"></p>
+      <div class="sf-chart-wrap" id="chartWrap"><div class="sf-chart" id="chart"><img id="chartImg" alt=""><svg id="chartSvg" aria-hidden="true"></svg></div></div>
+      <div class="sf-table-wrap" id="tableWrap" hidden></div>
+      <div class="sf-chart-tools" id="chartTools"><span>Linha magenta: caminho da leitura feito pelo app.</span><button type="button" id="zoomBtn">Ampliar</button></div>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="noteHead">
+      <h2 class="sf-kicker" id="noteHead">Base e limites</h2>
+      <ul class="sf-notes">
+        <li>Fonte: <b>AW139 RFM Rev 30, Suplemento 12, Parte A</b> (Fig. 4A-3 a 4A-7). Curvas extraídas do PDF vetorial; tabela 4A-7 transcrita.</li>
+        <li>W.A.T.: crédito de vento de proa pela seção inferior da carta, até 20 kt (já fatorado em 50% pelo RFM). Linha MAX OAT LIMIT = ISA+35 °C. Peso máximo 6400 kg. A carta IBF (4A-5A) vai até 10000 ft.</li>
+        <li>CTO (Fig. 4A-6, vale para Clean, EAPS ON/OFF e IBF): distância horizontal do início da decolagem até 35 ft ATS (ou a altura do TDPE) em V<sub>TOSS</sub>. A correção de vento já vem fatorada em 50% pelo RFM. Pesos abaixo de 4400 kg usam a curva de 4400 kg (conservador).</li>
+        <li>Obstáculo dentro da distância CTO (Fig. 4A-1): TDPE = HO + HC + 20 ft, de 35 a 70 ft. Acima de 70 ft o RFM manda adotar o Back Up.</li>
+        <li>Obstáculo depois da distância CTO (Fig. 4A-2): exige o gradiente PATH 1 (Fig. 4A-8 a 4A-31), ainda não digitalizado. O app só indica a distância D1 do fim do CTO até o obstáculo.</li>
+        <li>Limite de 7000 ft para TDPE: Hd estimada por Hd ≈ Hp + 118,8 × (OAT − ISA).</li>
+        <li>V<sub>TOSS</sub> 40 KIAS. GS máxima com PARK BRAKE ON 5 kt.</li>
+        <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
+      </ul>
+    </section>
+  </main>
+  <script src="vt-data.js"></script>
+  <script src="../shortfield/sf-engine.js"></script>
+  <script src="vt-engine.js"></script>
+  <script src="vt-ui.js"></script>
+  <script src="../shared/pwa.js"></script>
+</body>
+</html>
