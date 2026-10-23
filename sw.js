@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v83-backup-icon-flip';
+const CACHE_NAME = 'aw139-companion-root-v84-profile-icons-flip';
 const PRECACHE = [
   "./shared/offline-status.js",
   "./dropdown/assets/dropdown-enhanced-7000.png",
