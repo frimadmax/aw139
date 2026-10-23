@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../shared/pwa.css">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="../shortfield/sf.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>.sf-chart-wrap2{margin-top:10px}</style>
 </head>
 <body>
   <main class="app-shell">
@@ -23,6 +23,8 @@
         <span><b>CONFINED AREA</b><small>CAT A · <em>Heliponto</em> · Supl. 12</small></span>
       </a>
     </header>
+
+    <p class="sf-status bad" role="note">Em conferência: o obstáculo depois do CTO (PATH 1/2 e subida alternativa 60 KIAS) ainda está sendo validado contra as cartas do RFM. O restante do perfil já foi conferido.</p>
 
     <section class="sf-panel" aria-labelledby="inHead">
       <h2 class="sf-kicker" id="inHead">Configuração e dados</h2>
@@ -45,6 +47,12 @@
         <label class="sf-field is-optional"><span>Atrás: distância <small>m da borda traseira</small></span><input id="inObD" type="number" inputmode="numeric" step="1" placeholder="—"></label>
         <label class="sf-field is-optional"><span>À frente: altura <small>ft (HO)</small></span><input id="inAhH" type="number" inputmode="numeric" step="5" placeholder="—"></label>
         <label class="sf-field is-optional"><span>Folga exigida <small>ft (HC)</small></span><input id="inAhC" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>À frente: distância <small>m do ponto de decolagem (DO)</small></span><input id="inAhD" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+      </div>
+      <h3 class="sf-kicker sf-sub">Subida depois do CTO</h3>
+      <div class="sf-config" role="radiogroup" aria-label="Procedimento de subida">
+        <label><input type="radio" name="climb" value="std" checked><span>Padrão (PATH 1 + 2)</span></label>
+        <label><input type="radio" name="climb" value="alt"><span>Alternativa 60 KIAS</span></label>
       </div>
       <p class="sf-hint">Vento de cauda é proibido (Supl. 12, Seção 1D). Componente de través máxima 20 kt. Heliponto mínimo 20 m x 20 m. Altitude máxima 10000 ft Hp ou Hd.</p>
     </section>
@@ -71,10 +79,14 @@
       <div class="sf-tabs" role="tablist">
         <button type="button" role="tab" data-tab="wat" aria-selected="true">W.A.T.</button>
         <button type="button" role="tab" data-tab="dist" aria-selected="false">Distância do TDP</button>
+        <button type="button" role="tab" data-tab="p1" aria-selected="false">PATH 1</button>
+        <button type="button" role="tab" data-tab="p2" aria-selected="false">PATH 2</button>
+        <button type="button" role="tab" data-tab="alt" aria-selected="false">60 KIAS</button>
         <button type="button" role="tab" data-tab="tab" aria-selected="false">Tabelas</button>
       </div>
       <p class="sf-chart-cap" id="chartCap"></p>
       <div class="sf-chart-wrap" id="chartWrap"><div class="sf-chart" id="chart"><img id="chartImg" alt=""><svg id="chartSvg" aria-hidden="true"></svg></div></div>
+      <div class="sf-chart-wrap sf-chart-wrap2" id="chartWrap2" hidden><div class="sf-chart" id="chart2"><img id="chartImg2" alt=""><svg id="chartSvg2" aria-hidden="true"></svg></div></div>
       <div class="sf-table-wrap" id="tableWrap" hidden></div>
       <div class="sf-chart-tools" id="chartTools"><span>Linha magenta: caminho da leitura feito pelo app.</span><button type="button" id="zoomBtn">Ampliar</button></div>
     </section>
@@ -88,14 +100,21 @@
         <li>TDP entre linhas da tabela 4D-7: interpolação linear. Pesos abaixo de 4400 kg usam a curva de 4400 kg (conservador).</li>
         <li>Obstáculo atrás (Fig. 4D-8): usa a linha de altura igual ou logo acima (conservador); distância medida da borda traseira de um heliponto 20 m x 20 m, decolando com o eixo do rotor no centro.</li>
         <li>Obstáculo à frente, dentro da distância CTO (Fig. 4D-1): TDP = HO + HC + 85 ft, mínimo 100 ft e máximo 400 ft.</li>
+        <li>Obstáculo depois da distância CTO: altura no fim do CTO (Fig. 4D-7) + gradiente × D1 / 100. Subida padrão: PATH 1 (Fig. 4A-8 a 4A-31, V<sub>TOSS</sub> e 2,5 min OEI) até 200 ft ATS ou TDP + 100 ft, depois PATH 2 (Fig. 4K-5 a 4K-28, V<sub>Y</sub> e MCP OEI) até 1000 ft ATS. Subida alternativa: um gradiente só a 60 KIAS (Fig. 4D-10 a 4D-33) do fim do CTO até 1000 ft ATS. Interpolação entre as cartas de peso vizinhas, com o vento de proa informado. Se não atende, o app calcula o TDP necessário (o CTO muda com o TDP) e, se preciso, o peso com TDP 400 ft, mantendo a distância do TDP do peso atual (conservador).</li>
+        <li>Fig. 4D-13 e 4D-14 (60 KIAS, Clean, 5600 e 6000 kg): no PDF os rótulos −10 e −20 aparecem trocados; o app segue a ordem física das curvas (mais frio à direita).</li>
         <li>V<sub>TOSS</sub> 40 KIAS. Altitude máxima para decolagem: 10000 ft Hp ou Hd, o que vier primeiro. GS máxima com PARK BRAKE ON 5 kt.</li>
         <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
       </ul>
     </section>
   </main>
   <script src="ca-data.js"></script>
+  <script src="ca-alt-data.js"></script>
+  <script src="../vertical/vt-p1.js"></script>
+  <script src="../vertical/vt-p2.js"></script>
   <script src="../shortfield/sf-engine.js"></script>
   <script src="ca-engine.js"></script>
+  <script src="../vertical/vt-engine.js"></script>
+  <script src="ca-after.js"></script>
   <script src="../backup/bu-ui.js" data-profile="confined"></script>
   <script src="../shared/pwa.js"></script>
 </body>

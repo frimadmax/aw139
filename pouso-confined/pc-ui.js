@@ -3,7 +3,7 @@
   'use strict';
   const P = window.PCEngine, V = window.VTEngine;
   const C = {}, BASE = {};
-  [[window.CA_CHARTS, '../confined/'], [window.VT_P1, '../vertical/'], [window.VT_P2, '../vertical/'], [window.CL_CHARTS, '']].forEach(([set, base]) => {
+  [[window.CA_CHARTS, '../confined/'], [window.CA_ALT, '../confined/'], [window.VT_P1, '../vertical/'], [window.VT_P2, '../vertical/'], [window.CL_CHARTS, '']].forEach(([set, base]) => {
     Object.keys(set || {}).forEach(k => { C[k] = set[k]; BASE[k] = base; });
   });
   const $ = id => document.getElementById(id);
@@ -23,12 +23,14 @@
       fields.forEach(id => { if (s[id] != null) $(id).value = s[id]; });
       const r = document.querySelector(`input[name="config"][value="${s.config}"]`);
       if (r) r.checked = true;
+      const c = s.climb && document.querySelector(`input[name="climb"][value="${s.climb}"]`);
+      if (c) c.checked = true;
       if (s.tab) tab = s.tab;
     } catch (e) { /* sem armazenamento */ }
   }
   function save(inp) {
     try {
-      const s = { config: inp.config, tab };
+      const s = { config: inp.config, tab, climb: inp.climb };
       fields.forEach(id => { s[id] = $(id).value; });
       localStorage.setItem(KEY, JSON.stringify(s));
     } catch (e) { /* ignora */ }
@@ -38,7 +40,8 @@
     return {
       config: (document.querySelector('input[name="config"]:checked') || {}).value || 'clean',
       pa: num('inPa'), oat: num('inOat'), gw: num('inGw'), ldp: num('inLdp'), hw: num('inHw') || 0,
-      obsH: num('inBlH'), obsHc: num('inBlC'), obsD: num('inBlD'), apH: num('inApH'), apD: num('inApD')
+      obsH: num('inBlH'), obsHc: num('inBlC'), obsD: num('inBlD'), apH: num('inApH'), apD: num('inApD'),
+      climb: (document.querySelector('input[name="climb"]:checked') || {}).value || 'std'
     };
   }
   const src = fig => `Fig. ${fig} · RFM ${C[fig].rfmPage}`;
@@ -110,7 +113,7 @@
         sb.textContent = `Obstáculo depois da arremetida, D1 = ${fmt(Math.floor(r.d1))} m do fim. ${r.msg}`;
       } else {
         const top = h ? h.path1Top : 200;
-        let t = `Obstáculo depois da arremetida, D1 = ${fmt(Math.floor(r.d1))} m (${fmt(r.d1Ft)} ft) do fim. PATH 1 ${f1(r.g1.grad)} ft/100 ft`;
+        let t = `Obstáculo depois da arremetida, D1 = ${fmt(Math.floor(r.d1))} m (${fmt(r.d1Ft)} ft) do fim. ${r.alt ? 'Subida 60 KIAS' : 'PATH 1'} ${f1(r.g1.grad)} ft/100 ft`;
         if (r.g2) t += ` até ${fmt(top)} ft ALS (${fmt(r.d1p)} ft), depois PATH 2 ${f1(r.g2.grad)} ft/100 ft`;
         t += `: altura no obstáculo ${fmt(Math.floor(r.h))} ft, exigida ${fmt(r.hReq)} ft (HO + HC). `;
         if (r.clears) t += `Passa ${fmt(Math.floor(r.clear))} ft acima do obstáculo: atende.`;
@@ -174,7 +177,7 @@
         const xo = sx(Math.min(inp.obsD, span - back - 10)), ho = Math.min(150, 10 + inp.obsH * 0.32);
         const bad = r.within ? (!r.possible || inp.ldp < r.req) : !r.clears;
         s += `<rect x="${xo - 5}" y="${G - ho}" width="10" height="${ho}" fill="${bad ? '#ff4d6d' : '#8fa3e6'}" opacity=".8"/>`;
-        if (!r.within) s += `<path class="path-climb" stroke-dasharray="6 4" d="M${xe} ${yE} L ${xo + 5} ${Math.max(16, yE - 50)}"/><text class="sm" x="${xo - 10}" y="${Math.max(16, yE - 54)}" text-anchor="end">${r.g2 ? 'PATH 1 + 2' : 'PATH 1'}</text>`;
+        if (!r.within) s += `<path class="path-climb" stroke-dasharray="6 4" d="M${xe} ${yE} L ${xo + 5} ${Math.max(16, yE - 50)}"/><text class="sm" x="${xo - 10}" y="${Math.max(16, yE - 54)}" text-anchor="end">${r.alt ? '60 KIAS' : r.g2 ? 'PATH 1 + 2' : 'PATH 1'}</text>`;
       }
     }
     if (out.approach && land != null && inp.apD != null) {
@@ -203,8 +206,8 @@
     $('chartWrap').hidden = isTab; $('chartTools').hidden = isTab; $('tableWrap').hidden = !isTab;
     $('chartWrap2').hidden = true;
     if (isTab) { $('chartCap').textContent = 'Linhas destacadas: valores usados no cálculo.'; $('tableWrap').innerHTML = tablesHtml(last.input); return; }
-    if (tab === 'p1' || tab === 'p2') {
-      const path = tab === 'p1' ? 1 : 2, figFn = path === 1 ? V.p1Fig : V.p2Fig;
+    if (tab === 'p1' || tab === 'p2' || tab === 'alt') {
+      const path = { p1: 1, p2: 2, alt: 3 }[tab], figFn = { 1: V.p1Fig, 2: V.p2Fig, 3: V.altFig }[path];
       const inp = last.input;
       const g = V.gradForGw(inp.config, inp.pa, inp.oat, inp.hw, inp.gw, path);
       const i = Math.max(0, V.P1_GW.findIndex((w, k) => k < V.P1_GW.length - 1 && Math.max(4400, Math.min(6400, inp.gw)) <= V.P1_GW[k + 1]));
@@ -212,9 +215,10 @@
       const charts = g.ok ? g.charts : figs.map(f => V.grad(f, inp.pa, inp.oat, inp.hw));
       const shown = charts.length > 1 ? figs : [figs[0]];
       const vals = charts.map(c => c.ok ? `${c.fig}: ${f1(c.grad)} ft` : `${c.fig}: ${c.msg}`).join(' · ');
-      $('chartCap').innerHTML = `<b>PATH ${path}</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
+      $('chartCap').innerHTML = `<b>${path === 3 ? 'Subida alternativa 60 KIAS' : `PATH ${path}`}</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
         (g.ok && charts.length > 1 ? `. Interpolado para ${fmt(g.gw)} kg: <b>${f1(g.grad)} ft/100 ft</b>.` : '') +
-        (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324).' : '');
+        (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324).' : '') +
+        (shown.some(f => f === '4D-13' || f === '4D-14') ? ' <br>Nesta carta os rótulos −10 e −20 aparecem trocados no PDF; o app segue a ordem das curvas (mais frio à direita).' : '');
       paint('chartImg', 'chartSvg', shown[0], charts[0], 1);
       if (shown.length > 1) { $('chartWrap2').hidden = false; paint('chartImg2', 'chartSvg2', shown[1], charts[1], 1); }
       return;

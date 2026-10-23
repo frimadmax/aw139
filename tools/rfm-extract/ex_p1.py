@@ -96,7 +96,23 @@ def extract(n,fig,rfm,title,gw,cfg,seq=None):
     return dict(fig=fig,page=n,rfmPage=rfm,title=title,gw=gw,cfg=cfg,pa=PA,g=G,hw=HW,yBase=ends,y0kt=y0g,
                 oat=[dict(v=v,pts=c) for v,c in zip(vals,curves)],maxOat=maxoat,minGrad=ming,guides=Gd,labelcheck=chk,bad=bad,
                 gMax=gMax)
-if __name__=='__main__' and sys.argv[1:2]==['p2']:
+if __name__=='__main__' and sys.argv[1:2]==['d60']:
+    # Subida alternativa 60 KIAS PATH 1 & 2 (Fig. 4D-10 a 4D-33), mesmo leiaute do PATH 1/2
+    out={}
+    cfgs=[('clean',''),('eapsOff',', EAPS OFF'),('eapsOn',', EAPS ON'),('ibf',', IBF Installed')]
+    k=10
+    for ci,(cfg,suf) in enumerate(cfgs):
+        for wi,gw in enumerate(range(4400,6401,400)):
+            fig=f'4D-{k}'; n=1055+ci*6+wi
+            pg=DOC[n-1].get_text()
+            assert f'Figure {fig} ' in pg, (fig,n)
+            rfm=re.search(r'Page (S12-D\d+)',pg).group(1)
+            o=extract(n,fig,rfm,f'Alternative 60 KIAS PATH 1 & 2 Gradient, GW {gw} kg{suf}',gw,cfg); out[fig]=o
+            print(fig,n,rfm,cfg,gw,'shift',o['g'].get('tokShift'),'PA',round(o['pa']['resid'],1),o['pa']['n'],'HW',round(o['hw']['resid'],3),o['hw']['n'],'G',round(o['g']['resid'],3),o['g']['n'],o['gMax'],
+                  'curves',len(o['oat']),'guides',len(o['guides']),'maxOat',bool(o['maxOat']),'minG',o['minGrad'] and round(o['minGrad'],2),'bad',o['bad'],'y',o['yBase'],o['y0kt'])
+            k+=1
+    json.dump(out,open('d60.json','w'))
+elif __name__=='__main__' and sys.argv[1:2]==['p2']:
     out={}
     cfgs=[('clean',''),('eapsOff',', EAPS OFF'),('eapsOn',', EAPS ON'),('ibf',', IBF Installed')]
     k=5

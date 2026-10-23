@@ -24,6 +24,8 @@
       </a>
     </header>
 
+    <p class="sf-status bad" role="note">Em conferência: a subida alternativa 60 KIAS (Fig. 4D-10 a 4D-33) ainda está sendo validada contra as cartas do RFM. O restante da página já foi conferido.</p>
+
     <section class="sf-panel" aria-labelledby="inHead">
       <h2 class="sf-kicker" id="inHead">Configuração e dados</h2>
       <div class="sf-config" role="radiogroup" aria-label="Configuração da entrada de ar">
@@ -46,6 +48,11 @@
         <label class="sf-field is-optional"><span>Arremetida: distância <small>m do LDP (DO)</small></span><input id="inBlD" type="number" inputmode="numeric" step="5" placeholder="—"></label>
         <label class="sf-field is-optional"><span>Aproximação: altura <small>ft AGL</small></span><input id="inApH" type="number" inputmode="numeric" step="5" placeholder="—"></label>
         <label class="sf-field is-optional"><span>Aproximação: distância <small>m do heliponto</small></span><input id="inApD" type="number" inputmode="numeric" step="1" placeholder="—"></label>
+      </div>
+      <h3 class="sf-kicker sf-sub">Subida depois da arremetida</h3>
+      <div class="sf-config" role="radiogroup" aria-label="Procedimento de subida">
+        <label><input type="radio" name="climb" value="std" checked><span>Padrão (PATH 1 + 2)</span></label>
+        <label><input type="radio" name="climb" value="alt"><span>Alternativa 60 KIAS</span></label>
       </div>
       <p class="sf-hint">Vento de cauda é proibido. Componente de través máxima 20 kt. Heliponto mínimo 20 m x 20 m. Altitude máxima 10000 ft Hp ou Hd. Com obstáculo nos dois perfis, vale o maior LDP (Seção 4H).</p>
     </section>
@@ -74,6 +81,7 @@
         <button type="button" role="tab" data-tab="bl" aria-selected="false">Arremetida</button>
         <button type="button" role="tab" data-tab="p1" aria-selected="false">PATH 1</button>
         <button type="button" role="tab" data-tab="p2" aria-selected="false">PATH 2</button>
+        <button type="button" role="tab" data-tab="alt" aria-selected="false">60 KIAS</button>
         <button type="button" role="tab" data-tab="tab" aria-selected="false">Tabelas</button>
       </div>
       <p class="sf-chart-cap" id="chartCap"></p>
@@ -93,13 +101,14 @@
         <li>Obstáculo dentro da arremetida (Fig. 4H-1): LDP = HO + HC + 85 ft, de 100 a 400 ft ALS.</li>
         <li>Obstáculo depois da arremetida: altura no obstáculo = LDP − 65 ft + PATH 1 × D1 / 100 até 200 ft ou LDP + 100 ft ALS, depois PATH 2 até 1000 ft ALS (interpolando entre as cartas de peso vizinhas, com o vento de proa informado). Se não atende, o app calcula o LDP necessário e, se preciso, o peso com LDP 400 ft, mantendo a distância de arremetida do peso atual (conservador). Essa extensão segue o texto da Seção 4H; o RFM não traz exemplo dela.</li>
         <li>Obstáculo na aproximação (Fig. 4H-2): tem que ficar fora da zona da Fig. 4D-8 (já inclui 15 ft de folga). O app usa a linha de altura igual ou logo acima (conservador). Se a regra operacional pedir folga maior, considere no LDP.</li>
-        <li>Subida alternativa a 60 KIAS (Fig. 4D-10 a 4D-33) ainda não está no app.</li>
+        <li>Subida alternativa 60 KIAS (Fig. 3H-1A): um gradiente só (Fig. 4D-10 a 4D-33, 60 KIAS e 2,5 min OEI) do fim da arremetida até 1000 ft ALS, no lugar do PATH 1 + PATH 2. Nas Fig. 4D-13 e 4D-14 os rótulos −10 e −20 aparecem trocados no PDF; o app segue a ordem física das curvas.</li>
         <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
       </ul>
     </section>
   </main>
   <script src="../confined/ca-data.js"></script>
   <script src="cl-data.js"></script>
+  <script src="../confined/ca-alt-data.js"></script>
   <script src="../vertical/vt-p1.js"></script>
   <script src="../vertical/vt-p2.js"></script>
   <script src="../shortfield/sf-engine.js"></script>

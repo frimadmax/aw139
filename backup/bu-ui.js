@@ -10,7 +10,7 @@
     confined: {
       charts: 'CA_CHARTS', key: 'aw139.confined.v1', sec: 'Supl. 12, Seção 1D', tdp: '100–400', recuo: 'subida para trás', recuoCard: 'Alturas e recuo',
       t7: ['4D-7', 'S12-D35', 'Confined Area Typical Heights and Distances'], t8: ['4D-8', 'S12-D36', 'Minimum Distance for Obstacle Under Rearward Climb'],
-      ahead: ['4D-1', 85], hwOnWat: false
+      ahead: ['4D-1', 85], hwOnWat: false, after: true
     }
   };
   const me = document.currentScript;
@@ -24,7 +24,11 @@
   const ceil1 = n => Math.ceil(n - 1e-9);
   let tab = 'wat', last = null;
 
-  const fields = ['inPa', 'inOat', 'inGw', 'inTdp', 'inHw', 'inObH', 'inObD', 'inAhH', 'inAhC'];
+  const fields = ['inPa', 'inOat', 'inGw', 'inTdp', 'inHw', 'inObH', 'inObD', 'inAhH', 'inAhC', 'inAhD'].filter(id => $(id));
+  // Confined Area: obstáculo depois do CTO com PATH 1/2 ou subida alternativa 60 KIAS (ca-after.js)
+  const V = window.VTEngine, CX = Object.assign({}, window.VT_P1, window.VT_P2, window.CA_ALT);
+  const XBASE = fig => (window.CA_ALT && window.CA_ALT[fig]) ? '' : '../vertical/';
+  const climbOf = () => (document.querySelector('input[name="climb"]:checked') || {}).value || 'std';
   function load() {
     try {
       const s = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -32,12 +36,14 @@
       fields.forEach(id => { if (s[id] != null) $(id).value = s[id]; });
       const r = document.querySelector(`input[name="config"][value="${s.config}"]`);
       if (r) r.checked = true;
+      const c = s.climb && document.querySelector(`input[name="climb"][value="${s.climb}"]`);
+      if (c) c.checked = true;
       if (s.tab) tab = s.tab;
     } catch (e) { /* sem armazenamento */ }
   }
   function save(inp) {
     try {
-      const s = { config: inp.config, tab };
+      const s = { config: inp.config, tab, climb: inp.climb };
       fields.forEach(id => { s[id] = $(id).value; });
       localStorage.setItem(KEY, JSON.stringify(s));
     } catch (e) { /* ignora */ }
@@ -47,7 +53,8 @@
     return {
       config: (document.querySelector('input[name="config"]:checked') || {}).value || 'clean',
       pa: num('inPa'), oat: num('inOat'), gw: num('inGw'), tdp: num('inTdp'), hw: num('inHw') || 0,
-      obsBehindH: num('inObH'), obsBehindD: num('inObD'), obsAheadH: num('inAhH'), obsAheadHc: num('inAhC')
+      obsBehindH: num('inObH'), obsBehindD: num('inObD'), obsAheadH: num('inAhH'), obsAheadHc: num('inAhC'),
+      obsAheadD: $('inAhD') ? num('inAhD') : null, climb: climbOf()
     };
   }
   const src = fig => `Fig. ${fig} · RFM ${C[fig].rfmPage}`;
@@ -119,7 +126,31 @@
           (r.ok ? `Está a ${fmt(inp.obsBehindD)} m: OK.` : `Está a ${fmt(inp.obsBehindD)} m: dentro da zona, não atende.`);
       }
     } else sb.hidden = true;
-    if (out.ahead) {
+    const isAfter = P.after && out.ahead && inp.obsAheadD != null && d.ok && h && out.cto != null && inp.obsAheadD > out.cto;
+    if (isAfter) {
+      sa.hidden = false;
+      const r = window.CAAfter.obstacleAfter(inp, d.dist);
+      out.after = r;
+      const f1 = v => v.toFixed(1).replace('.', ',');
+      const D1 = `D1 = ${fmt(Math.floor(r.d1))} m (${fmt(r.d1 * M2FT)} ft) do fim do CTO`;
+      if (!r.ok) { sa.className = 'sf-status bad'; sa.textContent = `Obstáculo depois do CTO, ${D1}. ${r.msg}`; }
+      else {
+        let t = `Obstáculo depois do CTO, ${D1}. `;
+        if (r.alt) t += `Subida 60 KIAS ${f1(r.g1.grad)} ft/100 ft`;
+        else {
+          t += `PATH 1 ${f1(r.g1.grad)} ft/100 ft`;
+          if (r.g2) t += ` até ${fmt(r.top)} ft ATS (${fmt(r.d1p)} ft), depois PATH 2 ${f1(r.g2.grad)} ft/100 ft`;
+        }
+        t += `: altura no obstáculo ${fmt(Math.floor(r.h))} ft, exigida ${fmt(r.hReq)} ft (HO + HC). `;
+        if (r.clears) t += `Passa ${fmt(Math.floor(r.clear))} ft acima do obstáculo: atende.`;
+        else if (r.tdpReq) t += `Não atende com TDP ${inp.tdp} ft. TDP necessário: ${r.tdpReq} ft.`;
+        else if (r.gw2 != null) t += `Nem com TDP 400 ft. Com TDP 400 ft atende com peso até ${fmt(floor10(r.gw2))} kg (distância do TDP mantida do peso atual, conservador).`;
+        else t += 'Nem com TDP 400 ft e 4400 kg.';
+        if (r.aboveTop) t += ' Altura exigida acima de 1000 ft ATS, fim das cartas.';
+        sa.className = 'sf-status ' + (r.clears ? 'ok' : 'bad');
+        sa.textContent = t;
+      }
+    } else if (out.ahead) {
       sa.hidden = false;
       const r = out.ahead, hc = inp.obsAheadHc != null ? inp.obsAheadHc : 0;
       const ok = r.possible && inp.tdp >= r.req;
@@ -186,6 +217,26 @@
     const isTab = tab === 'tab';
     $('chartWrap').hidden = isTab; $('chartTools').hidden = isTab; $('tableWrap').hidden = !isTab;
     if (isTab) { $('chartCap').textContent = 'Linhas destacadas: valores usados no cálculo.'; $('tableWrap').innerHTML = tablesHtml(last.input); return; }
+    if ($('chartWrap2')) $('chartWrap2').hidden = true;
+    if (P.after && (tab === 'p1' || tab === 'p2' || tab === 'alt')) {
+      const path = { p1: 1, p2: 2, alt: 3 }[tab], figFn = { 1: V.p1Fig, 2: V.p2Fig, 3: V.altFig }[path];
+      const inp = last.input;
+      const g = V.gradForGw(inp.config, inp.pa, inp.oat, inp.hw, inp.gw, path);
+      const i = Math.max(0, V.P1_GW.findIndex((w, k) => k < V.P1_GW.length - 1 && Math.max(4400, Math.min(6400, inp.gw)) <= V.P1_GW[k + 1]));
+      const figs = [figFn(inp.config, i), figFn(inp.config, i + 1)];
+      const charts = g.ok ? g.charts : figs.map(f => V.grad(f, inp.pa, inp.oat, inp.hw));
+      const shown = charts.length > 1 ? figs : [figs[0]];
+      const f1 = v => v.toFixed(1).replace('.', ',');
+      const name = path === 3 ? 'Subida alternativa 60 KIAS' : `PATH ${path}`;
+      $('chartCap').innerHTML = `<b>${name}</b> ${shown.map(f => `Fig. ${f} (${CX[f].gw} kg, RFM ${CX[f].rfmPage})`).join(' e ')}. ` +
+        charts.map(c => c.ok ? `${c.fig}: ${f1(c.grad)} ft` : `${c.fig}: ${c.msg}`).join(' · ') +
+        (g.ok && charts.length > 1 ? `. Interpolado para ${fmt(g.gw)} kg: <b>${f1(g.grad)} ft/100 ft</b>.` : '') +
+        (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324).' : '') +
+        (shown.some(f => f === '4D-13' || f === '4D-14') ? ' <br>Nesta carta os rótulos −10 e −20 aparecem trocados no PDF; o app segue a ordem das curvas (mais frio à direita).' : '');
+      paintX('chartImg', 'chartSvg', shown[0], charts[0]);
+      if (shown.length > 1) { $('chartWrap2').hidden = false; paintX('chartImg2', 'chartSvg2', shown[1], charts[1]); }
+      return;
+    }
     const fig = tab === 'wat' ? last.cfg.wat : B.DIST_FIG;
     const ch = C[fig], res = tab === 'wat' ? last.wat : last.dist;
     $('chartCap').innerHTML = `<b>Figure ${fig}</b> ${ch.title} · RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`;
@@ -204,12 +255,28 @@
     svg.innerHTML = s;
   }
 
+  function paintX(imgId, svgId, fig, res) {
+    const ch = CX[fig], img = $(imgId), url = XBASE(fig) + ch.img.src;
+    if (img.getAttribute('src') !== url) { img.src = url; img.alt = `Figura ${fig} do RFM`; }
+    const [bx, by, bw, bh] = ch.img.box, svg = $(svgId);
+    svg.setAttribute('viewBox', `${bx} ${by} ${bw} ${bh}`);
+    let s = '';
+    if (res && res.ok && res.trace) {
+      s += `<polyline class="trace" points="${res.trace.map(p => p.map(v => v.toFixed(2)).join(',')).join(' ')}"/>`;
+      const p = res.trace[Math.min(1, res.trace.length - 1)];
+      s += `<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="2.2"/>`;
+    }
+    svg.innerHTML = s;
+  }
+
   function init() {
     load();
     document.querySelectorAll('.sf-config input, .sf-inputs input').forEach(el => el.addEventListener('input', render));
+    document.querySelectorAll('input[name="climb"]').forEach(el => el.addEventListener('change', render));
     document.querySelectorAll('.sf-tabs button').forEach(b => b.addEventListener('click', () => { tab = b.dataset.tab; save(readInput()); drawChart(); }));
     $('zoomBtn').addEventListener('click', () => {
       const z = $('chart').classList.toggle('is-zoom');
+      if ($('chart2')) $('chart2').classList.toggle('is-zoom', z);
       $('zoomBtn').textContent = z ? 'Reduzir' : 'Ampliar';
     });
     render();

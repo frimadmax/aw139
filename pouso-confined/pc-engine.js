@@ -49,8 +49,9 @@
       return { within: true, hReq, req, possible: req <= LDP_MAX };
     }
     const d1Ft = (inp.obsD - blM) * M2FT;
-    const at = (ldp, gw) => VT.heightAt(inp, gw, heights(ldp).endH, d1Ft, heights(ldp).path1Top);
-    const out = Object.assign({ within: false, hReq, d1: inp.obsD - blM, d1Ft }, at(inp.ldp, inp.gw));
+    const alt = inp.climb === 'alt';   // subida alternativa 60 KIAS (Fig. 3H-1A, 4D-10 a 4D-33) até 1000 ft ALS
+    const at = (ldp, gw) => VT.heightAt(inp, gw, heights(ldp).endH, d1Ft, heights(ldp).path1Top, alt);
+    const out = Object.assign({ within: false, alt, hReq, d1: inp.obsD - blM, d1Ft }, at(inp.ldp, inp.gw));
     if (!out.ok) return out;
     out.clear = out.h - inp.obsH;
     out.clears = out.h >= hReq - 1e-9;

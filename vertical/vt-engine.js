@@ -19,6 +19,9 @@
   // PATH 2 Gradient (Parte K, Fig. 4K-5 a 4K-28): de 200 ft a 1000 ft ATS, em VY e MCP OEI
   const P2_FIRST = { clean: 5, eapsOff: 11, eapsOn: 17, ibf: 23 };
   const p2Fig = (config, i) => `4K-${P2_FIRST[config] + i}`;
+  // Subida alternativa 60 KIAS PATH 1 & 2 (Confined Area, Fig. 4D-10 a 4D-33): do fim do CTO até 1000 ft ATS
+  const ALT_FIRST = { clean: 10, eapsOff: 16, eapsOn: 22, ibf: 28 };
+  const altFig = (config, i) => `4D-${ALT_FIRST[config] + i}`;
   const M2FT = 3.28084, PATH1_TOP = 200;
   // Fig. 4A-7: TDPE (ft) | altura mínima (ft) | altura no fim do CTO (ft)
   const T4A7 = [[35, 15, 35], [40, 20, 40], [45, 25, 45], [50, 30, 50], [55, 35, 55], [60, 40, 60], [65, 45, 65], [70, 50, 70]];
@@ -94,7 +97,7 @@
   }
   // Gradiente para o peso: interpolação linear entre as cartas de peso vizinhas (como no RFM, Ex. 2).
   function gradForGw(config, paFt, oat, hwKt, gwKg, path = 1) {
-    const fig = path === 2 ? p2Fig : p1Fig;
+    const fig = path === 3 ? altFig : path === 2 ? p2Fig : p1Fig;
     const gw = Math.max(P1_GW[0], Math.min(6400, gwKg));
     let i = P1_GW.findIndex((w, k) => k < P1_GW.length - 1 && gw <= P1_GW[k + 1]);
     if (i < 0) i = P1_GW.length - 2;
@@ -119,7 +122,12 @@
     return Math.min(best, gwMax);
   }
   // Altura no obstáculo depois do CTO: PATH 1 do fim do CTO até 200 ft ATS, depois PATH 2 (Fig. 4A-2 e Parte K).
-  function heightAt(inp, gw, endH, d1Ft, top = PATH1_TOP) {
+  function heightAt(inp, gw, endH, d1Ft, top = PATH1_TOP, alt = false) {
+    if (alt) {   // 60 KIAS: um só gradiente do fim do CTO até 1000 ft ATS
+      const g = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, gw, 3);
+      if (!g.ok) return { ok: false, msg: `60 KIAS: ${g.msg}` };
+      return { ok: true, alt: true, g1: g, d1p: Infinity, h: endH + Math.max(0, g.grad) * d1Ft / 100 };
+    }
     const g1 = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, gw, 1);
     if (!g1.ok) return { ok: false, msg: `PATH 1: ${g1.msg}` };
     const out = { ok: true, g1 };
@@ -177,5 +185,5 @@
     return out;
   }
 
-  root.VTEngine = { CONFIGS, CTO_FIG, P1_GW, p1Fig, p2Fig, grad, gradForGw, gwForGrad, heightAt, obstacleAfter, T4A7, TDP_MIN, TDP_MAX, TDPE_ALT_MAX, heights, obstacleAhead, hdFt, compute };
+  root.VTEngine = { CONFIGS, CTO_FIG, P1_GW, p1Fig, p2Fig, altFig, grad, gradForGw, gwForGrad, heightAt, obstacleAfter, T4A7, TDP_MIN, TDP_MAX, TDPE_ALT_MAX, heights, obstacleAhead, hdFt, compute };
 })(typeof window !== 'undefined' ? window : globalThis);
