@@ -24,6 +24,16 @@
       </a>
     </header>
 
+    <section class="off-card" id="offCard" data-state="idle" hidden aria-live="polite">
+      <div class="off-head">
+        <span class="off-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="off-cloud" d="M7 18h10.5a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.4 8.6 4.75 4.75 0 0 0 7 18z"/><path class="off-arrow" d="M12 9v6m-3-3 3 3 3-3"/><path class="off-check" d="m9 13 2.2 2.2L15.5 11"/></svg></span>
+        <div class="off-txt"><b id="offTitle">Preparing offline download</b><small id="offSub">Starting…</small></div>
+        <span class="off-pct" id="offPct">0%</span>
+      </div>
+      <div class="off-track" role="progressbar" aria-label="Offline download"><div class="off-fill" id="offFill"></div></div>
+      <button type="button" class="off-retry" id="offRetry" hidden>Download missing files</button>
+    </section>
+
     <section class="flow-section" aria-labelledby="toolsHeading">
       <h2 id="toolsHeading" class="section-kicker">Tools</h2>
       <div class="tile-grid" id="tileGrid">
@@ -85,5 +95,6 @@
 
   <script src="shared/pwa.js"></script>
   <script src="shared/home.js"></script>
+  <script src="shared/offline-status.js"></script>
 </body>
 </html>

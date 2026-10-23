@@ -1,5 +1,6 @@
-const CACHE_NAME = 'aw139-companion-root-v73-offline';
+const CACHE_NAME = 'aw139-companion-root-v74-offline-bar';
 const PRECACHE = [
+  "./shared/offline-status.js",
   "./dropdown/assets/dropdown-enhanced-7000.png",
   "./dropdown/assets/dropdown-offshore-6400.png",
   "./dropdown/assets/dropdown-offshore-6800.png",
@@ -389,19 +390,53 @@ const PRECACHE = [
 // Arquivos sem os quais o app não abre: se um deles falhar, a instalação falha e a versão anterior continua.
 const CORE = /(\/|\.(html|js|css|json|svg|webmanifest))$/i;
 
-self.addEventListener('install', (event) => {
-  self.skipWaiting();
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    // Sem repetidos: cache.addAll rejeita a lista inteira se houver URL duplicada.
-    const urls = [...new Set(PRECACHE)];
-    const results = await Promise.allSettled(urls.map(async (url) => {
+// Progresso do download offline, mostrado na tela inicial (shared/offline-status.js).
+const progress = { state: 'idle', done: 0, failed: 0, total: 0 };
+const precacheUrls = () => [...new Set(PRECACHE)];
+async function broadcast() {
+  const clients = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
+  const msg = Object.assign({ type: 'offline-status', version: CACHE_NAME }, progress);
+  clients.forEach((c) => c.postMessage(msg));
+}
+let lastBroadcast = 0;
+function tick(force) {
+  const now = Date.now();
+  if (force || now - lastBroadcast > 150) { lastBroadcast = now; broadcast(); }
+}
+// Baixa a lista (ou só o que falta) para o cache desta versão, contando o progresso.
+async function fill(urls) {
+  const cache = await caches.open(CACHE_NAME);
+  progress.state = 'downloading'; progress.total = precacheUrls().length;
+  progress.done = progress.total - urls.length; progress.failed = 0; tick(true);
+  const results = await Promise.allSettled(urls.map(async (url) => {
+    try {
       // cache:'reload' ignora o cache HTTP do navegador, para não gravar cópias antigas na versão nova.
       const response = await fetch(new Request(url, { cache: 'reload' }));
       if (!response.ok) throw new Error(url + ' ' + response.status);
       await cache.put(url, response);
-    }));
-    // Imagens e PDFs que falharem são baixados depois, no primeiro uso com internet.
+      progress.done++;
+    } catch (e) { progress.failed++; throw e; } finally { tick(); }
+  }));
+  progress.state = progress.failed ? 'partial' : 'ready'; tick(true);
+  return results;
+}
+async function status() {
+  if (progress.state === 'downloading') return;
+  const cache = await caches.open(CACHE_NAME);
+  const have = new Set((await cache.keys()).map((r) => r.url));
+  const urls = precacheUrls();
+  const missing = urls.filter((u) => !have.has(new URL(u, self.registration.scope).href));
+  progress.total = urls.length; progress.done = urls.length - missing.length; progress.failed = missing.length;
+  progress.state = missing.length ? 'partial' : 'ready';
+  return missing;
+}
+
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+  event.waitUntil((async () => {
+    const urls = precacheUrls();
+    const results = await fill(urls);
+    // Imagens e PDFs que falharem são baixados depois (botão na tela inicial ou no primeiro uso com internet).
     const coreFailed = results.some((r, i) => r.status === 'rejected' && CORE.test(urls[i]));
     if (coreFailed) throw new Error('Falha ao baixar arquivos essenciais do app');
   })());
@@ -416,7 +451,10 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+  const type = event.data && event.data.type;
+  if (type === 'SKIP_WAITING') self.skipWaiting();
+  if (type === 'OFFLINE_STATUS') event.waitUntil(status().then(() => broadcast()));
+  if (type === 'OFFLINE_FILL') event.waitUntil(status().then((missing) => missing && missing.length ? fill(missing) : broadcast()));
 });
 
 // HTML, JS, CSS, JSON e SVG: rede primeiro (com limite de tempo) e cache como reserva offline.
