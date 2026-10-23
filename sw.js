@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v85-icon-paths';
+const CACHE_NAME = 'aw139-companion-root-v86-icons-short-confined';
 const PRECACHE = [
   "./shared/offline-status.js",
   "./dropdown/assets/dropdown-enhanced-7000.png",

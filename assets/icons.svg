@@ -143,11 +143,11 @@
     <g transform="translate(19.29 19) scale(-0.42 0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
   </symbol>
   <symbol id="p-short" viewBox="0 0 48 32">
-    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 28h20"/><path d="M27 28v-8h3v8M36 28V14h4v14"/><path d="M11.8 17.8c2-5 5.5-8.4 10.2-9.8s14-3 24-6" stroke-dasharray="2.5 2.5"/></g>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 28h20"/><path d="M27 28v-8h3v8M36 28V14h4v14"/><path d="M7.7 17.2V8" stroke-dasharray="2.5 2.5"/><path d="M4.7 11l3-3 3 3"/><path d="M9.7 8c8 0 18-2 36.3-6" stroke-dasharray="2.5 2.5"/></g>
     <g transform="translate(12.29 17) scale(-0.42 0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
   </symbol>
   <symbol id="p-confined" viewBox="0 0 48 32">
-    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 28h22"/><path d="M4 28V12l3-4 3 4v16M32 28V10l3-5 3 5v18"/><path d="M21.7 19.2V6c0-2 3-3 8-3 6 0 10-1 16.3-2" stroke-dasharray="2.5 2.5"/></g>
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 28h22"/><path d="M4 28V12l3-4 3 4v16M32 28V10l3-5 3 5v18"/><path d="M20.4 19.2L15.6 7.6" stroke-dasharray="2.5 2.5"/><circle cx="15" cy="6.2" r="1.2"/><path d="M16.6 5.4c8-2.6 17-3.6 29.4-4.4" stroke-dasharray="2.5 2.5"/></g>
     <g transform="translate(26.29 19) scale(-0.42 0.42)" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h15"/><path d="M11 4.5v3"/><path d="M15.5 7.5H9a4 4 0 0 0-4 4 1.5 1.5 0 0 0 1.5 1.5h9z"/><path d="M15.5 9.5h5.5"/><path d="M21 7.5v4"/><path d="M8.5 13v3M13.5 13v3"/><path d="M6.5 16h9.5"/></g>
   </symbol>
   <symbol id="p-backup" viewBox="0 0 48 32">
