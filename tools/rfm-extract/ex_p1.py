@@ -54,11 +54,20 @@ def extract(n,fig,rfm,title,gw,cfg,seq=None):
     colx=statistics.median(x for v,x,y in T if v in (1,2,3,4,6,7,8,9) and y<ends)
     col=[(v,x,y) for v,x,y in T if abs(x-colx)<5]
     pa=[(snap(y,H,2.5) or y, v*1000) for v,x,y in col if y<ends+3 and -1<=v<=15]
-    hw=[(snap(y,H,2.5) or y, v) for v,x,y in col if y>ends+3 and v in (0,5,10,15,20)]
+    hw=[(snap(y,H,2.5) or y, v) for v,x,y in col if ends+3<y<ends+80 and v in (0,5,10,15,20)]
     PA=lin(pa,30); HW=lin(hw,0.05)
     yb=(20-HW['b'])/HW['a']
-    g=[(snap(x,V,2.5) or x, v) for v,x,y in T if yb+2<y<yb+16 and 0<=v<=70 and v%5==0]
-    G=lin(g,0.5)
+    g=[(snap(x,V,1.2) or x, v) for v,x,y in T if yb+2<y<yb+16 and 0<=v<=70 and v==int(v)]
+    gMax=max(v for x,v in g)
+    Gt=lin(g,0.5)
+    # eixo do gradiente pela moldura do painel de vento (0 na borda esquerda, gMax na direita);
+    # nas cartas do PATH 2 os rótulos estão deslocados ~1,3 pt em relação à moldura e às guias.
+    fr=[it[1] for d in p.get_drawings() if seq is None or seq[0]<=d['seqno']<=seq[1] for it in d['items']
+        if it[0]=='re' and 150<it[1].width<260 and (abs(it[1].y0-y0g)<0.6 or abs(it[1].y1-ends)<0.6)]
+    if fr:
+        G=lin([(fr[0].x0,0),(fr[0].x1,gMax),(fr[0].x0+1e-6,0)])
+        G['tokShift']=round((Gt['b']-G['b'])/G['a'],2)
+    else: G=Gt
     curves=[clean(q['pts']) for q in main]
     def cmp(a,b):
         lo=max(min(pt[1] for pt in a),min(pt[1] for pt in b)); hi=min(max(pt[1] for pt in a),max(pt[1] for pt in b))
@@ -68,7 +77,7 @@ def extract(n,fig,rfm,title,gw,cfg,seq=None):
     curves.sort(key=functools.cmp_to_key(cmp))   # da direita (mais frio) para a esquerda
     vals=list(range(-40,51,10))[:len(curves)]
     xl,xr=min(V),max(V)
-    x70=(70-G['b'])/G['a']
+    x70=(gMax-G['b'])/G['a']
     lab=[(v,x,y) for v,x,y in T if v in range(-40,51,10) and abs(x-colx)>12 and x<x70-3 and y<ends-2 and min(pt[1] for c in curves for pt in c)-6<y]
     chk=[];bad=[]
     byv={v:c for v,c in zip(vals,curves)}
@@ -78,7 +87,7 @@ def extract(n,fig,rfm,title,gw,cfg,seq=None):
         ok=a is not None and x>a-1 and (b is None or x<b+1)
         chk.append((v,ok));
         if not ok: bad.append((v,round(x,1),a and round(a,1),b and round(b,1)))
-    mo=sorted([q for q in dashed if max(pt[1] for pt in q['pts'])<ends+0.5 and len(q['pts'])>=2],key=lambda q:-len(q['pts']))
+    mo=sorted([q for q in dashed if max(pt[1] for pt in q['pts'])<ends+0.5 and len(q['pts'])>=2 and max(pt[1] for pt in q['pts'])-min(pt[1] for pt in q['pts'])>5],key=lambda q:-len(q['pts']))
     maxoat=clean(mo[0]['pts']) if mo else None
     mg=[q for q in dashed if min(pt[1] for pt in q['pts'])>ends-1 and abs(q['pts'][0][0]-q['pts'][-1][0])<0.2]
     ming=G['a']*mg[0]['pts'][0][0]+G['b'] if mg else None
@@ -86,8 +95,23 @@ def extract(n,fig,rfm,title,gw,cfg,seq=None):
     Gd=[dict(v=round(G['a']*g_[0][0]+G['b'],2),pts=g_) for g_ in gl]
     return dict(fig=fig,page=n,rfmPage=rfm,title=title,gw=gw,cfg=cfg,pa=PA,g=G,hw=HW,yBase=ends,y0kt=y0g,
                 oat=[dict(v=v,pts=c) for v,c in zip(vals,curves)],maxOat=maxoat,minGrad=ming,guides=Gd,labelcheck=chk,bad=bad,
-                gRight=G['a']*xr+G['b'])
-if __name__=='__main__':
+                gMax=gMax)
+if __name__=='__main__' and sys.argv[1:2]==['p2']:
+    out={}
+    cfgs=[('clean',''),('eapsOff',', EAPS OFF'),('eapsOn',', EAPS ON'),('ibf',', IBF Installed')]
+    k=5
+    for ci,(cfg,suf) in enumerate(cfgs):
+        for wi,gw in enumerate(range(4400,6401,400)):
+            fig=f'4K-{k}'; n=1336+ci*6+wi
+            pg=DOC[n-1].get_text()
+            assert f'Figure {fig} ' in pg, (fig,n)
+            rfm=re.search(r'Page (S12-K\d+)',pg).group(1)
+            o=extract(n,fig,rfm,f'PATH 2 Gradient, Gross Weight {gw} kg{suf}',gw,cfg); out[fig]=o
+            print(fig,n,rfm,cfg,gw,'shift',o['g'].get('tokShift'),'PA',round(o['pa']['resid'],1),o['pa']['n'],'HW',round(o['hw']['resid'],3),o['hw']['n'],'G',round(o['g']['resid'],3),o['g']['n'],o['gMax'],
+                  'curves',len(o['oat']),'guides',[g['v'] for g in o['guides']],'maxOat',bool(o['maxOat']),'minG',o['minGrad'] and round(o['minGrad'],2),'bad',o['bad'],'y',o['yBase'],o['y0kt'],round((0-o['hw']['b'])/o['hw']['a'],1))
+            k+=1
+    json.dump(out,open('k_p2.json','w'))
+elif __name__=='__main__':
     out={}
     cfgs=[('clean',''),('eapsOff',', EAPS OFF'),('eapsOn',', EAPS ON'),('ibf',', IBF Installed')]
     k=8
@@ -98,7 +122,7 @@ if __name__=='__main__':
             assert f'Figure {fig} ' in pg, (fig,n)
             rfm=re.search(r'Page (S12-A\d+)',pg).group(1)
             o=extract(n,fig,rfm,f'PATH 1 Gradient, Gross Weight {gw} kg{suf}',gw,cfg,(0,269) if n==915 else None); out[fig]=o
-            print(fig,n,rfm,cfg,gw,'PA',round(o['pa']['resid'],1),o['pa']['n'],'HW',round(o['hw']['resid'],3),o['hw']['n'],'G',round(o['g']['resid'],3),o['g']['n'],
+            print(fig,n,rfm,cfg,gw,'shift',o['g'].get('tokShift'),'PA',round(o['pa']['resid'],1),o['pa']['n'],'HW',round(o['hw']['resid'],3),o['hw']['n'],'G',round(o['g']['resid'],3),o['g']['n'],
                   'curves',[c['v'] for c in o['oat']][-1],len(o['oat']),'guides',[g['v'] for g in o['guides']][:3],len(o['guides']),'maxOat',bool(o['maxOat']),'minG',o['minGrad'] and round(o['minGrad'],2),'bad',o['bad'],'y',o['yBase'],o['y0kt'],round((0-o['hw']['b'])/o['hw']['a'],1))
             if n==915: o['srcPdf']='p915_6400.pdf'
             k+=1

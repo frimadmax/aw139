@@ -16,6 +16,9 @@
   const P1_GW = [4400, 4800, 5200, 5600, 6000, 6400];
   const P1_FIRST = { clean: 8, eapsOff: 14, eapsOn: 20, ibf: 26 };
   const p1Fig = (config, i) => `4A-${P1_FIRST[config] + i}`;
+  // PATH 2 Gradient (Parte K, Fig. 4K-5 a 4K-28): de 200 ft a 1000 ft ATS, em VY e MCP OEI
+  const P2_FIRST = { clean: 5, eapsOff: 11, eapsOn: 17, ibf: 23 };
+  const p2Fig = (config, i) => `4K-${P2_FIRST[config] + i}`;
   const M2FT = 3.28084, PATH1_TOP = 200;
   // Fig. 4A-7: TDPE (ft) | altura mínima (ft) | altura no fim do CTO (ft)
   const T4A7 = [[35, 15, 35], [40, 20, 40], [45, 25, 45], [50, 30, 50], [55, 35, 55], [60, 40, 60], [65, 45, 65], [70, 50, 70]];
@@ -56,7 +59,7 @@
     if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+35 = ${vLim.toFixed(1)} °C nesta altitude).`);
     const r = G.interp(fam, oat);
     if (!r) return fail('Fora das curvas da carta nesta altitude e temperatura.');
-    const x = r.pos, x0 = G.inv(ch.g, 0), x70 = G.inv(ch.g, 70);
+    const gMax = ch.gMax || 70, x = r.pos, x0 = G.inv(ch.g, 0), x70 = G.inv(ch.g, gMax);
     const gBase = Math.max(0, G.lin(ch.g, x));
     const notes = [];
     const trace = [[x0 - 4, y], [x, y], [x, ch.y0kt]];
@@ -85,21 +88,22 @@
         trace.push([xH, yH], [xH, G.inv(ch.hw, 20) + 3]);
       }
     } else trace.push([x, G.inv(ch.hw, 20) + 3]);
-    if (gHw >= 69.9) notes.push('Gradiente no fim da escala da carta (70 ft).');
+    if (gHw >= gMax - 0.1) notes.push(`Gradiente no fim da escala da carta (${gMax} ft).`);
     if (ch.minGrad != null && gHw < ch.minGrad) notes.push(`Gradiente abaixo da linha "Min. Gradient" da carta (${ch.minGrad.toFixed(1).replace('.', ',')} ft).`);
-    return { ok: true, fig, gBase, grad: Math.min(70, gHw), hw, notes, trace };
+    return { ok: true, fig, gBase, grad: Math.min(gMax, gHw), hw, notes, trace };
   }
   // Gradiente para o peso: interpolação linear entre as cartas de peso vizinhas (como no RFM, Ex. 2).
-  function gradForGw(config, paFt, oat, hwKt, gwKg) {
+  function gradForGw(config, paFt, oat, hwKt, gwKg, path = 1) {
+    const fig = path === 2 ? p2Fig : p1Fig;
     const gw = Math.max(P1_GW[0], Math.min(6400, gwKg));
     let i = P1_GW.findIndex((w, k) => k < P1_GW.length - 1 && gw <= P1_GW[k + 1]);
     if (i < 0) i = P1_GW.length - 2;
-    const a = grad(p1Fig(config, i), paFt, oat, hwKt), b = grad(p1Fig(config, i + 1), paFt, oat, hwKt);
+    const a = grad(fig(config, i), paFt, oat, hwKt), b = grad(fig(config, i + 1), paFt, oat, hwKt);
     const t = (gw - P1_GW[i]) / (P1_GW[i + 1] - P1_GW[i]);
-    if (t <= 1e-9 && a.ok) return { ok: true, grad: a.grad, charts: [a], gw, t: 0 };
+    if (t <= 1e-9 && a.ok) return { ok: true, grad: a.grad, charts: [a], gw, t: 0, path, notes: gwKg < P1_GW[0] ? ['Peso abaixo de 4400 kg: usada a carta de 4400 kg (conservador).'] : [] };
     if (!a.ok) return a;
     if (!b.ok) return b;
-    return { ok: true, grad: a.grad + t * (b.grad - a.grad), charts: [a, b], gw, t, notes: gwKg < P1_GW[0] ? ['Peso abaixo de 4400 kg: usada a carta de 4400 kg (conservador).'] : [] };
+    return { ok: true, grad: a.grad + t * (b.grad - a.grad), charts: [a, b], gw, t, path, notes: gwKg < P1_GW[0] ? ['Peso abaixo de 4400 kg: usada a carta de 4400 kg (conservador).'] : [] };
   }
   // Maior peso (até gwMax) que dá o gradiente exigido; null se nem 4400 kg atinge.
   function gwForGrad(config, paFt, oat, hwKt, need, gwMax) {
@@ -114,27 +118,45 @@
     }
     return Math.min(best, gwMax);
   }
-  // Obstáculo depois do CTO (Fig. 4A-2): altura no obstáculo com o gradiente PATH 1.
+  // Altura no obstáculo depois do CTO: PATH 1 do fim do CTO até 200 ft ATS, depois PATH 2 (Fig. 4A-2 e Parte K).
+  function heightAt(inp, gw, endH, d1Ft) {
+    const g1 = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, gw, 1);
+    if (!g1.ok) return { ok: false, msg: `PATH 1: ${g1.msg}` };
+    const out = { ok: true, g1 };
+    if (g1.grad <= 0) { out.h = endH; out.d1p = Infinity; return out; }
+    out.d1p = Math.max(0, (PATH1_TOP - endH) * 100 / g1.grad);   // ft até 200 ft ATS
+    if (d1Ft <= out.d1p) { out.h = endH + g1.grad * d1Ft / 100; return out; }
+    const g2 = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, gw, 2);
+    if (!g2.ok) return { ok: false, msg: `PATH 2: ${g2.msg}`, g1 };
+    out.g2 = g2;
+    out.h = PATH1_TOP + g2.grad * (d1Ft - out.d1p) / 100;
+    return out;
+  }
   function obstacleAfter(inp, ctoM, endH) {
     const hReq = inp.obsAheadH + (inp.obsAheadHc || 0);
     const d1Ft = (inp.obsAheadD - ctoM) * M2FT;
-    const out = { after: true, d1: inp.obsAheadD - ctoM, d1Ft, hReq };
-    out.path2 = hReq > PATH1_TOP;   // PATH 1 vale até 200 ft ATS; o Ex. 2 do RFM ainda usa o PATH 1 nesse caso
-    const g = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, inp.gw);
-    out.g = g;
-    if (!g.ok) return out;
-    out.hgd = g.grad * d1Ft / 100;
-    out.thg = endH + out.hgd;
-    out.clear = out.thg - inp.obsAheadH;
-    out.ok = out.thg >= hReq - 1e-9;
-    if (!out.ok) {
-      const tdpe = Math.max(TDP_MIN, Math.ceil(hReq - out.hgd));
-      if (tdpe <= TDP_MAX) out.tdpe = tdpe;
-      else {
-        out.cgd = (hReq - TDP_MAX) * 100 / d1Ft;
-        out.gw2 = gwForGrad(inp.config, inp.pa, inp.oat, inp.hw, out.cgd, inp.gw);
-      }
+    const out = Object.assign({ after: true, d1: inp.obsAheadD - ctoM, d1Ft, hReq }, heightAt(inp, inp.gw, endH, d1Ft));
+    out.aboveTop = hReq > 1000;
+    if (!out.ok) return out;
+    out.thg = out.h; out.clear = out.h - inp.obsAheadH;
+    out.clears = out.h >= hReq - 1e-9;
+    if (out.clears) return out;
+    // 1) TDPE até 70 ft (altura no fim do CTO = TDPE, Fig. 4A-7)
+    const H = t => heightAt(inp, inp.gw, t, d1Ft);
+    const h70 = H(TDP_MAX);
+    if (h70.ok && h70.h >= hReq - 1e-9) {
+      let lo = Math.max(TDP_MIN, inp.tdp), hi = TDP_MAX;
+      for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; const r = H(m); if (r.ok && r.h >= hReq) hi = m; else lo = m; }
+      out.tdpe = Math.ceil(hi - 1e-6);
+      return out;
     }
+    // 2) TDPE 70 ft e peso menor (CTO mantido do peso atual: conservador, como no RFM)
+    const W = w => heightAt(inp, w, TDP_MAX, d1Ft);
+    const w0 = W(4400);
+    if (!w0.ok || w0.h < hReq) { out.gw2 = null; return out; }
+    let lo = 4400, hi = Math.max(4400, Math.min(6400, inp.gw));
+    for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; const r = W(m); if (r.ok && r.h >= hReq) lo = m; else hi = m; }
+    out.gw2 = lo;
     return out;
   }
 
@@ -155,5 +177,5 @@
     return out;
   }
 
-  root.VTEngine = { CONFIGS, CTO_FIG, P1_GW, p1Fig, grad, gradForGw, gwForGrad, obstacleAfter, T4A7, TDP_MIN, TDP_MAX, TDPE_ALT_MAX, heights, obstacleAhead, hdFt, compute };
+  root.VTEngine = { CONFIGS, CTO_FIG, P1_GW, p1Fig, p2Fig, grad, gradForGw, gwForGrad, heightAt, obstacleAfter, T4A7, TDP_MIN, TDP_MAX, TDPE_ALT_MAX, heights, obstacleAhead, hdFt, compute };
 })(typeof window !== 'undefined' ? window : globalThis);

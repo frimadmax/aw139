@@ -1,7 +1,7 @@
 /* AW139 CAT A Heliport/Helideck Vertical — interface */
 (function () {
   'use strict';
-  const V = window.VTEngine, C = Object.assign({}, window.VT_CHARTS, window.VT_P1);
+  const V = window.VTEngine, C = Object.assign({}, window.VT_CHARTS, window.VT_P1, window.VT_P2);
   const $ = id => document.getElementById(id);
   const KEY = 'aw139.vertical.v1';
   const M2FT = 3.28084;
@@ -103,18 +103,20 @@
       const r = out.ahead, hc = inp.obsAheadHc != null ? inp.obsAheadHc : 0;
       if (r.after) {
         const D1 = `D1 = ${fmt(Math.floor(r.d1))} m (${fmt(r.d1Ft)} ft) do fim do CTO`;
-        if (!r.g || !r.g.ok) {
+        const f1 = v => v.toFixed(1).replace('.', ',');
+        if (!r.ok) {
           sa.className = 'sf-status bad';
-          sa.textContent = `Obstáculo depois do CTO, ${D1}. PATH 1: ${r.g ? r.g.msg : 'sem dados'}`;
+          sa.textContent = `Obstáculo depois do CTO, ${D1}. ${r.msg}`;
         } else {
-          const gtxt = `gradiente PATH 1 ${r.g.grad.toFixed(1).replace('.', ',')} ft/100 ft`;
-          let t = `Obstáculo depois do CTO, ${D1}; ${gtxt}: altura no obstáculo ${fmt(Math.floor(r.thg))} ft (${fmt(h.endH)} + ${fmt(Math.floor(r.hgd))}), exigida ${fmt(r.hReq)} ft. `;
-          if (r.ok) t += `Passa ${fmt(Math.floor(r.clear))} ft acima do obstáculo: atende.`;
+          let t = `Obstáculo depois do CTO, ${D1}. PATH 1 ${f1(r.g1.grad)} ft/100 ft`;
+          if (r.g2) t += ` até 200 ft ATS (${fmt(r.d1p)} ft), depois PATH 2 ${f1(r.g2.grad)} ft/100 ft`;
+          t += `: altura no obstáculo ${fmt(Math.floor(r.h))} ft, exigida ${fmt(r.hReq)} ft (HO + HC). `;
+          if (r.clears) t += `Passa ${fmt(Math.floor(r.clear))} ft acima do obstáculo: atende.`;
           else if (r.tdpe) t += `Não atende com TDP ${inp.tdp} ft. TDPE necessário: ${r.tdpe} ft.`;
-          else if (r.gw2 != null) t += `Nem com TDPE 70 ft. Gradiente exigido com TDPE 70 ft: ${r.cgd.toFixed(1).replace('.', ',')} ft/100 ft, obtido com peso até ${fmt(floor10(r.gw2))} kg (CTO mantido do peso atual, conservador como no RFM). Refaça com esse peso e TDPE 70 ft.`;
-          else t += `Nem com TDPE 70 ft e peso mínimo das cartas (4400 kg). O RFM manda adotar o Back Up.`;
-          if (r.path2) t += ' Atenção: altura exigida acima de 200 ft ATS, onde termina o PATH 1; confira também o PATH 2 (Fig. 4K-5 a 4K-28).';
-          sa.className = 'sf-status ' + (r.ok ? 'ok' : 'bad');
+          else if (r.gw2 != null) t += `Nem com TDPE 70 ft. Com TDPE 70 ft atende com peso até ${fmt(floor10(r.gw2))} kg (CTO mantido do peso atual, conservador como no RFM).`;
+          else t += `Nem com TDPE 70 ft e 4400 kg. O RFM manda adotar o Back Up.`;
+          if (r.aboveTop) t += ' Altura exigida acima de 1000 ft ATS, fim do PATH 2.';
+          sa.className = 'sf-status ' + (r.clears ? 'ok' : 'bad');
           sa.textContent = t;
         }
       } else {
@@ -158,9 +160,9 @@
       const r = out.ahead, D = inp.obsAheadD;
       if (r && D != null && inp.obsAheadH != null) {
         const xo = sx(Math.min(D, span / 1.02)), ho = Math.min(150, 12 + inp.obsAheadH * 0.9);
-        const bad = r.after ? !r.ok : (!r.possible || inp.tdp < r.req);
+        const bad = r.after ? !r.clears : (!r.possible || inp.tdp < r.req);
         s += `<rect x="${xo - 5}" y="${G - ho}" width="10" height="${ho}" fill="${bad ? '#ff4d6d' : '#8fa3e6'}" opacity=".8"/>`;
-        if (r.after) s += `<path class="path-climb" stroke-dasharray="6 4" d="M${xe} ${yT} L ${xo + 5} ${Math.max(16, yT - 60)}"/><text class="sm" x="${(xe + xo) / 2}" y="${Math.max(16, yT - 36)}" text-anchor="middle">PATH 1</text>`;
+        if (r.after) s += `<path class="path-climb" stroke-dasharray="6 4" d="M${xe} ${yT} L ${xo + 5} ${Math.max(16, yT - 60)}"/><text class="sm" x="${(xe + xo) / 2}" y="${Math.max(16, yT - 36)}" text-anchor="middle">${r.g2 ? 'PATH 1 + 2' : 'PATH 1'}</text>`;
       }
     }
     svg.setAttribute('viewBox', '0 0 640 236');
@@ -181,15 +183,16 @@
     $('chartWrap').hidden = isTab; $('chartTools').hidden = isTab; $('tableWrap').hidden = !isTab;
     $('chartWrap2').hidden = true;
     if (isTab) { $('chartCap').textContent = 'Linha destacada: valores usados no cálculo.'; $('tableWrap').innerHTML = tableHtml(last.input); return; }
-    if (tab === 'p1') {
+    if (tab === 'p1' || tab === 'p2') {
+      const path = tab === 'p1' ? 1 : 2, figFn = path === 1 ? V.p1Fig : V.p2Fig;
       const inp = last.input, r = last.ahead;
-      const g = r && r.after && r.g && r.g.ok ? r.g : V.gradForGw(inp.config, inp.pa, inp.oat, inp.hw, inp.gw);
+      const g = V.gradForGw(inp.config, inp.pa, inp.oat, inp.hw, inp.gw, path);
       const i = Math.max(0, V.P1_GW.findIndex((w, k) => k < V.P1_GW.length - 1 && Math.max(4400, Math.min(6400, inp.gw)) <= V.P1_GW[k + 1]));
-      const figs = [V.p1Fig(inp.config, i), V.p1Fig(inp.config, i + 1)];
+      const figs = [figFn(inp.config, i), figFn(inp.config, i + 1)];
       const charts = g.ok ? g.charts : figs.map(f => V.grad(f, inp.pa, inp.oat, inp.hw));
       const shown = charts.length > 1 ? figs : [figs[0]];
       const vals = charts.map(c => c.ok ? `${c.fig}: ${c.grad.toFixed(1).replace('.', ',')} ft` : `${c.fig}: ${c.msg}`).join(' · ');
-      $('chartCap').innerHTML = `<b>PATH 1</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
+      $('chartCap').innerHTML = `<b>PATH ${path}</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
         (g.ok && charts.length > 1 ? `. Interpolado para ${fmt(g.gw)} kg: <b>${g.grad.toFixed(1).replace('.', ',')} ft/100 ft</b>.` : '') +
         (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324, confere com o Ex. 2 do RFM).' : '');
       paint('chartImg', 'chartSvg', shown[0], charts[0], 1);

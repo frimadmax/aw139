@@ -16,3 +16,5 @@ Back Up (Parte C): `ex_bu.py bu` (W.A.T. 4C-3 a 4C-5A, calibração automática 
 PATH 1 do Vertical (Fig. 4A-8 a 4A-31): `mk915.py` (gera `p915_6400.pdf`; no PDF Rev 30 a página da Fig. 4A-13
 tem uma cópia da carta de 6000 kg desenhada por cima da carta correta de 6400 kg), `ex_p1.py` → `vt_p1.json`,
 `build.py ../../vertical VT_P1 vt_p1.json vt-p1.js`. `ov_p1.py 4A-8,...` desenha a extração para conferência.
+PATH 2 (Parte K, Fig. 4K-5 a 4K-28): `ex_p1.py p2` → `k_p2.json`, `build.py ../../vertical VT_P2 k_p2.json vt-p2.js`.
+O eixo do gradiente é calibrado pela moldura do painel (os rótulos do PDF ficam ~1,3 pt deslocados).
