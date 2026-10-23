@@ -6,7 +6,7 @@
   'use strict';
   const E = root.SFEngine;
   const CONFIGS = {
-    clean:   { label: 'Clean',    wat: '4D-4' },
+    clean:   { label: 'Clean Air Intake', wat: '4D-4' },
     eapsOff: { label: 'EAPS OFF', wat: '4D-5' },
     eapsOn:  { label: 'EAPS ON',  wat: '4D-6' },
     ibf:     { label: 'IBF',      wat: '4D-6A' }

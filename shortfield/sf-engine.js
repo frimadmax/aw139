@@ -8,7 +8,7 @@
   'use strict';
 
   const CONFIGS = {
-    clean:   { label: 'Clean (sem filtro)', wat: '4B-1',  rto: '4B-4',  cto: '4B-7' },
+    clean:   { label: 'Clean Air Intake', wat: '4B-1',  rto: '4B-4',  cto: '4B-7' },
     eapsOff: { label: 'EAPS OFF',           wat: '4B-2',  rto: '4B-5',  cto: '4B-7' },
     eapsOn:  { label: 'EAPS ON',            wat: '4B-3',  rto: '4B-6',  cto: '4B-7' },
     ibf:     { label: 'IBF instalado',      wat: '4B-3A', rto: '4B-6A', cto: '4B-7' }

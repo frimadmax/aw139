@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v75-catb-wat';
+const CACHE_NAME = 'aw139-companion-root-v76-clean-air-intake';
 const PRECACHE = [
   "./shared/offline-status.js",
   "./dropdown/assets/dropdown-enhanced-7000.png",
