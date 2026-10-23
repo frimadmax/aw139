@@ -1,9 +1,23 @@
-/* AW139 CAT A Heliport Back Up — interface */
+/* AW139 CAT A Heliport Back Up e Confined Area — interface (mesma tela, textos por perfil) */
 (function () {
   'use strict';
-  const S = window.SFEngine, B = window.BUEngine, C = window.BU_CHARTS;
+  const PROFILES = {
+    backup: {
+      charts: 'BU_CHARTS', key: 'aw139.backup.v1', sec: 'Supl. 12, Seção 1C', tdp: '85–400', recuo: 'back up', recuoCard: 'Alturas e back up',
+      t7: ['4C-7', 'S12-C31', 'Typical Heights and Distances'], t8: ['4C-8', 'S12-C32', 'Minimum Distance for Obstacle in Back Up Profile'],
+      ahead: ['4C-1', 70], hwOnWat: true
+    },
+    confined: {
+      charts: 'CA_CHARTS', key: 'aw139.confined.v1', sec: 'Supl. 12, Seção 1D', tdp: '100–400', recuo: 'subida para trás', recuoCard: 'Alturas e recuo',
+      t7: ['4D-7', 'S12-D35', 'Confined Area Typical Heights and Distances'], t8: ['4D-8', 'S12-D36', 'Minimum Distance for Obstacle Under Rearward Climb'],
+      ahead: ['4D-1', 85], hwOnWat: false
+    }
+  };
+  const me = document.currentScript;
+  const P = PROFILES[(me && me.dataset.profile) || 'backup'];
+  const S = window.SFEngine, B = window.BUEngine, C = window[P.charts];
   const $ = id => document.getElementById(id);
-  const KEY = 'aw139.backup.v1';
+  const KEY = P.key;
   const M2FT = 3.28084;
   const fmt = n => Math.round(n).toLocaleString('pt-BR');
   const floor10 = n => Math.floor(n / 10) * 10;
@@ -51,7 +65,7 @@
       cards.forEach(id => { $(id).className = 'sf-res'; $(id).innerHTML = '<h3>—</h3><p class="sub">Preencha altitude, OAT, peso e TDP.</p>'; });
       return;
     }
-    if (inp.hw < 0) { cards.forEach(id => errCard($(id), 'Vento', 'Supl. 12, Seção 1C', 'Vento de cauda: decolagem proibida.')); return; }
+    if (inp.hw < 0) { cards.forEach(id => errCard($(id), 'Vento', P.sec, 'Vento de cauda: decolagem proibida.')); return; }
     const out = B.compute(inp);
     last = out;
 
@@ -64,12 +78,13 @@
         <p class="big">${fmt(wMax)} <small>kg</small></p>
         <p class="sub">Sem vento ${fmt(floor10(w.wBase))} kg${w.hw > 0 ? ` · vento ${w.hw} kt +${fmt(w.wMax - w.wBase)} kg` : ''}${w.limitedBy6400 ? ' · limitado a 6400 kg' : ''}</p>
         <p class="sub">${margin >= 0 ? `Margem +${fmt(margin)} kg sobre o GW` : `<b>GW excede em ${fmt(-margin)} kg</b>`}</p>
-        ${inp.hw > 20 ? '<p class="note">Vento acima de 20 kt: crédito limitado a 20 kt (fim da escala).</p>' : ''}
+        ${P.hwOnWat && inp.hw > 20 ? '<p class="note">Vento acima de 20 kt: crédito limitado a 20 kt (fim da escala).</p>' : ''}
+        ${!P.hwOnWat ? '<p class="note">Sem crédito de vento: esta carta W.A.T. não tem seção de vento.</p>' : ''}
         <p class="src">${src(cfg.wat)}</p>`;
     }
 
     const d = out.dist, h = out.h, elC = $('resCto');
-    if (!h) errCard(elC, 'Distância CTO', 'Fig. 4C-7', 'TDP fora da faixa 85–400 ft ATS.');
+    if (!h) errCard(elC, 'Distância CTO', `Fig. ${P.t7[0]}`, `TDP fora da faixa ${P.tdp} ft ATS.`);
     else if (!d.ok) errCard(elC, 'Distância CTO', src(B.DIST_FIG), d.msg);
     else {
       const cto = ceil1(out.cto);
@@ -77,19 +92,20 @@
       elC.innerHTML = `<h3>Distância CTO (OEI)</h3>
         <p class="big">${fmt(cto)} <small>m</small></p>
         <p class="sub">${fmt(cto * M2FT)} ft a partir do ponto de decolagem</p>
-        <p class="sub">Do TDP ${fmt(ceil1(d.dist))} m${d.hw > 0 ? ` (sem vento ${fmt(ceil1(d.dist0))} m, ${d.corrPerKt.toFixed(1).replace('.', ',')} m/kt × ${d.hw} kt)` : ''} − back up ${fmt(Math.floor(h.backup))} m</p>
+        <p class="sub">Do TDP ${fmt(ceil1(d.dist))} m${d.hw > 0 ? ` (sem vento ${fmt(ceil1(d.dist0))} m, ${d.corrPerKt.toFixed(1).replace('.', ',')} m/kt × ${d.hw} kt)` : ''} − ${P.recuo} ${fmt(Math.floor(h.backup))} m</p>
         ${d.notes.map(n => `<p class="note">${n}</p>`).join('')}
-        <p class="src">${src(B.DIST_FIG)} e Fig. 4C-7</p>`;
+        <p class="src">${src(B.DIST_FIG)} e Fig. ${P.t7[0]}</p>`;
     }
     const elH = $('resHgt');
-    if (!h) errCard(elH, 'Alturas', 'Fig. 4C-7', 'TDP fora da faixa 85–400 ft ATS.');
+    if (!h) errCard(elH, 'Alturas', `Fig. ${P.t7[0]}`, `TDP fora da faixa ${P.tdp} ft ATS.`);
     else {
       elH.className = 'sf-res';
-      elH.innerHTML = `<h3>Alturas e back up</h3>
+      elH.innerHTML = `<h3>${P.recuoCard}</h3>
         <p class="big">${fmt(Math.floor(h.backup))} <small>m de recuo</small></p>
+        ${h.lateral != null ? `<p class="sub">Deslocamento lateral máx. ${fmt(h.lateral)} m (ponta de pá externa)</p>` : ''}
         <p class="sub">Altura mínima no CTO ${fmt(h.minH)} ft · no fim do CTO ${fmt(h.endH)} ft</p>
         <p class="sub">TDP ${inp.tdp} ft ATS${h.exact ? '' : ' (interpolado entre linhas)'}</p>
-        <p class="src">Fig. 4C-7 · RFM S12-C31</p>`;
+        <p class="src">Fig. ${P.t7[0]} · RFM ${P.t7[1]}</p>`;
     }
 
     const sb = $('obBehind'), sa = $('obAhead');
@@ -99,7 +115,7 @@
       if (r.out) { sb.className = 'sf-status bad'; sb.textContent = r.msg; }
       else {
         sb.className = 'sf-status ' + (r.ok ? 'ok' : 'bad');
-        sb.textContent = `Obstáculo atrás com ${fmt(inp.obsBehindH)} ft (linha de ${r.rowH} ft na Fig. 4C-8): distância mínima ${r.minDist} m da borda traseira. ` +
+        sb.textContent = `Obstáculo atrás com ${fmt(inp.obsBehindH)} ft (linha de ${r.rowH} ft na Fig. ${P.t8[0]}): distância mínima ${r.minDist} m da borda traseira. ` +
           (r.ok ? `Está a ${fmt(inp.obsBehindD)} m: OK.` : `Está a ${fmt(inp.obsBehindD)} m: dentro da zona, não atende.`);
       }
     } else sb.hidden = true;
@@ -108,8 +124,8 @@
       const r = out.ahead, hc = inp.obsAheadHc != null ? inp.obsAheadHc : 0;
       const ok = r.possible && inp.tdp >= r.req;
       sa.className = 'sf-status ' + (ok ? 'ok' : 'bad');
-      sa.textContent = !r.possible ? `Obstáculo à frente: TDPE necessário ${fmt(r.req)} ft passa do máximo de 400 ft.`
-        : `Obstáculo à frente (HO ${fmt(inp.obsAheadH)} ft + HC ${fmt(hc)} ft + 70): TDPE mínimo ${fmt(r.req)} ft. ` + (ok ? `TDP ${inp.tdp} ft atende.` : `TDP ${inp.tdp} ft é baixo.`);
+      sa.textContent = !r.possible ? `Obstáculo à frente: TDP necessário ${fmt(r.req)} ft passa do máximo de 400 ft.`
+        : `Obstáculo à frente (HO ${fmt(inp.obsAheadH)} ft + HC ${fmt(hc)} ft + ${P.ahead[1]}): TDP mínimo ${fmt(r.req)} ft. ` + (ok ? `TDP ${inp.tdp} ft atende.` : `TDP ${inp.tdp} ft é baixo.`);
     } else sa.hidden = true;
 
     drawDiagram(inp, out);
@@ -125,8 +141,9 @@
     const G = 178, XL = 30, XR = 610;
     const sx = m => XL + (XR - XL) * m / span;      // m a partir do ponto mais atrás (TDP)
     const xTdp = sx(0), xPad = sx(back);
-    const tdp = Math.max(85, Math.min(400, inp.tdp || 85));
-    const hT = 40 + (tdp - 85) / 315 * 96, yT = G - hT;
+    const t0 = B.TDP_MIN || 85;
+    const tdp = Math.max(t0, Math.min(400, inp.tdp || t0));
+    const hT = 40 + (tdp - t0) / (400 - t0) * 96, yT = G - hT;
     const yMin = h ? G - hT * (h.minH / tdp) : G - 10;
     let s = `<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#c8d3ff"/></marker></defs>`;
     s += `<line class="ground" x1="10" y1="${G}" x2="630" y2="${G}"/>`;
@@ -145,19 +162,21 @@
       s += `<text class="cto" x="${(xPad + xe) / 2}" y="${G + 44}" text-anchor="middle">CTO ${fmt(ceil1(cto))} m</text>`;
     }
     s += `<line class="dim" x1="${xTdp}" y1="${G + 62}" x2="${xPad}" y2="${G + 62}" marker-end="url(#ar)" marker-start="url(#ar)"/>`;
-    s += `<text class="rto" x="${(xTdp + xPad) / 2}" y="${G + 82}" text-anchor="middle">back up ${fmt(Math.floor(back))} m</text>`;
+    s += `<text class="rto" x="${Math.max(130, (xTdp + xPad) / 2)}" y="${G + 82}" text-anchor="middle">${P.recuo} ${fmt(Math.floor(back))} m</text>`;
     svg.setAttribute('viewBox', '0 0 640 268');
     svg.innerHTML = s;
   }
 
   function tablesHtml(inp) {
     const t = inp.tdp, hb = inp.obsBehindH;
-    const r7 = B.T4C7.map(r => `<tr class="${t != null && Math.abs(r[0] - t) < 7.5 ? 'hit' : ''}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+    const step = B.T4C7[1][0] - B.T4C7[0][0];
+    const r7 = B.T4C7.map(r => `<tr class="${t != null && Math.abs(r[0] - t) < step / 2 ? 'hit' : ''}">${r.map(v => `<td>${v}</td>`).join('')}</tr>`).join('');
+    const lat = B.T4C7[0].length > 4 ? '<th>Lateral (m)</th>' : '';
     const rowH = hb != null ? (B.T4C8.find(r => r[0] >= hb - 1e-9) || [])[0] : null;
     const r8 = B.T4C8.map(r => `<tr class="${r[0] === rowH ? 'hit' : ''}"><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
-    return `<table class="sf-table"><caption><b>Fig. 4C-7</b> Typical Heights and Distances · RFM S12-C31</caption>
-      <thead><tr><th>TDP (ft)</th><th>Alt. mín. (ft)</th><th>Fim CTO (ft)</th><th>Back up (m)</th></tr></thead><tbody>${r7}</tbody></table>
-      <table class="sf-table"><caption><b>Fig. 4C-8</b> Minimum Distance for Obstacle in Back Up Profile · RFM S12-C32</caption>
+    return `<table class="sf-table"><caption><b>Fig. ${P.t7[0]}</b> ${P.t7[2]} · RFM ${P.t7[1]}</caption>
+      <thead><tr><th>TDP (ft)</th><th>Alt. mín. (ft)</th><th>Fim CTO (ft)</th><th>Recuo (m)</th>${lat}</tr></thead><tbody>${r7}</tbody></table>
+      <table class="sf-table"><caption><b>Fig. ${P.t8[0]}</b> ${P.t8[2]} · RFM ${P.t8[1]}</caption>
       <thead><tr><th>Obstáculo (ft AGL)</th><th>Distância mín. atrás (m)</th></tr></thead><tbody>${r8}</tbody></table>`;
   }
 

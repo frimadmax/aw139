@@ -36,7 +36,7 @@
   const lin = (c, v) => c.a * v + c.b;          // coordenada -> valor
   const inv = (c, v) => (v - c.b) / c.a;        // valor -> coordenada
   // cartas: Short Field (SF_CHARTS) e Back Up (BU_CHARTS) usam o mesmo formato
-  const chart = fig => (root.SF_CHARTS && root.SF_CHARTS[fig]) || (root.BU_CHARTS && root.BU_CHARTS[fig]);
+  const chart = fig => ['SF_CHARTS', 'BU_CHARTS', 'CA_CHARTS'].map(k => root[k] && root[k][fig]).find(Boolean);
   const isaMaxOat = paFt => Math.min(50, 50 - 1.98 * paFt / 1000); // ISA+35 (linha MAX OAT LIMIT)
 
   // Interpola numa família {v, pos}; devolve pos para o valor pedido ou null.
@@ -74,7 +74,7 @@
     const top = Math.min(...ch.oat.map(c => Math.min(...c.pts.map(p => p[1]))));
     const bottom = Math.max(...ch.oat.map(c => Math.max(...c.pts.map(p => p[1]))));
     const paTop = Math.round(lin(ch.pa, top) / 100) * 100;
-    if (y < top - 0.1) return fail(`Altitude acima do limite da carta (${paTop} ft).`);
+    if (y < top - 0.2) return fail(`Altitude acima do limite da carta (${paTop} ft).`);
     if (y > bottom + 0.1) return fail('Altitude abaixo do limite da carta.');
     y = Math.min(bottom, Math.max(top, y));
     const { fam, vLim } = oatFamily(ch, pts => xAtY(pts, y), paFt);
@@ -89,11 +89,12 @@
     const xMax = inv(ch.w, GW_MAX);
     x = Math.min(x, xMax);
     const wBase = lin(ch.w, x);
-    const xLeft = Math.min(...ch.guides.map(g => g.pts[0][0]));
+    const xLeft = ch.guides.length ? Math.min(...ch.guides.map(g => g.pts[0][0])) : inv(ch.w, 4200);
     const trace = [[xLeft, y], [x, y], [x, ch.y0kt]];
 
     // crédito de vento de proa (seção inferior da carta)
-    const hw = Math.max(0, Math.min(20, hwKt || 0));
+    // cartas sem seção de vento (Confined Area): sem crédito
+    const hw = ch.hw ? Math.max(0, Math.min(20, hwKt || 0)) : 0;
     let wHw = wBase, xH = x;
     if (hw > 0) {
       const yH = inv(ch.hw, hw);
@@ -118,7 +119,7 @@
       }
       trace.push([xH, yH], [xH, inv(ch.hw, 20) + 4]);
     } else {
-      trace.push([x, inv(ch.hw, 20) + 4]);
+      trace.push([x, ch.hw ? inv(ch.hw, 20) + 4 : ch.y0kt + 4]);
     }
     return {
       ok: true, fig, wBase, wMax: wHw, hw, vLim,

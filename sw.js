@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v56-backup-ok';
+const CACHE_NAME = 'aw139-companion-root-v57-confined';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -142,6 +142,15 @@ const PRECACHE = [
   "./backup/charts/4C-5.webp",
   "./backup/charts/4C-5A.webp",
   "./backup/charts/4C-6.webp",
+  "./confined/",
+  "./confined/index.html",
+  "./confined/ca-data.js",
+  "./confined/ca-engine.js",
+  "./confined/charts/4D-4.webp",
+  "./confined/charts/4D-5.webp",
+  "./confined/charts/4D-6.webp",
+  "./confined/charts/4D-6A.webp",
+  "./confined/charts/4D-9.webp",
   "./shortfield/",
   "./shortfield/index.html",
   "./shortfield/sf.css",
