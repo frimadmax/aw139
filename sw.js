@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v65-hover';
+const CACHE_NAME = 'aw139-companion-root-v66-sem-pac';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -129,7 +129,6 @@ const PRECACHE = [
   "./shared/embedded-app.css",
   "./shared/embedded-skin.css",
   "./shared/landing-oei.js",
-  "./pac/",
   "./cat-a/",
   "./cat-a/index.html",
   "./backup/",
@@ -233,7 +232,6 @@ const PRECACHE = [
   "./shortfield/charts/4B-6A.webp",
   "./shortfield/charts/4B-7.webp",
   "./shared/tiles.css",
-  "./pac/index.html",
   "./catb/",
   "./catb/index.html",
   "./catb/app-data.js",

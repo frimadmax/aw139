@@ -70,7 +70,7 @@
   }
 
   function isExtraApp(path){
-    return ['/catb/','/power-check/','/ndl/','/roc/','/consumo/','/teto-pairado/','/limitacoes/','/pac/','/cat-a/','/shortfield/','/backup/','/confined/','/vertical/','/pouso-confined/'].some((d) => path.includes(d));
+    return ['/catb/','/power-check/','/ndl/','/roc/','/consumo/','/teto-pairado/','/limitacoes/','/cat-a/','/shortfield/','/backup/','/confined/','/vertical/','/pouso-confined/'].some((d) => path.includes(d));
   }
 
   function serviceWorkerConfig(){
