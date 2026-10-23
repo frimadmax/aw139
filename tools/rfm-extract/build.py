@@ -23,6 +23,7 @@ for fig,o in data.items():
                 r=pymupdf.Rect(sp['bbox'])*M
                 if r.y0>75 and r.y1<H-40: xs+=[r.x0,r.x1]; ys+=[r.y0,r.y1]
     x0,x1,y0,y1=min(xs)-8,max(xs)+8,min(ys)-8,max(ys)+8
+    if o.get('crop'): x0,y0,x1,y1=o.pop('crop')
     x0=max(0,x0); x1=min(W,x1); y0=max(0,y0); y1=min(H,y1)
     clip=pymupdf.Rect(x0,y0,x1,y1)
     # clip in displayed coords -> pixmap of full page then crop

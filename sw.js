@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v76-clean-air-intake';
+const CACHE_NAME = 'aw139-companion-root-v77-pwc-chart';
 const PRECACHE = [
   "./shared/offline-status.js",
   "./dropdown/assets/dropdown-enhanced-7000.png",
@@ -289,6 +289,11 @@ const PRECACHE = [
   "./power-check/",
   "./power-check/index.html",
   "./power-check/app-data.js",
+  "./power-check/pwc-data.js",
+  "./power-check/pwc-engine.js",
+  "./power-check/charts/NONE.webp",
+  "./power-check/charts/EAPS.webp",
+  "./power-check/charts/IBF.webp",
   "./ndl/",
   "./ndl/index.html",
   "./ndl/app-data.js",

@@ -18,3 +18,6 @@ tem uma cópia da carta de 6000 kg desenhada por cima da carta correta de 6400 k
 `build.py ../../vertical VT_P1 vt_p1.json vt-p1.js`. `ov_p1.py 4A-8,...` desenha a extração para conferência.
 PATH 2 (Parte K, Fig. 4K-5 a 4K-28): `ex_p1.py p2` → `k_p2.json`, `build.py ../../vertical VT_P2 k_p2.json vt-p2.js`.
 O eixo do gradiente é calibrado pela moldura do painel (os rótulos do PDF ficam ~1,3 pt deslocados).
+
+Power Check (Supl. 12 Fig. 4K-2/4K-3, Supl. 86 Fig. 4-1A, NR 102%): `ex_pwc.py` → `pwc.json` (gera `pwc_<pág>.pdf` sem o exemplo
+tracejado vermelho), `build.py ../../power-check PWC_CHARTS pwc.json pwc-data.js`. `ov_pwc.py <dir>` desenha a extração.
