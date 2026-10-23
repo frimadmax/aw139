@@ -1,10 +1,13 @@
 import sys,json; sys.path.insert(0,'.')
 from lib import *
 from PIL import Image
-OUT='/home/claude/aw139/shortfield'
+OUT=sys.argv[1] if len(sys.argv)>1 else '/home/claude/aw139/shortfield'
+VAR=sys.argv[2] if len(sys.argv)>2 else 'SF_CHARTS'
+FILES=sys.argv[3].split(',') if len(sys.argv)>3 else ['wat.json','rto.json','cto.json']
+JS=sys.argv[4] if len(sys.argv)>4 else 'sf-data.js'
 import os; os.makedirs(OUT+'/charts',exist_ok=True)
 data={}
-for f in ('wat.json','rto.json','cto.json'): data.update(json.load(open(f)))
+for f in FILES: data.update(json.load(open(f)))
 Z=2.5
 for fig,o in data.items():
     p=page(o['page']); T,P=disp(p); W,H=p.rect.width,p.rect.height
@@ -31,5 +34,5 @@ for fig,o in data.items():
     for k in ('pa','w','hw','dist','corr'):
         if k in o: o[k]={'a':o[k]['a'],'b':o[k]['b']}
     print(fig,o['img'],os.path.getsize(OUT+'/'+fn)//1024,'KB')
-js='/* Dados digitalizados (vetoriais) das cartas Short Field, RFM AW139 Rev 30, Suplemento 12.\n   Coordenadas em pontos PDF do quadro exibido da pagina. Gerado automaticamente. */\nwindow.SF_CHARTS='+json.dumps(data,separators=(',',':'))+';\n'
-open(OUT+'/sf-data.js','w').write(js); print(len(js)//1024,'KB data')
+js='/* Dados digitalizados (vetoriais) das cartas do RFM AW139 Rev 30, Suplemento 12.\n   Coordenadas em pontos PDF do quadro exibido da pagina. Gerado automaticamente. */\nwindow.'+VAR+'='+json.dumps(data,separators=(',',':'))+';\n'
+open(OUT+'/'+JS,'w').write(js); print(len(js)//1024,'KB data')

@@ -35,6 +35,8 @@
   }
   const lin = (c, v) => c.a * v + c.b;          // coordenada -> valor
   const inv = (c, v) => (v - c.b) / c.a;        // valor -> coordenada
+  // cartas: Short Field (SF_CHARTS) e Back Up (BU_CHARTS) usam o mesmo formato
+  const chart = fig => (root.SF_CHARTS && root.SF_CHARTS[fig]) || (root.BU_CHARTS && root.BU_CHARTS[fig]);
   const isaMaxOat = paFt => Math.min(50, 50 - 1.98 * paFt / 1000); // ISA+35 (linha MAX OAT LIMIT)
 
   // Interpola numa família {v, pos}; devolve pos para o valor pedido ou null.
@@ -67,7 +69,7 @@
 
   // ---------- W.A.T. (Fig. 4B-1, 4B-2, 4B-3, 4B-3A) ----------
   function wat(fig, paFt, oat, hwKt) {
-    const ch = root.SF_CHARTS[fig];
+    const ch = chart(fig);
     let y = inv(ch.pa, paFt);
     const top = Math.min(...ch.oat.map(c => Math.min(...c.pts.map(p => p[1]))));
     const bottom = Math.max(...ch.oat.map(c => Math.max(...c.pts.map(p => p[1]))));
@@ -126,7 +128,7 @@
   }
   // ---------- RTO (Fig. 4B-4, 4B-5, 4B-6, 4B-6A) ----------
   function rto(fig, paFt, oat, gwKg, tdpFt) {
-    const ch = root.SF_CHARTS[fig];
+    const ch = chart(fig);
     let x = inv(ch.pa, paFt);
     const left = Math.min(...ch.oat.map(c => Math.min(...c.pts.map(p => p[0]))));
     if (x < left - 0.1) return fail('Altitude acima do limite da carta.');
@@ -156,8 +158,8 @@
   }
 
   // ---------- CTO (Fig. 4B-7) ----------
-  function cto(paFt, oat, gwKg, hwKt) {
-    const ch = root.SF_CHARTS['4B-7'];
+  function cto(paFt, oat, gwKg, hwKt, fig = '4B-7') {
+    const ch = chart(fig);
     let x = inv(ch.pa, paFt);
     const xs = ch.oat.flatMap(c => c.pts.map(p => p[0]));
     if (x < Math.min(...xs) - 0.1) return fail('Altitude acima do limite da carta.');
@@ -183,7 +185,7 @@
     const trace = [[x, bottom], [x, Y], [g.pos, Y], [g.pos, bottom]];
     const traceCorr = xr == null ? null : [[g.pos, Y], [xr, Y], [xr, bottom]];
     return {
-      ok: true, fig: '4B-7', dist0: D0, corrPerKt, hw, corr, dist: Math.max(0, D0 + corr), vLim, notes, trace, traceCorr
+      ok: true, fig, dist0: D0, corrPerKt, hw, corr, dist: Math.max(0, D0 + corr), vLim, notes, trace, traceCorr
     };
   }
 

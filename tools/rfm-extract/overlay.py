@@ -3,7 +3,7 @@ from lib import *
 from PIL import Image, ImageDraw
 Z=2
 data={}
-for f in ('wat.json','rto.json','cto.json'): data.update(json.load(open(f)))
+for f in (sys.argv[1].split(',') if len(sys.argv)>1 else ['wat.json','rto.json','cto.json']): data.update(json.load(open(f)))
 for fig,o in data.items():
     p=page(o['page']); pm=p.get_pixmap(matrix=pymupdf.Matrix(Z,Z))
     im=Image.frombytes('RGB',(pm.width,pm.height),pm.samples); d=ImageDraw.Draw(im)

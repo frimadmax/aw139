@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v54-shortfield-ok';
+const CACHE_NAME = 'aw139-companion-root-v55-backup';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -132,6 +132,16 @@ const PRECACHE = [
   "./pac/",
   "./cat-a/",
   "./cat-a/index.html",
+  "./backup/",
+  "./backup/index.html",
+  "./backup/bu-data.js",
+  "./backup/bu-engine.js",
+  "./backup/bu-ui.js",
+  "./backup/charts/4C-3.webp",
+  "./backup/charts/4C-4.webp",
+  "./backup/charts/4C-5.webp",
+  "./backup/charts/4C-5A.webp",
+  "./backup/charts/4C-6.webp",
   "./shortfield/",
   "./shortfield/index.html",
   "./shortfield/sf.css",
