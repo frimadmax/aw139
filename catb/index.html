@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
   <link rel="stylesheet" href="../shared/pwa.css">
   <link rel="stylesheet" href="../shared/embedded-app.css">
-<link rel="stylesheet" href="../assets/ubuntu.css"><link rel="stylesheet" href="../shared/omni-theme.css">
+<link rel="stylesheet" href="../assets/ubuntu.css"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>.cb-tabs{margin:0 8px 8px}.cb-pane[hidden]{display:none}#watPane{margin:0 8px calc(12px + env(safe-area-inset-bottom));border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgba(91,196,241,.2), 0 18px 44px rgba(1,3,24,.55)}#watFrame{display:block;width:100%;min-height:70vh;border:0;background:transparent}</style>
 </head>
 <body class="embedded-app embedded-catb">
   <div class="embedded-shell">
@@ -23,11 +23,49 @@
         <div><div class="product-line">AW139</div><div class="product-sub">CAT B</div></div>
       </div>
     </header>
-    <main id="app-frame"></main>
+    <div class="sf-tabs cb-tabs" role="tablist">
+      <button type="button" role="tab" data-pane="dist" aria-selected="true">Distâncias</button>
+      <button type="button" role="tab" data-pane="wat" aria-selected="false">W.A.T.</button>
+    </div>
+    <main id="app-frame" class="cb-pane" data-pane="dist"></main>
+    <section id="watPane" class="cb-pane" data-pane="wat" hidden>
+      <iframe id="watFrame" title="W.A.T. CAT B" loading="eager" data-src="../wat/?catb=1"></iframe>
+    </section>
   </div>
   <script src="../shared/embedded-app.js"></script>
   <script src="app-data.js"></script>
   <script>loadEmbeddedApp(document.getElementById('app-frame'), window.AW139_EMBEDDED, '../shared/embedded-skin.css');</script>
+  <script>
+  /* CAT B: aba W.A.T. com o módulo WAT do site travado no procedimento CAT B */
+  (function(){
+    var KEY='aw139.catb.pane', pane='dist', frame=document.getElementById('watFrame');
+    try{ pane=localStorage.getItem(KEY)||'dist'; }catch(e){}
+    function fit(){ try{ var d=frame.contentDocument; if(d&&d.body) frame.style.height=Math.max(d.documentElement.scrollHeight,d.body.scrollHeight)+'px'; }catch(e){} }
+    function prep(){
+      try{
+        var d=frame.contentDocument; if(!d) return;
+        var st=d.createElement('style'); st.textContent='.module-topbar{display:none!important}body{background:transparent}';
+        d.head.appendChild(st);
+        var sel=d.getElementById('procedure');
+        if(sel){
+          Array.prototype.slice.call(sel.options).forEach(function(o){ if(o.value!=='catb') o.remove(); });
+          sel.value='catb'; sel.dispatchEvent(new Event('change',{bubbles:true})); sel.dispatchEvent(new Event('input',{bubbles:true}));
+        }
+        if(window.ResizeObserver) new ResizeObserver(fit).observe(d.body);
+        fit();
+      }catch(e){ console.warn('WAT CAT B', e); }
+    }
+    frame.addEventListener('load', prep);
+    function show(){
+      document.querySelectorAll('.cb-tabs button').forEach(function(b){ b.setAttribute('aria-selected', String(b.dataset.pane===pane)); });
+      document.querySelectorAll('.cb-pane').forEach(function(el){ el.hidden = el.dataset.pane!==pane; });
+      if(pane==='wat' && !frame.getAttribute('src')) frame.setAttribute('src', frame.dataset.src);
+      if(pane==='wat') setTimeout(fit,50);
+    }
+    document.querySelectorAll('.cb-tabs button').forEach(function(b){ b.addEventListener('click', function(){ pane=b.dataset.pane; try{localStorage.setItem(KEY,pane);}catch(e){} show(); }); });
+    show();
+  })();
+  </script>
   <script src="../shared/pwa.js"></script>
 </body>
 </html>
