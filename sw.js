@@ -1,5 +1,30 @@
-const CACHE_NAME = 'aw139-companion-root-v72-ndl-sem-foto';
+const CACHE_NAME = 'aw139-companion-root-v73-offline';
 const PRECACHE = [
+  "./dropdown/assets/dropdown-enhanced-7000.png",
+  "./dropdown/assets/dropdown-offshore-6400.png",
+  "./dropdown/assets/dropdown-offshore-6800.png",
+  "./adc/",
+  "./cata/",
+  "./decolagem-offshore/",
+  "./dropdown/",
+  "./pouso-offshore/",
+  "./rto/",
+  "./wat/",
+  "./dropdown/index.html",
+  "./dropdown/app.js",
+  "./dropdown/styles.css",
+  "./dropdown/ddv7-fullscreen-fix.js",
+  "./dropdown/ddv7-patch.js",
+  "./dropdown/final-ui.js",
+  "./assets/ubuntu.css",
+  "./assets/fonts/ubuntu-400-latin-ext.woff2",
+  "./assets/fonts/ubuntu-400-latin.woff2",
+  "./assets/fonts/ubuntu-500-latin-ext.woff2",
+  "./assets/fonts/ubuntu-500-latin.woff2",
+  "./assets/fonts/ubuntu-500i-latin-ext.woff2",
+  "./assets/fonts/ubuntu-500i-latin.woff2",
+  "./assets/fonts/ubuntu-700-latin-ext.woff2",
+  "./assets/fonts/ubuntu-700-latin.woff2",
   "./",
   "./README.md",
   "./adc/app.js",
@@ -119,7 +144,6 @@ const PRECACHE = [
   "./rto/index.html",
   "./rto/manifest.webmanifest",
   "./rto/styles.css",
-  "./rto/sw.js",
   "./dropdown/graphData.js",
   "./shared/home.js",
   "./shared/module-bridge.js",
@@ -359,7 +383,6 @@ const PRECACHE = [
   "./wat/index.html",
   "./wat/manifest.webmanifest",
   "./wat/styles.css",
-  "./wat/sw.js",
   "./wat/test_overlay_case.png"
 ];
 
@@ -386,7 +409,8 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+    // Apaga só versões antigas deste site (inclusive os caches dos antigos service workers de /wat/ e /rto/).
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME && k.startsWith('aw139-')).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });

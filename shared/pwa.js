@@ -76,9 +76,8 @@
   function serviceWorkerConfig(){
     const path = pagePath();
     if (isExtraApp(path)) return { url: '../sw.js', scope: '../' };
-    if (path.includes('/wat/')) return { url: 'sw.js', scope: './' };
-    if (path.includes('/rto/')) return { url: 'sw.js', scope: './' };
-    if (path.includes('/cata/') || path.includes('/adc/')) return { url: '../sw.js', scope: '../' };
+    // Um só service worker para o site todo (offline completo); os antigos de /wat/ e /rto/ se removem sozinhos.
+    if (['/wat/','/rto/','/cata/','/adc/','/dropdown/','/decolagem-offshore/','/pouso-offshore/'].some((d) => path.includes(d))) return { url: '../sw.js', scope: '../' };
     return { url: 'sw.js', scope: './' };
   }
 
