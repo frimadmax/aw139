@@ -10,7 +10,7 @@ data={}
 for f in FILES: data.update(json.load(open(f)))
 Z=2.5
 for fig,o in data.items():
-    p=page(o['page']); T,P=disp(p); W,H=p.rect.width,p.rect.height
+    p=pymupdf.open(o.pop('srcPdf'))[0] if o.get('srcPdf') else page(o['page']); T,P=disp(p); W,H=p.rect.width,p.rect.height
     M=p.rotation_matrix; xs=[];ys=[]
     for d in p.get_drawings():
         r=d['rect']*M
@@ -30,8 +30,8 @@ for fig,o in data.items():
     im=Image.frombytes('RGB',(pm.width,pm.height),pm.samples).crop((int(x0*Z),int(y0*Z),int(x1*Z),int(y1*Z)))
     fn=f'charts/{fig}.webp'; im.save(OUT+'/'+fn,'WEBP',quality=82,method=6)
     o['img']=dict(src=fn,box=[round(x0,2),round(y0,2),round(x1-x0,2),round(y1-y0,2)])
-    o.pop('labelcheck',None)
-    for k in ('pa','w','hw','dist','corr'):
+    for k in ('labelcheck','bad','gRight'): o.pop(k,None)
+    for k in ('pa','w','hw','dist','corr','g'):
         if o.get(k): o[k]={'a':o[k]['a'],'b':o[k]['b']}
     print(fig,o['img'],os.path.getsize(OUT+'/'+fn)//1024,'KB')
 js='/* Dados digitalizados (vetoriais) das cartas do RFM AW139 Rev 30, Suplemento 12.\n   Coordenadas em pontos PDF do quadro exibido da pagina. Gerado automaticamente. */\nwindow.'+VAR+'='+json.dumps(data,separators=(',',':'))+';\n'

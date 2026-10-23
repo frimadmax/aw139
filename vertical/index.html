@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../shared/pwa.css">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="../shortfield/sf.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>.sf-chart-wrap2{margin-top:10px}</style>
 </head>
 <body>
   <main class="app-shell">
@@ -72,10 +72,12 @@
       <div class="sf-tabs" role="tablist">
         <button type="button" role="tab" data-tab="wat" aria-selected="true">W.A.T.</button>
         <button type="button" role="tab" data-tab="dist" aria-selected="false">CTO</button>
+        <button type="button" role="tab" data-tab="p1" aria-selected="false">PATH 1</button>
         <button type="button" role="tab" data-tab="tab" aria-selected="false">Tabela 4A-7</button>
       </div>
       <p class="sf-chart-cap" id="chartCap"></p>
       <div class="sf-chart-wrap" id="chartWrap"><div class="sf-chart" id="chart"><img id="chartImg" alt=""><svg id="chartSvg" aria-hidden="true"></svg></div></div>
+      <div class="sf-chart-wrap sf-chart-wrap2" id="chartWrap2" hidden><div class="sf-chart" id="chart2"><img id="chartImg2" alt=""><svg id="chartSvg2" aria-hidden="true"></svg></div></div>
       <div class="sf-table-wrap" id="tableWrap" hidden></div>
       <div class="sf-chart-tools" id="chartTools"><span>Linha magenta: caminho da leitura feito pelo app.</span><button type="button" id="zoomBtn">Ampliar</button></div>
     </section>
@@ -87,7 +89,8 @@
         <li>W.A.T.: crédito de vento de proa pela seção inferior da carta, até 20 kt (já fatorado em 50% pelo RFM). Linha MAX OAT LIMIT = ISA+35 °C. Peso máximo 6400 kg. A carta IBF (4A-5A) vai até 10000 ft.</li>
         <li>CTO (Fig. 4A-6, vale para Clean, EAPS ON/OFF e IBF): distância horizontal do início da decolagem até 35 ft ATS (ou a altura do TDPE) em V<sub>TOSS</sub>. A correção de vento já vem fatorada em 50% pelo RFM. Pesos abaixo de 4400 kg usam a curva de 4400 kg (conservador).</li>
         <li>Obstáculo dentro da distância CTO (Fig. 4A-1): TDPE = HO + HC + 20 ft, de 35 a 70 ft. Acima de 70 ft o RFM manda adotar o Back Up.</li>
-        <li>Obstáculo depois da distância CTO (Fig. 4A-2): exige o gradiente PATH 1 (Fig. 4A-8 a 4A-31), ainda não digitalizado. O app só indica a distância D1 do fim do CTO até o obstáculo.</li>
+        <li>Obstáculo depois da distância CTO (Fig. 4A-2): altura no obstáculo = altura no fim do CTO + gradiente PATH 1 × D1 / 100 (Fig. 4A-8 a 4A-31, interpolando entre as cartas de peso vizinhas). Se não atende, o app calcula o TDPE necessário (até 70 ft) e, se preciso, o peso que dá o gradiente exigido com TDPE 70 ft, mantendo o CTO do peso atual (conservador, como no RFM). O PATH 1 vale até 200 ft ATS.</li>
+        <li>Fig. 4A-13 (PATH 1, 6400 kg, Clean): no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg. A carta correta de 6400 kg (ICN ...12324) está por baixo no próprio PDF e é a que o app usa; ela confere com o Exemplo 2 do RFM (15 ft a 4000 ft, 15 °C, 5 kt).</li>
         <li>Limite de 7000 ft para TDPE: Hd estimada por Hd ≈ Hp + 118,8 × (OAT − ISA).</li>
         <li>V<sub>TOSS</sub> 40 KIAS. GS máxima com PARK BRAKE ON 5 kt.</li>
         <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
@@ -95,6 +98,7 @@
     </section>
   </main>
   <script src="vt-data.js"></script>
+  <script src="vt-p1.js"></script>
   <script src="../shortfield/sf-engine.js"></script>
   <script src="vt-engine.js"></script>
   <script src="vt-ui.js"></script>

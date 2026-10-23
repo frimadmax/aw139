@@ -1,7 +1,7 @@
 /* AW139 CAT A Heliport/Helideck Vertical — interface */
 (function () {
   'use strict';
-  const V = window.VTEngine, C = window.VT_CHARTS;
+  const V = window.VTEngine, C = Object.assign({}, window.VT_CHARTS, window.VT_P1);
   const $ = id => document.getElementById(id);
   const KEY = 'aw139.vertical.v1';
   const M2FT = 3.28084;
@@ -102,8 +102,21 @@
       sa.hidden = false;
       const r = out.ahead, hc = inp.obsAheadHc != null ? inp.obsAheadHc : 0;
       if (r.after) {
-        sa.className = 'sf-status bad';
-        sa.textContent = `Obstáculo a ${fmt(inp.obsAheadD)} m, depois do fim do CTO (D1 = ${fmt(Math.floor(r.d1))} m). A verificação usa o gradiente PATH 1 (Fig. 4A-8 a 4A-31), ainda não disponível no app: calcule pelo RFM.`;
+        const D1 = `D1 = ${fmt(Math.floor(r.d1))} m (${fmt(r.d1Ft)} ft) do fim do CTO`;
+        if (!r.g || !r.g.ok) {
+          sa.className = 'sf-status bad';
+          sa.textContent = `Obstáculo depois do CTO, ${D1}. PATH 1: ${r.g ? r.g.msg : 'sem dados'}`;
+        } else {
+          const gtxt = `gradiente PATH 1 ${r.g.grad.toFixed(1).replace('.', ',')} ft/100 ft`;
+          let t = `Obstáculo depois do CTO, ${D1}; ${gtxt}: altura no obstáculo ${fmt(Math.floor(r.thg))} ft (${fmt(h.endH)} + ${fmt(Math.floor(r.hgd))}), exigida ${fmt(r.hReq)} ft. `;
+          if (r.ok) t += `Passa ${fmt(Math.floor(r.clear))} ft acima do obstáculo: atende.`;
+          else if (r.tdpe) t += `Não atende com TDP ${inp.tdp} ft. TDPE necessário: ${r.tdpe} ft.`;
+          else if (r.gw2 != null) t += `Nem com TDPE 70 ft. Gradiente exigido com TDPE 70 ft: ${r.cgd.toFixed(1).replace('.', ',')} ft/100 ft, obtido com peso até ${fmt(floor10(r.gw2))} kg (CTO mantido do peso atual, conservador como no RFM). Refaça com esse peso e TDPE 70 ft.`;
+          else t += `Nem com TDPE 70 ft e peso mínimo das cartas (4400 kg). O RFM manda adotar o Back Up.`;
+          if (r.path2) t += ' Atenção: altura exigida acima de 200 ft ATS, onde termina o PATH 1; confira também o PATH 2 (Fig. 4K-5 a 4K-28).';
+          sa.className = 'sf-status ' + (r.ok ? 'ok' : 'bad');
+          sa.textContent = t;
+        }
       } else {
         const ok = r.possible && inp.tdp >= r.req;
         sa.className = 'sf-status ' + (ok ? 'ok' : 'bad');
@@ -120,7 +133,7 @@
   function drawDiagram(inp, out) {
     const svg = $('diagram');
     const h = out.h, cto = out.dist.ok ? out.dist.dist : null;
-    const span = Math.max(cto || 0, 250) * 1.12;
+    const span = Math.max(cto || 0, inp.obsAheadH != null && inp.obsAheadD != null ? inp.obsAheadD : 0, 250) * 1.12;
     const G = 178, XL = 60, XR = 610;
     const sx = m => XL + (XR - XL) * m / span;
     const xPad = sx(0);
@@ -145,7 +158,9 @@
       const r = out.ahead, D = inp.obsAheadD;
       if (r && D != null && inp.obsAheadH != null) {
         const xo = sx(Math.min(D, span / 1.02)), ho = Math.min(150, 12 + inp.obsAheadH * 0.9);
-        s += `<rect x="${xo - 5}" y="${G - ho}" width="10" height="${ho}" fill="${r.after || !r.possible || inp.tdp < r.req ? '#ff4d6d' : '#8fa3e6'}" opacity=".8"/>`;
+        const bad = r.after ? !r.ok : (!r.possible || inp.tdp < r.req);
+        s += `<rect x="${xo - 5}" y="${G - ho}" width="10" height="${ho}" fill="${bad ? '#ff4d6d' : '#8fa3e6'}" opacity=".8"/>`;
+        if (r.after) s += `<path class="path-climb" stroke-dasharray="6 4" d="M${xe} ${yT} L ${xo + 5} ${Math.max(16, yT - 60)}"/><text class="sm" x="${(xe + xo) / 2}" y="${Math.max(16, yT - 36)}" text-anchor="middle">PATH 1</text>`;
       }
     }
     svg.setAttribute('viewBox', '0 0 640 236');
@@ -164,20 +179,40 @@
     document.querySelectorAll('.sf-tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
     const isTab = tab === 'tab';
     $('chartWrap').hidden = isTab; $('chartTools').hidden = isTab; $('tableWrap').hidden = !isTab;
+    $('chartWrap2').hidden = true;
     if (isTab) { $('chartCap').textContent = 'Linha destacada: valores usados no cálculo.'; $('tableWrap').innerHTML = tableHtml(last.input); return; }
+    if (tab === 'p1') {
+      const inp = last.input, r = last.ahead;
+      const g = r && r.after && r.g && r.g.ok ? r.g : V.gradForGw(inp.config, inp.pa, inp.oat, inp.hw, inp.gw);
+      const i = Math.max(0, V.P1_GW.findIndex((w, k) => k < V.P1_GW.length - 1 && Math.max(4400, Math.min(6400, inp.gw)) <= V.P1_GW[k + 1]));
+      const figs = [V.p1Fig(inp.config, i), V.p1Fig(inp.config, i + 1)];
+      const charts = g.ok ? g.charts : figs.map(f => V.grad(f, inp.pa, inp.oat, inp.hw));
+      const shown = charts.length > 1 ? figs : [figs[0]];
+      const vals = charts.map(c => c.ok ? `${c.fig}: ${c.grad.toFixed(1).replace('.', ',')} ft` : `${c.fig}: ${c.msg}`).join(' · ');
+      $('chartCap').innerHTML = `<b>PATH 1</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
+        (g.ok && charts.length > 1 ? `. Interpolado para ${fmt(g.gw)} kg: <b>${g.grad.toFixed(1).replace('.', ',')} ft/100 ft</b>.` : '') +
+        (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324, confere com o Ex. 2 do RFM).' : '');
+      paint('chartImg', 'chartSvg', shown[0], charts[0], 1);
+      if (shown.length > 1) { $('chartWrap2').hidden = false; paint('chartImg2', 'chartSvg2', shown[1], charts[1], 1); }
+      return;
+    }
     const fig = tab === 'wat' ? last.cfg.wat : V.CTO_FIG;
     const ch = C[fig], res = tab === 'wat' ? last.wat : last.dist;
     $('chartCap').innerHTML = `<b>Figure ${fig}</b> ${ch.title} · RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`;
-    const img = $('chartImg');
+    paint('chartImg', 'chartSvg', fig, res, tab === 'wat' ? 1 : 2);
+  }
+  function paint(imgId, svgId, fig, res, dotIdx) {
+    const ch = C[fig];
+    const img = $(imgId);
     if (img.getAttribute('src') !== ch.img.src) { img.src = ch.img.src; img.alt = `Figura ${fig} do RFM`; }
     const [bx, by, bw, bh] = ch.img.box;
-    const svg = $('chartSvg');
+    const svg = $(svgId);
     svg.setAttribute('viewBox', `${bx} ${by} ${bw} ${bh}`);
     let s = '';
     if (res && res.ok && res.trace) {
       s += `<polyline class="trace" points="${res.trace.map(p => p.map(v => v.toFixed(2)).join(',')).join(' ')}"/>`;
       if (res.traceCorr) s += `<polyline class="trace2" points="${res.traceCorr.map(p => p.map(v => v.toFixed(2)).join(',')).join(' ')}"/>`;
-      const p = res.trace[Math.min(tab === 'wat' ? 1 : 2, res.trace.length - 1)];
+      const p = res.trace[Math.min(dotIdx, res.trace.length - 1)];
       s += `<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="2.2"/>`;
     }
     svg.innerHTML = s;
@@ -188,7 +223,7 @@
     document.querySelectorAll('.sf-config input, .sf-inputs input').forEach(el => el.addEventListener('input', render));
     document.querySelectorAll('.sf-tabs button').forEach(b => b.addEventListener('click', () => { tab = b.dataset.tab; save(readInput()); drawChart(); }));
     $('zoomBtn').addEventListener('click', () => {
-      const z = $('chart').classList.toggle('is-zoom');
+      const z = $('chart').classList.toggle('is-zoom'); $('chart2').classList.toggle('is-zoom', z);
       $('zoomBtn').textContent = z ? 'Reduzir' : 'Ampliar';
     });
     render();

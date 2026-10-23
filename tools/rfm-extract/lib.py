@@ -31,7 +31,7 @@ def polylines(p):
         q=[pts[0]]
         for pt in pts[1:]:
             if abs(pt[0]-q[-1][0])>1e-3 or abs(pt[1]-q[-1][1])>1e-3: q.append(pt)
-        res.append(dict(i=i,w=round(d.get('width') or 0,2),c=d.get('color'),dash=d.get('dashes'),pts=q))
+        res.append(dict(seq=d.get('seqno'),i=i,w=round(d.get('width') or 0,2),c=d.get('color'),dash=d.get('dashes'),pts=q))
     return res
 def fit(pairs):
     # least squares linear coord->value
