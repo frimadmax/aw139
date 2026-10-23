@@ -119,17 +119,17 @@
     return Math.min(best, gwMax);
   }
   // Altura no obstáculo depois do CTO: PATH 1 do fim do CTO até 200 ft ATS, depois PATH 2 (Fig. 4A-2 e Parte K).
-  function heightAt(inp, gw, endH, d1Ft) {
+  function heightAt(inp, gw, endH, d1Ft, top = PATH1_TOP) {
     const g1 = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, gw, 1);
     if (!g1.ok) return { ok: false, msg: `PATH 1: ${g1.msg}` };
     const out = { ok: true, g1 };
     if (g1.grad <= 0) { out.h = endH; out.d1p = Infinity; return out; }
-    out.d1p = Math.max(0, (PATH1_TOP - endH) * 100 / g1.grad);   // ft até 200 ft ATS
+    out.d1p = Math.max(0, (top - endH) * 100 / g1.grad);   // ft até o fim do PATH 1 (200 ft ATS)
     if (d1Ft <= out.d1p) { out.h = endH + g1.grad * d1Ft / 100; return out; }
     const g2 = gradForGw(inp.config, inp.pa, inp.oat, inp.hw, gw, 2);
     if (!g2.ok) return { ok: false, msg: `PATH 2: ${g2.msg}`, g1 };
     out.g2 = g2;
-    out.h = PATH1_TOP + g2.grad * (d1Ft - out.d1p) / 100;
+    out.h = top + g2.grad * (d1Ft - out.d1p) / 100;
     return out;
   }
   function obstacleAfter(inp, ctoM, endH) {
