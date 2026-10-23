@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v62-path2';
+const CACHE_NAME = 'aw139-companion-root-v63-pouso-confined';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -163,6 +163,12 @@ const PRECACHE = [
   "./vertical/charts/4A-6.webp",
   "./vertical/vt-p1.js",
   "./vertical/vt-p2.js",
+  "./pouso-confined/",
+  "./pouso-confined/index.html",
+  "./pouso-confined/cl-data.js",
+  "./pouso-confined/pc-engine.js",
+  "./pouso-confined/pc-ui.js",
+  "./pouso-confined/charts/4H-4.webp",
   "./vertical/charts/4K-5.webp",
   "./vertical/charts/4K-6.webp",
   "./vertical/charts/4K-7.webp",

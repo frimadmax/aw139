@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05082a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>AW139 — Pouso Confined Area</title>
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../shared/pwa.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shared/tiles.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>.sf-chart-wrap2{margin-top:10px}</style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="efb-bar">
+      <a class="efb-back nav-btn" id="backBtn" href="../cat-a/" aria-label="Voltar">⥢</a>
+      <a class="efb-id" href="../cat-a/">
+        <svg class="aw-icon" aria-hidden="true"><use href="../assets/icons.svg#p-confined"/></svg>
+        <span><b>POUSO CONFINED AREA</b><small>CAT A · <em>Heliponto</em> · Supl. 12</small></span>
+      </a>
+    </header>
+
+    <p class="sf-status bad" role="note">Em conferência: os números desta página ainda estão sendo validados contra as cartas do RFM. Não use para planejamento até a liberação.</p>
+
+    <section class="sf-panel" aria-labelledby="inHead">
+      <h2 class="sf-kicker" id="inHead">Configuração e dados</h2>
+      <div class="sf-config" role="radiogroup" aria-label="Configuração da entrada de ar">
+        <label><input type="radio" name="config" value="clean" checked><span>Clean</span></label>
+        <label><input type="radio" name="config" value="eapsOff"><span>EAPS OFF</span></label>
+        <label><input type="radio" name="config" value="eapsOn"><span>EAPS ON</span></label>
+        <label><input type="radio" name="config" value="ibf"><span>IBF</span></label>
+      </div>
+      <div class="sf-inputs">
+        <label class="sf-field"><span>Altitude pressão <small>ft</small></span><input id="inPa" type="number" inputmode="numeric" step="100" value="0"></label>
+        <label class="sf-field"><span>OAT <small>°C</small></span><input id="inOat" type="number" inputmode="decimal" step="1" value="15"></label>
+        <label class="sf-field"><span>Peso (GW) <small>kg</small></span><input id="inGw" type="number" inputmode="numeric" step="10" value="6000"></label>
+        <label class="sf-field"><span>LDP <small>ft ALS · 100 a 400</small></span><input id="inLdp" type="number" inputmode="numeric" step="5" min="100" max="400" value="100"></label>
+        <label class="sf-field"><span>Vento de proa <small>kt · só no PATH 1/2</small></span><input id="inHw" type="number" inputmode="numeric" step="1" min="0" value="0"></label>
+      </div>
+      <h3 class="sf-kicker sf-sub">Obstáculos <em>opcional</em></h3>
+      <div class="sf-inputs">
+        <label class="sf-field is-optional"><span>Arremetida: altura <small>ft ALS (HO)</small></span><input id="inBlH" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>Folga exigida <small>ft (HC)</small></span><input id="inBlC" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>Arremetida: distância <small>m do LDP (DO)</small></span><input id="inBlD" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>Aproximação: altura <small>ft AGL</small></span><input id="inApH" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+        <label class="sf-field is-optional"><span>Aproximação: distância <small>m do heliponto</small></span><input id="inApD" type="number" inputmode="numeric" step="1" placeholder="—"></label>
+      </div>
+      <p class="sf-hint">Vento de cauda é proibido. Componente de través máxima 20 kt. Heliponto mínimo 20 m x 20 m. Altitude máxima 10000 ft Hp ou Hd. Com obstáculo nos dois perfis, vale o maior LDP (Seção 4H).</p>
+    </section>
+
+    <section class="sf-panel sf-diagram" aria-labelledby="diaHead">
+      <h2 class="sf-kicker" id="diaHead">Perfil <em>Pouso Confined Area</em></h2>
+      <svg id="diagram" viewBox="0 0 640 268" role="img" aria-label="Diagrama do pouso Confined Area"></svg>
+      <p class="sf-diagram-cap">Aproximação até o LDP (100 a 400 ft ALS). Falha no LDP ou depois: pousa no heliponto (laranja, Fig. 4H-3). Falha antes do LDP: arremete (verde, Fig. 4H-4), altura mínima LDP − 85 ft; no fim da distância, LDP − 65 ft. Depois segue PATH 1 até 200 ft ou LDP + 100 ft e PATH 2 até 1000 ft ALS.</p>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="resHead">
+      <h2 class="sf-kicker" id="resHead">Resultados</h2>
+      <div class="sf-results">
+        <article class="sf-res" id="resWat"></article>
+        <article class="sf-res" id="resLand"></article>
+        <article class="sf-res" id="resBl"></article>
+      </div>
+      <div class="sf-status" id="obBalked" hidden></div>
+      <div class="sf-status" id="obApproach" hidden></div>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="chartHead">
+      <h2 class="sf-kicker" id="chartHead">Carta do RFM <em>com a leitura</em></h2>
+      <div class="sf-tabs" role="tablist">
+        <button type="button" role="tab" data-tab="wat" aria-selected="true">W.A.T.</button>
+        <button type="button" role="tab" data-tab="bl" aria-selected="false">Arremetida</button>
+        <button type="button" role="tab" data-tab="p1" aria-selected="false">PATH 1</button>
+        <button type="button" role="tab" data-tab="p2" aria-selected="false">PATH 2</button>
+        <button type="button" role="tab" data-tab="tab" aria-selected="false">Tabelas</button>
+      </div>
+      <p class="sf-chart-cap" id="chartCap"></p>
+      <div class="sf-chart-wrap" id="chartWrap"><div class="sf-chart" id="chart"><img id="chartImg" alt=""><svg id="chartSvg" aria-hidden="true"></svg></div></div>
+      <div class="sf-chart-wrap sf-chart-wrap2" id="chartWrap2" hidden><div class="sf-chart" id="chart2"><img id="chartImg2" alt=""><svg id="chartSvg2" aria-hidden="true"></svg></div></div>
+      <div class="sf-table-wrap" id="tableWrap" hidden></div>
+      <div class="sf-chart-tools" id="chartTools"><span>Linha magenta: caminho da leitura feito pelo app.</span><button type="button" id="zoomBtn">Ampliar</button></div>
+    </section>
+
+    <section class="sf-panel" aria-labelledby="noteHead">
+      <h2 class="sf-kicker" id="noteHead">Base e limites</h2>
+      <ul class="sf-notes">
+        <li>Fonte: <b>AW139 RFM Rev 30, Suplemento 12, Parte H</b> (Fig. 3H-1, 4H-1 a 4H-4), com W.A.T. da Parte D (Fig. 4D-4 a 4D-6A), zona de obstáculo 4D-8, PATH 1 (Fig. 4A-8 a 4A-31) e PATH 2 (Fig. 4K-5 a 4K-28). Carta 4H-4 extraída do PDF vetorial; tabela 4H-3 transcrita.</li>
+        <li>W.A.T.: sem crédito de vento. Peso máximo 6400 kg.</li>
+        <li>Distância de pouso OEI (Fig. 4H-3): do LDP ao ponto de pouso, vale para todos os pesos do W.A.T. Entre linhas da tabela o app interpola.</li>
+        <li>Distância de arremetida OEI (Fig. 4H-4): a carta não tem correção de vento. Pela Seção 4H vale para Clean, EAPS ON/OFF e IBF. Pesos abaixo de 4400 kg usam a curva de 4400 kg (conservador).</li>
+        <li>Obstáculo dentro da arremetida (Fig. 4H-1): LDP = HO + HC + 85 ft, de 100 a 400 ft ALS.</li>
+        <li>Obstáculo depois da arremetida: altura no obstáculo = LDP − 65 ft + PATH 1 × D1 / 100 até 200 ft ou LDP + 100 ft ALS, depois PATH 2 até 1000 ft ALS (interpolando entre as cartas de peso vizinhas, com o vento de proa informado). Se não atende, o app calcula o LDP necessário e, se preciso, o peso com LDP 400 ft, mantendo a distância de arremetida do peso atual (conservador). Essa extensão segue o texto da Seção 4H; o RFM não traz exemplo dela.</li>
+        <li>Obstáculo na aproximação (Fig. 4H-2): tem que ficar fora da zona da Fig. 4D-8 (já inclui 15 ft de folga). O app usa a linha de altura igual ou logo acima (conservador). Se a regra operacional pedir folga maior, considere no LDP.</li>
+        <li>Subida alternativa a 60 KIAS (Fig. 4D-10 a 4D-33) ainda não está no app.</li>
+        <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
+      </ul>
+    </section>
+  </main>
+  <script src="../confined/ca-data.js"></script>
+  <script src="cl-data.js"></script>
+  <script src="../vertical/vt-p1.js"></script>
+  <script src="../vertical/vt-p2.js"></script>
+  <script src="../shortfield/sf-engine.js"></script>
+  <script src="../confined/ca-engine.js"></script>
+  <script src="../vertical/vt-engine.js"></script>
+  <script src="pc-engine.js"></script>
+  <script src="pc-ui.js"></script>
+  <script src="../shared/pwa.js"></script>
+</body>
+</html>
