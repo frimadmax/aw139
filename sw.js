@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aw139-companion-root-v64-menu';
+const CACHE_NAME = 'aw139-companion-root-v65-hover';
 const PRECACHE = [
   "./",
   "./README.md",
@@ -252,6 +252,11 @@ const PRECACHE = [
   "./teto-pairado/",
   "./teto-pairado/index.html",
   "./teto-pairado/app-data.js",
+  "./teto-pairado/hl-data.js",
+  "./teto-pairado/hl-engine.js",
+  "./teto-pairado/hl-ui.js",
+  "./teto-pairado/charts/4-43.webp",
+  "./teto-pairado/charts/S50-4-37.webp",
   "./limitacoes/",
   "./limitacoes/index.html",
   "./limitacoes/app-data.js",

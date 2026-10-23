@@ -31,7 +31,7 @@ for fig,o in data.items():
     fn=f'charts/{fig}.webp'; im.save(OUT+'/'+fn,'WEBP',quality=82,method=6)
     o['img']=dict(src=fn,box=[round(x0,2),round(y0,2),round(x1-x0,2),round(y1-y0,2)])
     for k in ('labelcheck','bad','gRight'): o.pop(k,None)
-    for k in ('pa','w','hw','dist','corr','g'):
+    for k in ('pa','w','hw','dist','corr','g','hl'):
         if o.get(k): o[k]={'a':o[k]['a'],'b':o[k]['b']}
     print(fig,o['img'],os.path.getsize(OUT+'/'+fn)//1024,'KB')
 js='/* Dados digitalizados (vetoriais) das cartas do RFM AW139 Rev 30, Suplemento 12.\n   Coordenadas em pontos PDF do quadro exibido da pagina. Gerado automaticamente. */\nwindow.'+VAR+'='+json.dumps(data,separators=(',',':'))+';\n'

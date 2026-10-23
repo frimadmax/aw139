@@ -22,12 +22,10 @@
         <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-heli"/></svg>
         <span><b>AW139</b><small>Omni <em>Táxi Aéreo</em></small></span>
       </a>
-      <label class="efb-search"><input id="tileSearch" type="search" placeholder="Buscar…" autocomplete="off" aria-label="Buscar ferramenta"></label>
-      <span class="status-icon connected" aria-label="Online">●</span>
     </header>
 
     <section class="flow-section" aria-labelledby="toolsHeading">
-      <h2 id="toolsHeading" class="section-kicker">Ferramentas</h2>
+      <h2 id="toolsHeading" class="section-kicker">Tools</h2>
       <div class="tile-grid" id="tileGrid">
         <a class="tile tile-key" href="cat-a/" data-search="cat a offshore enhanced clear area vertical short field confined backup decolagem pouso">
           <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-cata"/></svg>
@@ -57,21 +55,21 @@
           <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-climb"/></svg>
           <span class="tile-label">ROC</span>
         </a>
-        <a class="tile" href="consumo/" data-search="consumo">
+        <a class="tile" href="consumo/" data-search="fuel consumption">
           <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-fuel"/></svg>
-          <span class="tile-label">Consumo</span>
+          <span class="tile-label">Fuel Consumption</span>
         </a>
-        <a class="tile" href="teto-pairado/" data-search="teto do pairado">
+        <a class="tile" href="teto-pairado/" data-search="hover">
           <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-hover"/></svg>
-          <span class="tile-label">Teto do Pairado</span>
+          <span class="tile-label">Hover</span>
         </a>
         <a class="tile" href="ndl/" data-search="ndl">
           <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-moon"/></svg>
           <span class="tile-label">NDL</span>
         </a>
-        <a class="tile" href="limitacoes/" data-search="limitações">
+        <a class="tile" href="limitacoes/" data-search="limits">
           <svg class="aw-icon" aria-hidden="true"><use href="assets/icons.svg#i-limits"/></svg>
-          <span class="tile-label">Limitações</span>
+          <span class="tile-label">Limits</span>
         </a>
       </div>
     </section>
@@ -87,15 +85,5 @@
 
   <script src="shared/pwa.js"></script>
   <script src="shared/home.js"></script>
-  <script>
-    (function(){
-      var input = document.getElementById('tileSearch');
-      var tiles = document.querySelectorAll('#tileGrid .tile');
-      input && input.addEventListener('input', function(){
-        var q = input.value.trim().toLowerCase();
-        tiles.forEach(function(t){ t.hidden = q && t.dataset.search.indexOf(q) === -1; });
-      });
-    })();
-  </script>
 </body>
 </html>

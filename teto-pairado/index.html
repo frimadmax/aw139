@@ -6,13 +6,13 @@
   <meta name="theme-color" content="#05082a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>AW139 — Teto do Pairado</title>
+  <title>AW139 — Hover</title>
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
   <link rel="stylesheet" href="../shared/pwa.css">
   <link rel="stylesheet" href="../shared/embedded-app.css">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,400;0,500;0,700;1,500&display=swap"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>#hlPane *,#hlPane *::before,#hlPane *::after{box-sizing:border-box}#hlPane input{min-width:0;width:100%}.hv-tabs{margin:0 8px 8px}.hv-pane[hidden]{display:none}#hlPane{margin:0 8px calc(12px + env(safe-area-inset-bottom))}#hlPane .sf-panel:first-child{margin-top:0}</style>
 </head>
 <body class="embedded-app embedded-teto-pairado">
   <div class="embedded-shell">
@@ -20,14 +20,60 @@
       <a class="nav-btn" id="backBtn" href="../index.html" aria-label="Voltar">⥢</a>
       <div class="product-tag">
         <div class="product-icon"><img src="../assets/icon-192.png" alt=""></div>
-        <div><div class="product-line">AW139</div><div class="product-sub">Teto do Pairado</div></div>
+        <div><div class="product-line">AW139</div><div class="product-sub">Hover</div></div>
       </div>
     </header>
-    <main id="app-frame"></main>
+    <div class="sf-tabs hv-tabs" role="tablist">
+      <button type="button" role="tab" data-pane="hc" aria-selected="true">Hover Ceiling</button>
+      <button type="button" role="tab" data-pane="hl" aria-selected="false">Height Loss</button>
+    </div>
+    <main id="app-frame" class="hv-pane" data-pane="hc"></main>
+    <section id="hlPane" class="hv-pane" data-pane="hl" hidden>
+      <p class="sf-status bad" role="note">Under review: these numbers are still being checked against the RFM charts. Do not use for planning until released.</p>
+      <section class="sf-panel" aria-labelledby="hlIn">
+        <h2 class="sf-kicker" id="hlIn">Height Loss after Engine Failure <em>in Hover (flyaway)</em></h2>
+        <div class="sf-inputs">
+          <label class="sf-field"><span>Pressure altitude <small>ft</small></span><input id="hlPa" type="number" inputmode="numeric" step="100" value="0"></label>
+          <label class="sf-field"><span>OAT <small>°C</small></span><input id="hlOat" type="number" inputmode="decimal" step="1" value="15"></label>
+          <label class="sf-field"><span>Gross weight <small>kg</small></span><input id="hlGw" type="number" inputmode="numeric" step="10" value="6400"></label>
+          <label class="sf-field"><span>Headwind <small>kt · 0 to 40</small></span><input id="hlHw" type="number" inputmode="numeric" step="1" min="0" value="0"></label>
+        </div>
+        <h3 class="sf-kicker sf-sub">Hover height <em>optional</em></h3>
+        <div class="sf-inputs">
+          <label class="sf-field is-optional"><span>Hover height <small>ft</small></span><input id="hlH" type="number" inputmode="numeric" step="5" placeholder="—"></label>
+          <label class="sf-field is-optional"><span>Clearance <small>ft · min. 15</small></span><input id="hlClr" type="number" inputmode="numeric" step="5" placeholder="15"></label>
+        </div>
+      </section>
+      <section class="sf-panel" aria-labelledby="hlResH">
+        <h2 class="sf-kicker" id="hlResH">Result</h2>
+        <div class="sf-results"><article class="sf-res" id="hlRes"></article></div>
+        <div class="sf-status" id="hlFly" hidden></div>
+      </section>
+      <section class="sf-panel" aria-labelledby="hlChartH">
+        <h2 class="sf-kicker" id="hlChartH">RFM chart <em>with the reading</em></h2>
+        <p class="sf-chart-cap" id="hlCap"></p>
+        <div class="sf-chart-wrap"><div class="sf-chart" id="hlChart"><img id="hlImg" alt=""><svg id="hlSvg" aria-hidden="true"></svg></div></div>
+        <div class="sf-chart-tools"><span>Magenta line: the app's reading path.</span><button type="button" id="hlZoom">Zoom</button></div>
+      </section>
+      <section class="sf-panel" aria-labelledby="hlNoteH">
+        <h2 class="sf-kicker" id="hlNoteH">Basis and limits</h2>
+        <ul class="sf-notes">
+          <li>Source: <b>AW139 RFM Rev 30</b>, Section 4, Fig. 4-43 (up to 6400 kg, page 4-65) and Supplement 50, Fig. 4-37 (6400 to 6800 kg, page S50-63). Curves extracted from the vector PDF.</li>
+          <li>The chart does not include clearance. Flyaway capability exists when hover height ≥ height loss + clearance (15 ft / 5 m minimum).</li>
+          <li>Headwind credit is already factored 50% in the chart. Valid for 100% or 102% NR, with the flyaway initiated within 1 second of engine failure recognition.</li>
+          <li>If the weight at engine failure is at or below the Hover OGE 2.5 min OEI weight, an engine failure in hover gives no height loss, provided the pilot does not intervene on the controls (RFM note).</li>
+          <li>Above 6800 kg there is no flyaway chart in the RFM Rev 30 used here. Weights below 4400 kg use the 4400 kg curve (conservative).</li>
+          <li>Support tool. The approved RFM prevails.</li>
+        </ul>
+      </section>
+    </section>
   </div>
   <script src="../shared/embedded-app.js"></script>
   <script src="app-data.js"></script>
   <script>loadEmbeddedApp(document.getElementById('app-frame'), window.AW139_EMBEDDED, '../shared/embedded-skin.css');</script>
+  <script src="hl-data.js"></script>
+  <script src="hl-engine.js"></script>
+  <script src="hl-ui.js"></script>
   <script src="../shared/pwa.js"></script>
 </body>
 </html>
