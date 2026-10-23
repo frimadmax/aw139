@@ -16,6 +16,15 @@
   // Fig. 4H-3: LDP (ft ALS) | distância de pouso OEI do LDP (m)
   const T4H3 = [[100, 36], [120, 44], [140, 51], [160, 58], [180, 66], [200, 73], [220, 80], [240, 87],
     [260, 94], [280, 102], [300, 109], [320, 116], [340, 123], [360, 131], [380, 138], [400, 145]];
+  // Na Fig. 4H-4 as curvas de peso leves terminam no eixo de 0 m. Abaixo desse ponto a leitura fica no eixo
+  // (0 m): prolonga cada curva que toca o eixo em linha vertical até a base da carta.
+  (function () {
+    const ch = root.CL_CHARTS && root.CL_CHARTS[BL_FIG];
+    if (!ch || ch.axisExt) return;
+    const x0 = Math.min(...ch.gw.map(c => c.pts[0][0])), yb = Math.max(...ch.gw.flatMap(c => c.pts.map(p => p[1])));
+    ch.gw.forEach(c => { const p = c.pts[0]; if (Math.abs(p[0] - x0) < 0.2 && p[1] < yb - 0.1) c.pts.unshift([p[0], yb]); });
+    ch.axisExt = true;
+  })();
   const LDP_MIN = 100, LDP_MAX = 400, PA_MAX = 10000, M2FT = 3.28084;
 
   function landDist(ldp) {
@@ -69,6 +78,7 @@
     out.land = landDist(inp.ldp);
     out.h = inp.ldp >= LDP_MIN && inp.ldp <= LDP_MAX ? heights(inp.ldp) : null;
     out.bl = E.cto(inp.pa, inp.oat, inp.gw, 0, BL_FIG);
+    if (out.bl.ok && out.bl.dist < 0.5) out.bl.notes.push('Leitura no eixo de 0 m: nesta condição a curva de peso termina no eixo da carta.');
     if (inp.obsH != null) out.balked = obstacleBalked(inp, out.bl.ok ? out.bl.dist : null);
     if (inp.apH != null && inp.apD != null) out.approach = CA.obstacleBehind(inp.apH, inp.apD);
     return out;
