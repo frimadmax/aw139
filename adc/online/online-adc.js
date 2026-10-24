@@ -5,7 +5,7 @@
   'use strict';
   const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/legacy/build/';
   const RENDER_SCALE = 3;                                    // carta renderizada a 3x (pontos -> pixels)
-  const DEFAULT_WORKER = '';                                 // endereço do worker do AISWEB (workers.dev)
+  const DEFAULT_WORKER = 'https://aw139-aisweb.frimadmax.workers.dev';                               // endereço do worker do AISWEB (workers.dev)
   const packs = {};                                          // bases online desta sessão, por ICAO
   let pdfjsPromise = null;
 
