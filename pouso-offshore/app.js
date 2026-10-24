@@ -11,11 +11,39 @@ function activeTab(){return document.querySelector('.viewer-tab.active')?.datase
 function showTab(tab){
   $('watCanvas').style.display=tab==='wat'?'':'none';
   $('ddCanvas').style.display=tab==='dropdown'?'':'none';
-  $('vizTitle').textContent=tab==='wat'?'WAT Offshore Procedure':'Dropdown Offshore Landing';
+  $('oblView').style.display=tab==='balked'?'':'none';
+  $('vizTitle').textContent=tab==='wat'?'WAT Offshore Procedure':tab==='dropdown'?'Dropdown Offshore Landing':'Balked Landing Distance OEI';
+  if(tab==='balked')drawOBL();
   if(tab==='dropdown')requestAnimationFrame(()=>requestAnimationFrame(drawDD));
   else if(tab==='wat')requestAnimationFrame(()=>requestAnimationFrame(drawWAT));
 }
 function drawDD(){drawDDV7Canvas($('ddCanvas'),state.last?.ddResult,'../dropdown/assets/');}
+// Balked Landing Distance OEI: cartas vetoriais do RFM (obl-data.js / obl-engine.js)
+const fmtM=n=>Math.round(n).toLocaleString('pt-BR');
+function calcOBL(s){return window.OBLEngine.compute(s.w,s.pa,s.oat,s.hw,s.cfg);}
+function drawOBL(){
+  const s=state.last,r=s&&!s.error?s.obl||calcOBL(s):null;
+  const E=window.OBLEngine,set=r&&r.set?r.set:E.SETS[0],cfg=s&&s.cfg?s.cfg:'standard',key=r&&r.fig?r.fig:set.figs[cfg]||set.figs.standard,ch=window.OBL_CHARTS[key];
+  const img=$('oblImg');if(img.getAttribute('src')!==ch.img.src){img.src=ch.img.src;img.alt=`Figura ${ch.fig} do RFM`;}
+  const [bx,by,bw,bh]=ch.img.box,svg=$('oblSvg');svg.setAttribute('viewBox',`${bx} ${by} ${bw} ${bh}`);
+  let h='';
+  if(r&&r.ok){h+=`<polyline class="trace" points="${r.trace.map(p=>p.map(v=>v.toFixed(2)).join(',')).join(' ')}"/>`;h+=`<circle class="dot" cx="${r.trace[2][0]}" cy="${r.trace[2][1]}" r="2.2"/>`;}
+  svg.innerHTML=h;
+  $('oblCap').innerHTML=`<b>Fig. ${ch.fig}</b> Offshore Helideck Balked Landing Distance · ${set.supl}, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?(r.ok?` · leitura na carta: <b>${fmtM(r.dist0)} m</b>`:` · ${r.msg}`):'');
+}
+function renderOBL(s){
+  const box=$('oblBox'),note=$('oblNotice');box.classList.remove('ok','bad');note.hidden=true;
+  if(!s||s.error){$('oblRes').textContent='—';$('oblSub').textContent=s&&s.error?'—':'Sem cálculo ainda.';return;}
+  const r=s.obl||calcOBL(s);
+  if(!r.ok){$('oblRes').textContent='—';$('oblSub').textContent=r.fig?`Fig. ${r.fig}`:'Fora das cartas';note.hidden=false;note.textContent=r.msg;return;}
+  $('oblRes').textContent=`${fmtM(r.dist)} m`;
+  const w=r.corr?` · vento ${s.hw} kt: ${r.corr} m (carta ${fmtM(r.dist0)} m)`:'';
+  $('oblSub').textContent=`Fig. ${r.fig} · ${r.set.supl}${w}`;
+  const msgs=r.notes.slice();
+  if(s.hw<0)msgs.push('Vento de cauda: a carta não traz correção para vento de cauda; nenhum crédito aplicado.');
+  if(s.hw>40)msgs.push('Vento acima de 40 kt: crédito limitado ao da tabela (40 kt, -120 m).');
+  if(msgs.length){note.hidden=false;note.innerHTML=msgs.map(m=>`<div>${m}</div>`).join('');}
+}
 function drawWAT(){drawWATCanvas($('watCanvas'),state.last?.watResult,'../wat/',false);}
 function calc(){
   const qnh=Number($('qnh').value),elev=Number($('elevation').value||0),pa=calcPA(qnh,elev);
@@ -35,6 +63,7 @@ function calc(){
   const maxWeight=wat.maxWeight,margin=Math.round(maxWeight-w),ok=margin>=0;
   const dropdown=ddResult?Math.round(ddResult.finalFt):null;
   state.last={qnh,elev,pa,oat,w,wRaw,hw,ac,profile,cfg,wat:maxWeight,watResult:wat,dropdown,margin,ok,ddResult};
+  state.last.obl=calcOBL(state.last);
   render();
   localStorage.setItem('aw139_offshore_landing_v1',JSON.stringify({qnh,elev,pa,oat,w,wRaw,weightUnit:isLbUnit()?'lb':'kg',hw,ac,profile,cfg,wat:maxWeight,dropdown,margin,ok}));
   localStorage.setItem('aw139_companion_shared_context_v1',JSON.stringify({lastModule:'pouso-offshore',updatedAt:new Date().toISOString(),weightKg:w,oatC:oat,pressureAltitudeFt:pa,headwindKt:hw,cataAircraftSet:String(ac),cataConfiguration:cfg}));
@@ -43,6 +72,7 @@ function render(){
   if(!state.last)return;const s=state.last;
   document.querySelector('.result-panel')?.classList.remove('pending');
   const chip=$('statusChip');
+  renderOBL(s);
   if(s.error){chip.textContent='Erro';chip.className='status-chip bad';$('maxWeight').textContent='—';$('dropdownRes').textContent='—';$('watSummary').textContent=s.error;$('ddSummary').textContent='—';$('margin').textContent='—';$('watBox').className='result-box';$('ddBox').className='result-box';return;}
   const ddOk=s.dropdown!=null?(s.elev-s.dropdown)>=15:null;
   $('watBox').classList.toggle('ok',s.ok);$('watBox').classList.toggle('bad',!s.ok);
@@ -56,6 +86,7 @@ function render(){
   const tab=activeTab();
   if(tab==='dropdown')drawDD();
   else if(tab==='wat')drawWAT();
+  else if(tab==='balked')drawOBL();
 }
 function restore(){
   try{
@@ -93,6 +124,7 @@ document.querySelectorAll('.viewer-tab').forEach(b=>b.addEventListener('click',(
   document.querySelectorAll('.viewer-tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
   showTab(b.dataset.tab);
 }));
+$('oblZoom').addEventListener('click',()=>{const z=$('oblChart').classList.toggle('is-zoom');$('oblZoom').textContent=z?'Reduzir':'Ampliar';});
 $('watCanvas').addEventListener('click',openFS);$('ddCanvas').addEventListener('click',openFS);
 $('fsClose').addEventListener('click',closeFS);document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeFS();});
 $('runBtn').onclick=calc;$('resetBtn').onclick=()=>location.reload();$('pdfBtn').onclick=exportPDF;

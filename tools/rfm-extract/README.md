@@ -28,3 +28,9 @@ Pouso Clear Area OEI (Supl. 12 Parte J Fig. 4J-2/1, 4J-2/2, 4J-1; Supl. 50 Fig. 
 `ex_cl.py` → `cl_ldg.json`, `build.py ../../cata CL_LDG cl_ldg.json cl-data.js`. `ov_cl.py <dir> <figs>` desenha a extração, `rd_cl.py` testa a leitura.
 Na 4J-2/2 as linhas de OAT são polígonos preenchidos, a linha de 50 °C é o próprio MAX OAT e a 1ª curva de peso (sem rótulo) é 4400 kg.
 Na 4-100 os rótulos de peso são ambíguos; a curva de 6800 kg foi conferida contra a 6800 da Fig. 4-60.
+
+Pouso Offshore, Balked Landing Distance OEI (Supl. 12 Parte I Fig. 4I-2/4/6/8; Supl. 50 Fig. 4-75/77/79/100):
+`ex_obl.py` → `obl.json`, `build.py ../../pouso-offshore OBL_CHARTS obl.json obl-data.js`. `ov_obl.py <dir> <figs>` desenha a extração.
+As curvas vêm em pedaços sobrepostos e recortados (clip) pelo painel: o extrator aplica o clip de cada caminho, filtra pela página
+renderizada (só o que aparece escuro) e junta os pedaços. Na 4-100 há uma carta antiga escondida por baixo; a moldura e os eixos
+são medidos na grade visível (-40..50 °C; 0..600 m).
