@@ -374,10 +374,3 @@ html body .ldg-panel .ldg-total .result-value{color:var(--omni-sky)}
 html body .ldg-panel .result-band{margin-top:8px}
 html body .ldg-notice{margin-top:8px;padding:10px 12px;border-radius:10px;font-size:13px;background:rgba(217,164,65,.16);border:1px solid rgba(217,164,65,.5);color:#ffe7b0}
 html body .ldg-conditions{margin:10px 0 0;font-size:11px;line-height:1.45;color:var(--omni-muted)}
-/* Pouso Clear Area: bloco AEO */
-html body .ldg-panel .ldg-sub{margin:10px 0 6px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--omni-sky)}
-html body .ldg-panel .ldg-aeo{margin-top:6px;padding:10px 12px;border-radius:10px;border:1px solid var(--omni-line);background:rgba(3,5,28,.35)}
-html body .ldg-panel .ldg-aeo .ldg-sub{margin-top:0}
-html body .ldg-panel .ldg-aeo ul{margin:0;padding-left:18px;font-size:13px;line-height:1.45;color:#e3f4ff}
-html body .ldg-panel .ldg-aeo li+li{margin-top:3px}
-html body .ldg-panel .ldg-aeo-note{margin:8px 0 0;font-size:11.5px;line-height:1.4;color:rgba(169,183,234,.9)}
