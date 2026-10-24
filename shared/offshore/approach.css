@@ -1,0 +1,93 @@
+/* Aba Aproximação / Saída SLO (shared/offshore/approach.js) */
+.oa{line-height:1.35;padding:12px;color:var(--omni-text,#eef3ff);font-size:14px}
+.oa .oa-review{margin:0 0 12px}
+.oa-units{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.oa-unit{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 9px;border-radius:12px;border:1px solid rgba(91,196,241,.22);background:#0d1450;color:inherit;cursor:pointer;font:inherit;min-width:0}
+.oa-unit svg{width:56px;height:34px}
+.oa-unit svg .h{fill:#5d6a9e;stroke:#c8d3ff;stroke-width:1.2}
+.oa-unit svg .m{fill:#2b3266;stroke:#aab6ee;stroke-width:1}
+.oa-unit svg .m2{stroke:#aab6ee;stroke-width:1;fill:none}
+.oa-unit svg .d{fill:#1d9a4f;stroke:#e8ff6a;stroke-width:1.6}
+.oa-unit b{font-size:14px}
+.oa-unit small{font-size:11px;opacity:.75;text-align:center}
+.oa-unit.is-on{border-color:#3fb6ef;background:linear-gradient(180deg,rgba(63,182,239,.28),rgba(63,182,239,.10));box-shadow:0 0 0 1px #3fb6ef inset}
+.oa-sub{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.oa-sub[hidden]{display:none}
+.oa-sub button,.oa-seg button{height:34px;padding:0 12px;border-radius:9px;border:1px solid rgba(91,196,241,.22);background:#0d1450;color:inherit;font:inherit;font-size:13px;cursor:pointer}
+.oa-sub button.is-on,.oa-seg button.is-on{background:#3fb6ef;border-color:#3fb6ef;color:#fff}
+.oa-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 0}
+.oa-inputs .field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.oa-inputs .field[hidden]{display:none}
+.oa-inputs .field span{font-size:12px;opacity:.85}
+.oa-inputs input,.oa-inputs select{width:100%;box-sizing:border-box;height:40px;border-radius:9px;border:1px solid rgba(91,196,241,.28);background:#070b36;color:inherit;font:inherit;padding:0 10px}
+.oa-check{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:13px}
+.oa-more{margin:10px 0 0}
+.oa-more summary{cursor:pointer;font-size:13px;opacity:.85}
+.oa-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:12px 0 8px}
+.oa-seg{display:flex;gap:4px}
+.oa-fig{background:#06103a;border-radius:12px;overflow:hidden}
+.oa-svg{display:block;width:100%;max-width:560px;margin:0 auto;aspect-ratio:1/1;font-family:inherit}
+.oa-z-red{fill:rgba(225,52,52,.42)}
+.oa-z-amber{fill:rgba(245,170,40,.55)}
+.oa-z-green{fill:rgba(36,190,100,.55)}
+.oa-lim{stroke:#e9fff1;stroke-width:1.2;stroke-dasharray:5 4;opacity:.75}
+.oa-ring-c{fill:none;stroke:#e8eeff;stroke-width:1.4;opacity:.7}
+.oa-ring line{stroke:#e8eeff;stroke-width:1.2;opacity:.7}
+.oa-ring-t{fill:#e8eeff;font-size:13px;text-anchor:middle;font-weight:500}
+.oa-ring-t.is-n{fill:#ffd34d;font-weight:700}
+.oa-hull{fill:#56608f;stroke:#d7defc;stroke-width:1.2;opacity:.95}
+.oa-mod{fill:#353d70;stroke:#9aa6dd;stroke-width:.8}
+.oa-rig{fill:#2b315d;stroke:#ffd34d;stroke-width:1}
+.oa-col{fill:#3a4377;stroke:#c9d3ff;stroke-width:1}
+.oa-bow{fill:#dfe6ff;font-size:10px;text-anchor:middle;letter-spacing:.08em;opacity:.8}
+.oa-deck{fill:#1a8f47;stroke:#ffffff;stroke-width:1.4}
+.oa-tdpm{fill:none;stroke:#ffe14d;stroke-width:2.2}
+.oa-h{fill:#fff;font-size:11px;font-weight:700;text-anchor:middle;dominant-baseline:central}
+.oa-haxis{stroke:#ffffff;stroke-width:1;stroke-dasharray:2 5;opacity:.55}
+.oa-wind{stroke:#ffd34d;stroke-width:5;stroke-linecap:round}
+.oa-wind-h{fill:#ffd34d}
+.oa-path{stroke:#7cf29b;stroke-width:3.5;fill:none}
+.oa-path.is-flex{stroke:#ffb43a}
+.oa-path.is-bad{stroke:#ff6b6b;stroke-dasharray:8 6}
+.oa-head{fill:#7cf29b;stroke:none}
+.oa-head.is-flex{fill:#ffb43a}
+.oa-head.is-bad{fill:#ff6b6b}
+.oa-heli{fill:#0b1240;stroke:#fff;stroke-width:1.3}
+.oa-rotor{stroke:#fff;stroke-width:1.6}
+.oa-crs{fill:#fff;font-size:17px;font-weight:700;paint-order:stroke;stroke:#06103a;stroke-width:4px}
+.oa-note{fill:#c6d0f5;font-size:11px;opacity:.85}
+.oa-rr{fill:none;stroke:#9fb0ee;stroke-width:1;stroke-dasharray:3 5;opacity:.6}
+.oa-rr-t{fill:#9fb0ee;font-size:10.5px}
+.oa-um{fill:#e9eeff;stroke:#1a8f47;stroke-width:3}
+.oa-circ{fill:none;stroke:#5bc4f1;stroke-width:3;stroke-linejoin:round}
+.oa-circ.is-ovf{stroke-dasharray:6 6;stroke-width:2;opacity:.8}
+.oa-circ-h{fill:#5bc4f1}
+.oa-leg-t{fill:#fff;font-size:12.5px;text-anchor:middle;paint-order:stroke;stroke:#06103a;stroke-width:4px}
+.oa-legend{display:flex;flex-wrap:wrap;gap:12px;margin:8px 2px 0;font-size:12px;opacity:.9}
+.oa-legend span::before{content:"";display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.oa-legend .g::before{background:rgba(36,190,100,.85)}
+.oa-legend .a::before{background:rgba(245,170,40,.9)}
+.oa-legend .r::before{background:rgba(225,52,52,.75)}
+.oa-legend .w::before{background:#ffd34d}
+.oa-out{margin:12px 0 0}
+.oa-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.oa-big{grid-column:1/-1;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(91,196,241,.25);background:#0d1450}
+.oa-big span{font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
+.oa-big b{font-size:30px;line-height:1}
+.oa-big em{font-style:normal;font-size:13px;font-weight:500}
+.oa-big.ok{border-color:rgba(36,190,100,.7)}.oa-big.ok em{color:#7cf29b}
+.oa-big.warn{border-color:rgba(245,170,40,.8)}.oa-big.warn em{color:#ffc35c}
+.oa-big.bad{border-color:rgba(255,107,107,.85)}.oa-big.bad em{color:#ff9a9a}
+.oa-kv{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:rgba(13,20,80,.7);border:1px solid rgba(91,196,241,.14);min-width:0}
+.oa-kv span{font-size:11.5px;opacity:.75}
+.oa-kv b{font-size:15px;font-weight:500}
+.oa-kv.bad b{color:#ff9a9a}
+.oa-notes{margin:10px 0 0;padding-left:18px;font-size:12.5px;opacity:.92}
+.oa-notes li{margin:3px 0}
+.oa-use{margin-top:10px;width:100%}
+@media (max-width:620px){
+  .oa{padding:10px 8px}
+  .oa-units{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .oa-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .oa-inputs .field:nth-child(3){grid-column:1/-1}
+}
