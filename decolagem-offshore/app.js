@@ -11,7 +11,7 @@ if(PROC==='enhanced'){
 _loadConfinedDataFrom('../wat/data/');
 // Offshore: W.A.T. e Drop Down pelas cartas vetoriais do RFM (shared/offshore). Enhanced segue com as tabelas/carta do Supl. 97.
 const VEC=PROC==='offshore';
-if(VEC){$('ofsReview').hidden=false;['watView','ddView'].forEach(id=>OFSView.mount($(id)));$('watCanvas').style.display='none';$('watView').style.display='';}
+if(VEC){['watView','ddView'].forEach(id=>OFSView.mount($(id)));$('watCanvas').style.display='none';$('watView').style.display='';}
 const KG_TO_LB=2.2046226218;
 function isLbUnit(){return $('weightUnit')?.value==='lb';}
 function parseWeightKg(){const r=Number($('weight').value||0);return isLbUnit()?r/KG_TO_LB:r;}
