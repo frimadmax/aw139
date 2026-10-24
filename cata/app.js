@@ -20,6 +20,8 @@ const AERODROME_DB = {
   SBJR: { elevationFt: 16,  magVar: -22, runways: { RWY_03_21: { '03': 30, '21': 210 } } },
   SBMI: { elevationFt: 13,  magVar: -22, runways: { RWY_09_27: { '09': 90, '27': 270 } } },
   SBFS: { elevationFt: 7,   magVar: -21, runways: { RWY_15_33: { '15': 150, '33': 330 } } },
+  // AIP Guyana AD 2.2-13: rumo magnético 069°/249°, VAR 16° W (2019, 3'/ano)
+  SYEC: { elevationFt: 2,   magVar: -16, runways: { RWY_07_25: { '07': 69, '25': 249 } } },
 };
 const adcFrame = document.getElementById('adcFrame');
 // W.A.T. e RTO: cartas vetoriais do RFM (shared/clear/clr-engine.js), desenhadas aqui num canvas próprio.
@@ -738,6 +740,8 @@ function applyBaseMode() {
   if (els.manualRow) { els.manualRow.hidden = !none; els.manualRow.style.display = none ? '' : 'none'; }
   if (els.departureField) { els.departureField.hidden = none; els.departureField.style.visibility = none ? 'hidden' : ''; }
   if (els.metarBtn) els.metarBtn.disabled = none;
+  const review = document.getElementById('syecReview');
+  if (review) review.style.display = els.base?.value === 'SYEC' ? '' : 'none';
 }
 function addNoBaseOption() {
   if (![...els.base.options].some(o => o.value === NO_BASE)) els.base.insertAdjacentHTML('beforeend', `<option value="${NO_BASE}">Nenhum (proa manual)</option>`);

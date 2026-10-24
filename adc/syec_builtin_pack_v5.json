@@ -1,0 +1,111 @@
+{
+  "id": "SYEC",
+  "code": "SYEC",
+  "name": "Georgetown / Eugene F. Correia, INTL",
+  "city": "Guiana",
+  "adcTitle": "SYEC ADC AIP Guyana AD 2.2-13 10 OCT 19",
+  "engineId": "adc_syec_v1",
+  "stability": "draft",
+  "locked": true,
+  "schemaVersion": 5,
+  "defaultChartId": "ADC_MAIN",
+  "defaultRunwayId": "RWY_07_25",
+  "charts": [
+    {
+      "id": "ADC_MAIN",
+      "label": "ADC principal",
+      "asset": "syec_chart_p1.png",
+      "assetName": "syec_chart_p1.png",
+      "size": {
+        "width": 3024,
+        "height": 1836
+      }
+    }
+  ],
+  "runways": [
+    {
+      "id": "RWY_07_25",
+      "label": "07/25",
+      "chartId": "ADC_MAIN",
+      "referenceEnd": "07",
+      "ends": [
+        "07",
+        "25"
+      ],
+      "lengthM": 1400,
+      "widthM": 30.5,
+      "widthPx": 53,
+      "pavementRef": {
+        "x": 547.08,
+        "y": 1615.01
+      },
+      "pavementOpp": {
+        "x": 2495.28,
+        "y": 143.23
+      },
+      "thresholdRef": {
+        "x": 630.54,
+        "y": 1551.96
+      },
+      "thresholdOpp": {
+        "x": 2411.82,
+        "y": 206.28
+      },
+      "declaredDistances": {
+        "07": {
+          "tora": 1280,
+          "toda": 1437,
+          "asda": 1340,
+          "lda": 1280
+        },
+        "25": {
+          "tora": 1280,
+          "toda": 1437,
+          "asda": 1340,
+          "lda": 1280
+        }
+      },
+      "intersections": [
+        {
+          "id": "F",
+          "name": "TWY F",
+          "metersFromRef": 764.7,
+          "labelPoint": {
+            "x": 1636.56,
+            "y": 844.59
+          }
+        },
+        {
+          "id": "A",
+          "name": "TWY A",
+          "metersFromRef": 1042.2,
+          "labelPoint": {
+            "x": 2022.67,
+            "y": 552.9
+          }
+        },
+        {
+          "id": "D",
+          "name": "TWY D",
+          "metersFromRef": 1198.2,
+          "labelPoint": {
+            "x": 2239.78,
+            "y": 388.89
+          }
+        }
+      ],
+      "endFeatures": {
+        "07": {
+          "displacedThresholdM": 0,
+          "stopwayM": 60,
+          "clearwayM": 157
+        },
+        "25": {
+          "displacedThresholdM": 0,
+          "stopwayM": 60,
+          "clearwayM": 157
+        }
+      }
+    }
+  ]
+}
