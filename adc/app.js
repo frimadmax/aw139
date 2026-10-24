@@ -1640,9 +1640,9 @@ const GEOM_KEY = 'aw139_adc_geometry_v49';
       const usableAvailable = Number.isFinite(availableMeters) ? availableMeters : runway.lengthM;
       const clampedReq = clamp(requiredMeters, 0, usableAvailable);
       const startBase = Number.isFinite(startMetersOverride) ? startMetersOverride : metersForKind(runway, depIsRef(runway, dep) ? 'pavementRef' : 'pavementOpp', dep);
-      const endBase = Number.isFinite(endMetersOverride) ? endMetersOverride : gateMetersFromRef(usableAvailable, runway, dep);
-      const startMRef = stationAtOffsetFromStart(startBase, Math.max(0, usableAvailable - clampedReq), runway, dep);
-      const endMRef = Number.isFinite(endMetersOverride) ? endBase : gateMetersFromRef(usableAvailable, runway, dep);
+      // seta a partir do início da corrida até o ponto de parada (início + RTO), limitada ao fim da ASDA
+      const startMRef = startBase;
+      const endMRef = stationAtOffsetFromStart(startBase, clampedReq, runway, dep);
       const startP = pointAtMetersFromRef(startMRef, runway);
       const endP = pointAtMetersFromRef(endMRef, runway);
       const s = toScreen(startP), e = toScreen(endP);
@@ -1664,7 +1664,7 @@ const GEOM_KEY = 'aw139_adc_geometry_v49';
       ctx.lineTo(e.x - ux * ah - px * aw, e.y - uy * ah - py * aw);
       ctx.closePath();
       ctx.fill();
-      const anchor = { x: s.x + (e.x - s.x) * 0.28, y: s.y + (e.y - s.y) * 0.28 };
+      const anchor = { x: e.x, y: e.y };                    // rótulo na ponta da seta (ponto de parada)
       const side = dep === currentOppositeEnd(runway) ? -1 : 1;
       drawCalloutLabel([label, `${Math.round(requiredMeters)} m`], anchor, [
         { x: anchor.x + px * 108 * side, y: anchor.y + py * 108 * side - 28, align: (px * side) > 0 ? 'left' : 'right' },

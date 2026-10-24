@@ -428,13 +428,13 @@ async function renderAdcPreviewToCanvas(out) {
     const endMeters = Number(analysis.metrics?.asda?.endMeters);
     const hasMetrics = Number.isFinite(startMeters) && Number.isFinite(endMeters);
     const startBase = hasMetrics ? startMeters : (Number(analysis.meta?.fullLengthMetersFromRef));
-    const endBase = hasMetrics ? endMeters : Number(runway.lengthM || 0);
     const usable = Math.max(0, available);
     const req = Math.max(0, Math.min(usable, rto));
     const dep = String(payload.departureEnd || '');
     const depIsOpp = dep === String(oppositeEnd(runway) || '');
-    const startMRef = depIsOpp ? startBase - Math.max(0, usable - req) : startBase + Math.max(0, usable - req);
-    const endMRef = endBase;
+    // seta a partir do início da corrida até o ponto de parada (início + RTO), limitada ao fim da ASDA
+    const startMRef = startBase;
+    const endMRef = depIsOpp ? startBase - req : startBase + req;
     const s = pointAtMetersFromRef(runway, startMRef);
     const e = pointAtMetersFromRef(runway, endMRef);
     ctx.save();
@@ -456,7 +456,7 @@ async function renderAdcPreviewToCanvas(out) {
     ctx.closePath();
     ctx.fill();
     ctx.restore();
-    const anchor = { x: s.x + (e.x - s.x) * 0.28, y: s.y + (e.y - s.y) * 0.28 };
+    const anchor = { x: e.x, y: e.y };                      // rótulo na ponta da seta (ponto de parada)
     const side = depIsOpp ? -1 : 1;
     drawCalloutLabel(ctx, ['RTO', `${rto} m`], anchor, [
       { x: anchor.x + g.px * 108 * side, y: anchor.y + g.py * 108 * side - 28, align: (g.px * side) > 0 ? 'left' : 'right' },

@@ -71,6 +71,7 @@
             <button id="adcPdfBtn" class="ghost-btn" type="button" title="Abrir a carta ADC em PDF do DECEA">PDF</button>
             <input id="adcPdfInput" type="file" accept="application/pdf,.pdf" hidden>
           </div>
+          <p class="ldg-review" id="rtoArrowReview" role="note">Em conferência: na carta ADC, a seta do RTO agora sai do início da corrida e termina no ponto de parada, com o rótulo na ponta.</p>
           <p class="ldg-review" id="onlineReview" role="note">Em conferência: ADC online. O botão PDF já lê a carta ADC do DECEA; a busca pelo ICAO no AISWEB funciona depois que as chaves da API forem cadastradas no Cloudflare.</p>
           <div class="adc-online-status" id="adcOnlineStatus" hidden></div>
           <div class="adc-online-warn" id="adcOnlineWarn" hidden></div>
@@ -321,7 +322,7 @@
   <script src="../adc/online/pdf-paths.js" defer></script>
   <script src="../adc/online/adc-detect.js" defer></script>
   <script src="../adc/online/online-adc.js" defer></script>
-  <script src="app.js?v=62"></script>
+  <script src="app.js?v=63"></script>
 <script src="../shared/pwa.js"></script>
 </body>
 </html>
