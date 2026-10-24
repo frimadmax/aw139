@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
   <link rel="stylesheet" href="../shared/pwa.css">
   <link rel="stylesheet" href="../shared/embedded-app.css">
-<link rel="stylesheet" href="../assets/ubuntu.css"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>.cb-tabs{margin:0 8px 8px}.cb-pane[hidden]{display:none}#watPane{margin:0 8px calc(12px + env(safe-area-inset-bottom));border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgba(91,196,241,.2), 0 18px 44px rgba(1,3,24,.55)}#watFrame{display:block;width:100%;min-height:70vh;border:0;background:transparent}</style>
+<link rel="stylesheet" href="../assets/ubuntu.css"><link rel="stylesheet" href="../shared/omni-theme.css"><link rel="stylesheet" href="../shortfield/sf.css"><style>.cb-tabs{margin:0 8px 8px}.cb-pane[hidden]{display:none}#watPane{margin:0 8px calc(12px + env(safe-area-inset-bottom));border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgba(91,196,241,.2), 0 18px 44px rgba(1,3,24,.55)}#watFrame{display:block;width:100%;min-height:70vh;border:0;background:transparent}.cb-dist{display:block;padding:0 8px calc(12px + env(safe-area-inset-bottom))}.cb-dist .sf-panel{margin:0 0 10px}.cb-review{margin:0 0 10px}@media (min-width:700px){.cb-dist .sf-results{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
 </head>
 <body class="embedded-app embedded-catb">
   <div class="embedded-shell">
@@ -27,14 +27,55 @@
       <button type="button" role="tab" data-pane="dist" aria-selected="true">Distâncias</button>
       <button type="button" role="tab" data-pane="wat" aria-selected="false">W.A.T.</button>
     </div>
-    <main id="app-frame" class="cb-pane" data-pane="dist"></main>
+    <main id="distPane" class="cb-pane cb-dist" data-pane="dist">
+      <p class="ldg-review cb-review" role="note">Em conferência: CAT B refeito pelas cartas vetoriais do RFM, ainda sendo validado. Não usar para planejamento real até a liberação.</p>
+      <section class="sf-panel" aria-labelledby="cbIn">
+        <h2 class="sf-kicker" id="cbIn">Dados</h2>
+        <div class="sf-inputs">
+          <label class="sf-field"><span>Altitude pressão <small>ft</small></span><input id="cbPa" type="number" inputmode="numeric" step="100" placeholder="0"></label>
+          <label class="sf-field"><span>OAT <small>°C</small></span><input id="cbOat" type="number" inputmode="decimal" step="1" placeholder="25"></label>
+          <label class="sf-field"><span>Peso (GW) <small>kg</small></span><input id="cbGw" type="number" inputmode="numeric" step="10" placeholder="6400"></label>
+        </div>
+      </section>
+      <section class="sf-panel" aria-labelledby="cbRes">
+        <h2 class="sf-kicker" id="cbRes">Resultados <em>obstáculo de 50 ft</em></h2>
+        <div class="sf-results">
+          <article class="sf-res" id="cbTo"></article>
+          <article class="sf-res" id="cbTd"></article>
+          <article class="sf-res" id="cbBr"></article>
+          <article class="sf-res" id="cbTot"></article>
+        </div>
+        <div class="ldg-notice" id="cbNotice" hidden></div>
+      </section>
+      <section class="sf-panel" aria-labelledby="cbChartHead">
+        <h2 class="sf-kicker" id="cbChartHead">Carta do RFM <em>com a leitura</em></h2>
+        <div class="sf-tabs" role="tablist">
+          <button type="button" role="tab" data-cb="to" aria-selected="true">Decolagem</button>
+          <button type="button" role="tab" data-cb="ld" aria-selected="false">Pouso e frenagem</button>
+        </div>
+        <p class="sf-chart-cap" id="cbCap"></p>
+        <div class="sf-chart-wrap"><div class="sf-chart" id="cbChart"><img id="cbImg" alt=""><svg id="cbSvg" aria-hidden="true"></svg></div></div>
+        <div class="sf-chart-tools"><span>Linha magenta: caminho da leitura feito pelo app.</span><button type="button" id="cbZoom">Ampliar</button></div>
+      </section>
+      <section class="sf-panel" aria-labelledby="cbNotes">
+        <h2 class="sf-kicker" id="cbNotes">Base e premissas</h2>
+        <ul class="sf-notes">
+          <li>Fonte: <b>AW139 RFM Rev 30</b>. Até 6400 kg Seção 4, Fig. 4-17 (decolagem) e 4-18 (pouso); de 6400 a 6800 kg Supl. 50, Fig. 4-35 e 4-36; de 6800 a 7000 kg Supl. 90, Fig. 4-42 e 4-43. Cartas extraídas do PDF vetorial.</li>
+          <li>Rotor 100%, vento zero, superfície dura, lisa e nivelada.</li>
+          <li>Decolagem iniciada de H.IGE (5 ft), V<sub>50FT</sub> 50 KIAS, potência H.IGE + 5% TQ por motor.</li>
+          <li>Pouso: V<sub>app</sub> 30 KIAS, 500 ft/min, 2.5 min OEI / TOP AEO, motor inoperante assegurado. Landing distance = distância até o toque sobre obstáculo de 50 ft.</li>
+          <li>OAT máxima ISA+35 °C. Valores arredondados para cima (metro inteiro).</li>
+          <li>Ferramenta de apoio. O RFM aprovado prevalece.</li>
+        </ul>
+      </section>
+    </main>
     <section id="watPane" class="cb-pane" data-pane="wat" hidden>
       <iframe id="watFrame" title="W.A.T. CAT B" loading="eager" data-src="../wat/?catb=1"></iframe>
     </section>
   </div>
-  <script src="../shared/embedded-app.js"></script>
-  <script src="app-data.js"></script>
-  <script>loadEmbeddedApp(document.getElementById('app-frame'), window.AW139_EMBEDDED, '../shared/embedded-skin.css');</script>
+  <script src="cb-data.js"></script>
+  <script src="cb-engine.js"></script>
+  <script src="cb-ui.js"></script>
   <script>
   /* CAT B: aba W.A.T. com o módulo WAT do site travado no procedimento CAT B */
   (function(){

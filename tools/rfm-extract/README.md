@@ -34,3 +34,10 @@ Pouso Offshore, Balked Landing Distance OEI (Supl. 12 Parte I Fig. 4I-2/4/6/8; S
 As curvas vêm em pedaços sobrepostos e recortados (clip) pelo painel: o extrator aplica o clip de cada caminho, filtra pela página
 renderizada (só o que aparece escuro) e junta os pedaços. Na 4-100 há uma carta antiga escondida por baixo; a moldura e os eixos
 são medidos na grade visível (-40..50 °C; 0..600 m).
+
+CAT B (Seção 4 Fig. 4-17/4-18; Supl. 50 Fig. 4-35/4-36; Supl. 90 Fig. 4-42/4-43): `ex_cb.py` → `cb.json`,
+`build.py ../../catb CB_CHARTS cb.json cb-data.js`. `ov_cb.py <dir> <figs>` desenha a extração.
+Na Seção 4 as linhas de OAT são traços grossos contornados (polígonos): usa a linha média das bordas; 50 e -40 °C são as
+linhas vermelhas do envelope. Pedaços de curva são agrupados só quando se sobrepõem na mesma direção e encadeados pela ponta.
+A ordem das curvas de peso vem do sentido dos rótulos; conferido cruzando cartas (6400 kg Seção 4 x Supl. 50 e 6800 kg
+Supl. 50 x Supl. 90 batem em até 0,3 m).
