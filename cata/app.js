@@ -1557,7 +1557,7 @@ function getLegendForMode(mode) {
   if (mode === 'adc') return [
     { color: '#7CFC00', label: 'OK / disponível' },
     { color: '#ef4444', label: 'Não OK' },
-    { color: '#f59e0b', label: 'Gate operacional' },
+    { color: '#f59e0b', label: 'TDP' },
   ];
   return [];
 }
