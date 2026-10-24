@@ -30,8 +30,8 @@ async function refreshLda(){
   if (base && base !== '__NONE__' && dep.includes('::')) {
     const [rwyId, end] = dep.split('::');
     try {
-      const res = await fetch(`../adc/${base.toLowerCase()}_builtin_pack_v5.json`);
-      const pack = await res.json();
+      // base online (AISWEB/PDF) desta sessão: não tem arquivo de pacote
+      const pack = window.OnlineAdc?.packFor(base) || await (await fetch(`../adc/${base.toLowerCase()}_builtin_pack_v5.json`)).json();
       const rwy = (pack.runways || []).find((r) => r.id === rwyId);
       const lda = rwy?.declaredDistances?.[end]?.lda;
       if (Number.isFinite(lda)) { currentLda = lda; currentLdaLabel = `${base} ${end}`; }

@@ -65,6 +65,16 @@
             </label>
           </div>
 
+          <div class="adc-online" id="adcOnline">
+            <input id="adcSearchInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="4" placeholder="Buscar ADC online (ICAO)" aria-label="Buscar ADC online pelo ICAO" enterkeyhint="search">
+            <button id="adcSearchBtn" class="ghost-btn" type="button">Buscar</button>
+            <button id="adcPdfBtn" class="ghost-btn" type="button" title="Abrir a carta ADC em PDF do DECEA">PDF</button>
+            <input id="adcPdfInput" type="file" accept="application/pdf,.pdf" hidden>
+          </div>
+          <p class="ldg-review" id="onlineReview" role="note">Em conferência: ADC online. O botão PDF já lê a carta ADC do DECEA; a busca pelo ICAO no AISWEB começa a funcionar quando o acesso à API estiver configurado.</p>
+          <div class="adc-online-status" id="adcOnlineStatus" hidden></div>
+          <div class="adc-online-warn" id="adcOnlineWarn" hidden></div>
+
           <div class="form-grid form-grid-2" id="manualRow" hidden>
             <label class="field">
               <span>Elevação (ft)</span>
@@ -308,7 +318,10 @@
   <script src="cl-data.js" defer></script>
   <script src="cl-engine.js" defer></script>
   <script src="../shared/landing-oei.js" defer></script>
-  <script src="app.js?v=61"></script>
+  <script src="../adc/online/pdf-paths.js" defer></script>
+  <script src="../adc/online/adc-detect.js" defer></script>
+  <script src="../adc/online/online-adc.js" defer></script>
+  <script src="app.js?v=62"></script>
 <script src="../shared/pwa.js"></script>
 </body>
 </html>

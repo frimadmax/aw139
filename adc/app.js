@@ -1031,7 +1031,7 @@ const GEOM_KEY = 'aw139_adc_geometry_v49';
     function refreshBaseOptions() {
       const select = document.getElementById('baseSelect');
       const ids = Object.keys(baseLibrary).sort();
-      select.innerHTML = ids.map(id => `<option value="${id}">${id}</option>`).join('');
+      select.innerHTML = ids.map(id => `<option value="${id}">${id}${baseLibrary[id]?.online ? ' · online' : ''}</option>`).join('');
       if (!ids.includes(state.currentBaseId)) state.currentBaseId = ids[0];
       select.value = state.currentBaseId;
     }
@@ -2034,7 +2034,15 @@ window.__adcBridge = {
     canvasWidth: canvas?.width || 0,
     canvasHeight: canvas?.height || 0
   }),
-  waitForChart
+  waitForChart,
+  // base lida do AISWEB/PDF nesta sessão (não vai para o armazenamento local nem para o cache offline)
+  addOnlineBase(pack) {
+    const norm = normalizeBasePack(pack);
+    norm.online = true;
+    baseLibrary[norm.id] = norm;
+    refreshBaseOptions();
+    return norm.id;
+  }
 };
 
 

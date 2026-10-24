@@ -167,3 +167,13 @@ body.fullscreen-body{overflow:hidden}
 .weight-row{display:grid;grid-template-columns:84px 1fr;gap:8px;align-items:end}
 .mini-select{height:38px;min-height:38px;padding:0 10px;font-size:13px;width:100%;margin-top:0}
 .metar-info-line{font-size:12px;color:#cfe2f5;opacity:.9;margin:-2px 0 8px 0;min-height:16px}
+
+/* ADC online (AISWEB / PDF do DECEA) */
+.adc-online{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:8px}
+.adc-online input{height:38px;min-width:0;width:100%;border-radius:8px;border:1px solid rgba(63,182,239,.55);background:#162270;color:var(--text);padding:0 10px;outline:none;font-size:14px;text-transform:uppercase}
+.adc-online input::placeholder{text-transform:none}
+.adc-online .ghost-btn{height:38px;border-radius:8px;padding:0 12px;font-weight:700;cursor:pointer}
+.adc-online .ghost-btn:disabled{opacity:.55;cursor:default}
+.adc-online-status{margin-top:6px;font-size:12px;opacity:.85}
+.adc-online-status.err{color:#ff8a8a;opacity:1}
+.adc-online-warn{margin-top:8px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,193,7,.6);background:rgba(255,193,7,.12);color:#ffd666;font-size:12px;line-height:1.4}

@@ -745,6 +745,70 @@ function addNoBaseOption() {
   if (![...els.base.options].some(o => o.value === NO_BASE)) els.base.insertAdjacentHTML('beforeend', `<option value="${NO_BASE}">Nenhum (proa manual)</option>`);
 }
 
+// ---------- ADC online (AISWEB ou PDF do DECEA): base só desta sessão, lida automaticamente ----------
+function setOnlineStatus(text, isErr = false) {
+  const el = document.getElementById('adcOnlineStatus');
+  if (!el) return;
+  el.hidden = !text; el.textContent = text || ''; el.classList.toggle('err', !!isErr);
+}
+function updateOnlineWarn() {
+  const el = document.getElementById('adcOnlineWarn');
+  if (!el) return;
+  const pack = window.OnlineAdc?.get(els.base?.value);
+  el.hidden = !pack;
+  if (!pack) { el.textContent = ''; return; }
+  const lines = [`${pack.adcTitle}: carta lida automaticamente, NÃO CONFERIDA. Confira cabeceiras, distâncias e taxiways na carta oficial antes de usar a decisão.`]
+    .concat((pack.warnings || []).map(w => '• ' + w));
+  el.innerHTML = lines.map(l => `<div>${l.replace(/[<&>]/g, c => ({ '<': '&lt;', '&': '&amp;', '>': '&gt;' }[c]))}</div>`).join('');
+}
+async function loadOnlineAdc(getPack) {
+  const btns = ['adcSearchBtn', 'adcPdfBtn'].map(id => document.getElementById(id));
+  btns.forEach(b => { if (b) b.disabled = true; });
+  try {
+    const pack = await getPack(step => setOnlineStatus(step + '…'));
+    const bridge = adcFrame.contentWindow?.__adcBridge;
+    if (!bridge?.addOnlineBase) throw new Error('Módulo ADC não está pronto.');
+    const id = bridge.addOnlineBase(pack);
+    const runways = {};
+    pack.runways.forEach(r => {
+      runways[r.id] = Object.fromEntries(r.ends.map(e => [e, Number.isFinite(r.brgMag?.[e]) ? r.brgMag[e] : Number(String(e).replace(/\D/g, '')) * 10]));
+    });
+    AERODROME_DB[id] = { elevationFt: pack.elevationFt ?? null, magVar: pack.magVar || 0, runways, online: true };
+    await populateBaseOptions();
+    els.base.value = id;
+    els.base.dispatchEvent(new Event('change', { bubbles: true }));
+    const rw = pack.runways.map(r => `${r.label} (${r.intersections.length} taxiway${r.intersections.length === 1 ? '' : 's'})`).join(', ');
+    setOnlineStatus(`${id} carregado: ${rw}.`);
+  } catch (e) {
+    setOnlineStatus(e?.message || String(e), true);
+  } finally {
+    btns.forEach(b => { if (b) b.disabled = false; });
+  }
+}
+function bindOnlineAdc() {
+  const input = document.getElementById('adcSearchInput');
+  const go = () => {
+    const icao = String(input?.value || '').trim().toUpperCase();
+    if (!icao) return;
+    if (AERODROME_DB[icao] && !AERODROME_DB[icao].online && [...els.base.options].some(o => o.value === icao)) {
+      els.base.value = icao; els.base.dispatchEvent(new Event('change', { bubbles: true }));
+      setOnlineStatus(`${icao} já está na lista offline.`);
+      return;
+    }
+    if (!window.OnlineAdc) { setOnlineStatus('Busca online indisponível.', true); return; }
+    loadOnlineAdc(step => window.OnlineAdc.search(icao, step));
+  };
+  document.getElementById('adcSearchBtn')?.addEventListener('click', go);
+  input?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+  const file = document.getElementById('adcPdfInput');
+  document.getElementById('adcPdfBtn')?.addEventListener('click', () => file?.click());
+  file?.addEventListener('change', () => {
+    const f = file.files?.[0];
+    file.value = '';
+    if (f && window.OnlineAdc) loadOnlineAdc(step => window.OnlineAdc.openFile(f, step));
+  });
+}
+
 async function populateBaseOptions() {
   const doc = await waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']);
   const baseSelect = doc.getElementById('baseSelect');
@@ -2602,6 +2666,7 @@ function bindEvents() {
   document.querySelectorAll('.viewer-tab').forEach(btn => btn.addEventListener('click', () => setVisualization(btn.dataset.viz, true)));
   els.base.addEventListener('change', () => {
     applyBaseMode();
+    updateOnlineWarn();
     updateCalcDisplay();
     if (isNoBase()) { markCalculationDirty('aeroporto alterado'); pushSharedContext(collectInputs()); return; }
     refreshAdcDecisionForSelection('a base').catch(console.warn);
@@ -2703,6 +2768,7 @@ function bindEvents() {
 window.addEventListener('load', async () => {
   try { const saved = localStorage.getItem('aw139_weight_unit'); if (saved === 'lbs') setWeightUnit('lbs', false); } catch { /* quota */ }
   bindEvents();
+  bindOnlineAdc();
   setupAutoAdvance();
   updateSharePdfButtonLabel();
   clearVisualization();
