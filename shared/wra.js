@@ -109,7 +109,7 @@
     if (r.speed > ch.vMax) return { ch, traces: [], dots: [], msg: 'Vento acima da escala da carta (60 kt).' };
     return Object.assign(polar(ch, r.speed), { msg: `proa ${fmt(r.head)} kt · través ${fmt(r.cross)} kt` });
   }
-  const capOf = (ch, extra) => ch ? `<b>Fig. ${ch.fig.replace(/^S97-/, '')}</b> ${ch.title} · ${ch.supl}, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)${extra ? ' · ' + extra : ''} · <b>aba WRA em conferência</b>` : '';
+  const capOf = (ch, extra) => ch ? `<b>Fig. ${ch.fig.replace(/^S97-/, '')}</b> ${ch.title} · ${ch.supl}, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)${extra ? ' · ' + extra : ''}` : '';
   const svgOf = v => v.traces.map(t => `<polyline class="trace" points="${t.map(p => p.map(n => n.toFixed(2)).join(',')).join(' ')}"/>`).join('') +
     v.dots.map(d => `<circle class="dot" cx="${d[0].toFixed(2)}" cy="${d[1].toFixed(2)}" r="2.2"/>`).join('');
 

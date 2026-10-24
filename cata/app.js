@@ -1588,7 +1588,6 @@ function getVisualizationMeta(mode) {
     { label: 'Fonte', value: `RFM AW139 Rev 30, ${r.supl}, pág. ${ch.rfmPage} (pág. ${ch.page} do PDF)` },
     { label: 'Leitura', value: mode === 'wra' ? (r.w ? `${WRA.describe(r.w)}` : r.msg) : !r.ok ? r.msg : mode === 'wat' ? `${r.kg} kg${r.note ? ' · ' + r.note : ''}` : `${Math.round(r.dist0)} m na carta${r.hw > 0 ? ` · vento ${r.hw.toFixed(0)} kt: ${r.perKt.toFixed(1)} m/kt = ${Math.round(r.corr)} m` : ''} · ${mode.toUpperCase()} ${Math.round(r.dist)} m${r.note ? ' · ' + r.note : ''}` },
   ] : [];
-  if (mode === 'wra') facts.push({ label: 'Status', value: 'Aba WRA em conferência' });
   return {
     legend: getLegendForMode(mode),
     facts
