@@ -4,6 +4,7 @@
   const card = document.getElementById('offCard');
   if (!card || !('serviceWorker' in navigator) || !('caches' in window)) return;
   const $ = id => document.getElementById(id);
+  const badge = $('offBadge');
   const title = $('offTitle'), sub = $('offSub'), pct = $('offPct'), fill = $('offFill'), retry = $('offRetry');
   let last = null, asked = 0, timer = null, newest = '';
 
@@ -16,6 +17,7 @@
     fill.style.width = (s.state === 'ready' ? 100 : p) + '%';
     pct.textContent = (s.state === 'ready' ? 100 : p) + '%';
     retry.hidden = true;
+    if (badge) badge.hidden = s.state !== 'ready';
     if (s.state === 'ready') {
       title.textContent = 'Ready for offline use';
       sub.textContent = online ? `All ${s.total} files saved on this device` : `No internet · using the saved version (${s.total} files)`;

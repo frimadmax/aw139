@@ -119,3 +119,6 @@
 .profile.is-onshore .profile-actions a.go-main{background:linear-gradient(135deg,#ff4f8b,var(--omni-magenta) 50%,#b8325e)}
 .profile.is-onshore .profile-actions a:not(.go-main){background:linear-gradient(180deg,rgba(230,0,126,.18),rgba(38,71,166,.5))}
 .profile.is-onshore .profile-name{border-color:rgba(230,0,126,.45)}
+.efb-off{margin-left:auto;display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;padding:3px 8px 3px 6px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#7ee2a8;background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.35)}
+.efb-off[hidden]{display:none}
+.efb-off svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
