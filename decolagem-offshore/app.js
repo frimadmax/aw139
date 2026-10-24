@@ -9,8 +9,9 @@ if(PROC==='enhanced'){
   $('runBtn').textContent='Calcular '+t;
 }
 _loadConfinedDataFrom('../wat/data/');
-// Offshore: W.A.T. e Drop Down pelas cartas vetoriais do RFM (shared/offshore). Enhanced segue com as tabelas/carta do Supl. 97.
-const VEC=PROC==='offshore';
+// W.A.T. e Drop Down pelas cartas vetoriais do RFM (shared/offshore): Offshore pelo Supl. 50/12 (OFSEngine), Enhanced pelo Supl. 97 (EWEngine).
+const VEC=true,ENH=PROC==='enhanced';
+if(ENH)$('ewReview').hidden=false;
 if(VEC){['watView','ddView'].forEach(id=>OFSView.mount($(id)));$('watCanvas').style.display='none';$('watView').style.display='';}
 const KG_TO_LB=2.2046226218;
 function isLbUnit(){return $('weightUnit')?.value==='lb';}
@@ -26,17 +27,28 @@ function showTab(tab){
   $('ddCanvas').style.display=!VEC&&tab==='dropdown'?'':'none';
   $('watView').style.display=VEC&&tab==='wat'?'':'none';
   $('ddView').style.display=VEC&&tab==='dropdown'?'':'none';
-  $('vizTitle').textContent=tab==='wat'?'WAT Offshore':'Dropdown Offshore';
+  $('vizTitle').textContent=(tab==='wat'?'WAT ':'Dropdown ')+(ENH?'Enhanced':'Offshore');
   if(tab==='dropdown')requestAnimationFrame(()=>requestAnimationFrame(drawDD));
   else if(tab==='wat')requestAnimationFrame(()=>requestAnimationFrame(drawWAT));
 }
 const fmtHp=v=>Math.round(v).toLocaleString('pt-BR');
 function drawVecWAT(){
+  if(ENH)return drawEnhWAT();
   const s=state.last,cfg=(s&&s.cfg)||$('config').value,fig=OFSEngine.WAT[cfg]||OFSEngine.WAT.standard,ch=OFW_CHARTS[fig];
   const r=s&&!s.error&&s.vw&&s.vw.ok?s.vw:null;
   OFSView.draw($('watView'),ch,`<b>Fig. ${fig}</b> ${ch.title} · Supl. 50, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?` · leitura: <b>${fmtHp(r.kg)} kg</b>`:s&&s.error?` · ${s.error}`:''),r?[r.trace]:[]);
 }
+function drawEnhWAT(){
+  const s=state.last,cfg=(s&&s.cfg)||$('config').value,fig=EWEngine.WAT[cfg]||EWEngine.WAT.standard,ch=EW_CHARTS[fig];
+  const r=s&&!s.error&&s.vw&&s.vw.ok?s.vw:null;
+  OFSView.draw($('watView'),ch,`<b>Fig. ${EWEngine.figName(fig)}</b> ${ch.title} · Supl. 97, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?` · leitura: <b>${fmtHp(r.kg)} kg</b>`:s&&s.error?` · ${s.error}`:''),r?[r.trace]:[]);
+}
+function drawEnhDD(){
+  const s=state.last,r=s&&s.vd?s.vd:null,ch=EDD_CHARTS[EWEngine.DD];
+  OFSView.draw($('ddView'),ch,`<b>Fig. 4-10</b> ${ch.title} · Supl. 97, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?(r.ok?` · leitura na carta: <b>${r.final} ft</b>`:` · ${r.msg}`):''),r&&r.ok?r.traces:[],r&&r.ok?r.dots:[]);
+}
 function drawVecDD(){
+  if(ENH)return drawEnhDD();
   const s=state.last,r=s&&s.vd?s.vd:null,fig=r?r.fig:OFSEngine.ddFig(s&&s.w||6000,'takeoff'),ch=OFD_CHARTS[fig];
   const sup=fig==='4-74'?'Supl. 50':'Supl. 12';
   OFSView.draw($('ddView'),ch,`<b>Fig. ${fig}</b> ${ch.title} · ${sup}, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?(r.ok?` · leitura na carta: <b>${Math.ceil(r.base)} ft</b>`:` · ${r.msg}`):''),r&&r.ok?[r.trace]:[]);
@@ -49,9 +61,9 @@ function calc(){
   const ac=Number($('aircraft').value||7000),proc=$('procedure').value,cfg=$('config').value;
   let wat;
   if(VEC){
-    const vw=OFSEngine.wat(cfg,pa,oat,hw);
+    const vw=ENH?EWEngine.wat(cfg,pa,oat):OFSEngine.wat(cfg,pa,oat,hw);
     if(!vw.ok){state.last={error:vw.msg,proc,cfg,qnh,elev,pa,oat,w,wRaw,hw,ac,vw,vd:null};render();saveInputs();return;}
-    const vd=OFSEngine.dd(w,pa,oat,hw,{phase:'takeoff'});
+    const vd=ENH?EWEngine.dd(w,pa,oat,hw):OFSEngine.dd(w,pa,oat,hw,{phase:'takeoff'});
     const maxWeight=vw.kg,margin=Math.round(maxWeight-w),ok=margin>=0;
     const dropdown=vd.ok?Math.ceil(vd.final):null;
     state.last={qnh,elev,pa,oat,w,wRaw,hw,ac,proc,cfg,wat:maxWeight,vw,vd,dropdown,margin,ok};
@@ -100,8 +112,9 @@ function render(){
   $('ddSummary').textContent=ddOk!=null?`Clearance ${s.elev-s.dropdown} ft ASL`:'Dropdown Offshore Takeoff';
   if(VEC){
     const d=s.vd;
-    $('watSummary').textContent=`Fig. ${s.vw.fig} · Supl. 50 · PA ${s.pa} ft${s.vw.hw?` · vento ${s.vw.hw} kt`:''}`;
-    if(d&&d.ok){const parts=[`Fig. ${d.fig}: ${Math.ceil(d.base)} ft`];if(d.wind)parts.push(`vento ${d.wind} ft`);$('ddSummary').textContent=`${ddOk!=null?`Clearance ${s.elev-s.dropdown} ft ASL · `:''}${parts.join(' · ')}`;}
+    $('watSummary').textContent=ENH?`Fig. ${s.vw.name} · Supl. 97 · PA ${s.pa} ft`:`Fig. ${s.vw.fig} · Supl. 50 · PA ${s.pa} ft${s.vw.hw?` · vento ${s.vw.hw} kt`:''}`;
+    if(d&&d.ok&&ENH){const parts=[`Fig. 4-10: ${d.final} ft${d.hw?` com ${d.hw.toFixed(0)} kt de proa`:''}`,...d.notes];$('ddSummary').textContent=`${ddOk!=null?`Clearance ${s.elev-s.dropdown} ft ASL · `:''}${parts.join(' · ')}`;}
+    else if(d&&d.ok){const parts=[`Fig. ${d.fig}: ${Math.ceil(d.base)} ft`];if(d.wind)parts.push(`vento ${d.wind} ft`);$('ddSummary').textContent=`${ddOk!=null?`Clearance ${s.elev-s.dropdown} ft ASL · `:''}${parts.join(' · ')}`;}
     else if(d)$('ddSummary').textContent=d.msg;
   }
   $('margin').textContent=`Margin: ${fmtWt(s.margin)}`;
