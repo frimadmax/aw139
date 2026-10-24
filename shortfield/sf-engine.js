@@ -55,10 +55,12 @@
   }
 
   // Família de OAT na posição de altitude, incluindo a linha MAX OAT (ISA+35) como curva de valor variável.
+  // Supl. 90 (7000 kg): a linha limite é ISA+20 (ch.isaDev = 20).
   function oatFamily(ch, posAt, paFt) {
-    const vLim = isaMaxOat(paFt);
+    const dev = ch.isaDev || 35, raw = 15 + dev - 1.98 * paFt / 1000;
+    const vLim = Math.min(50, raw);
     const fam = ch.oat.filter(c => c.v <= vLim + 1e-9).map(c => ({ v: c.v, pos: posAt(c.pts) }));
-    if (paFt >= 0) {
+    if (dev === 35 ? paFt >= 0 : raw < 50) {
       const p = ch.maxOat ? posAt(ch.maxOat) : null;
       if (p != null) fam.push({ v: vLim, pos: p, isLimit: true });
     }
@@ -78,7 +80,7 @@
     if (y > bottom + 0.1) return fail('Altitude abaixo do limite da carta.');
     y = Math.min(bottom, Math.max(top, y));
     const { fam, vLim } = oatFamily(ch, pts => xAtY(pts, y), paFt);
-    if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+35 = ${vLim.toFixed(1)} °C nesta altitude).`);
+    if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+${ch.isaDev || 35} = ${vLim.toFixed(1)} °C nesta altitude).`);
     const r = interp(fam, oat);
     if (!r) return fail('Fora da carta (limite de Hd ou temperatura fora das curvas).');
     let x = r.pos;
@@ -137,7 +139,7 @@
     if (x > ch.divider + 0.1) return fail('Altitude abaixo do limite da carta.');
     x = Math.min(ch.divider, Math.max(left, x));
     const { fam, vLim } = oatFamily(ch, pts => yAtX(pts, x), paFt);
-    if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+35 = ${vLim.toFixed(1)} °C nesta altitude).`);
+    if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+${ch.isaDev || 35} = ${vLim.toFixed(1)} °C nesta altitude).`);
     const r = interp(fam, oat);
     if (!r) return fail('Temperatura fora das curvas da carta.');
     const Y = r.pos;
@@ -168,7 +170,7 @@
     if (x > Math.max(...xs) + 0.1) return fail('Altitude abaixo do limite da carta.');
     x = Math.min(Math.max(...xs), Math.max(Math.min(...xs), x));
     const { fam, vLim } = oatFamily(ch, pts => yAtX(pts, x), paFt);
-    if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+35 = ${vLim.toFixed(1)} °C nesta altitude).`);
+    if (oat > vLim + 1e-9) return fail(`OAT acima do limite MAX OAT (ISA+${ch.isaDev || 35} = ${vLim.toFixed(1)} °C nesta altitude).`);
     const r = interp(fam, oat);
     if (!r) return fail('Temperatura fora das curvas da carta.');
     const Y = r.pos;

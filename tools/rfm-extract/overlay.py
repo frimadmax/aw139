@@ -13,7 +13,7 @@ for fig,o in data.items():
     for fam,col in cols.items():
         for c in o.get(fam,[]):
             line(c['pts'],col); x,y=c['pts'][-1]; d.text((x*Z+3,y*Z-6),str(c['v']),fill=col)
-    line(o['maxOat'],(0,160,255),3)
+    if o.get('maxOat'): line(o['maxOat'],(0,160,255),3)
     if o.get('hd'): line(o['hd'],(0,200,0),3)
     if o.get('ref'): line(o['ref'],(0,200,0),3)
     im.save(f'ov_{fig}.png')
