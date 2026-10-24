@@ -54,7 +54,7 @@
     box.className = 'wra-box';
     const field = (id, text, ph) => `<label class="${label.className}"><span>${text}</span><input id="${id}" class="${hwInput.className}" type="number" inputmode="numeric" min="0" max="360" step="1" placeholder="${ph}"></label>`;
     const p = o.prefix || 'wra';
-    box.innerHTML = `<div class="wra-title">Vento relativo (WRA) <small>opcional: preenche o vento de proa</small></div>
+    box.innerHTML = `<div class="wra-title">Vento relativo (WRA) <small>opcional: preenche o vento de proa</small> <small class="wra-review">· em conferência</small></div>
       <div class="wra-grid">${field(p + 'Dir', 'Vento <small>°M</small>', '360')}${field(p + 'Spd', 'Velocidade <small>kt</small>', '15')}${field(p + 'Hdg', 'Proa <small>°M</small>', '360')}</div>
       <p class="wra-out" aria-live="polite"></p>`;
     label.insertAdjacentElement('afterend', box);
@@ -86,7 +86,7 @@
     st.id = 'wra-style';
     st.textContent = '.wra-box{grid-column:1/-1;margin:2px 0 6px}.wra-title{font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.8;margin:4px 0}' +
       '.wra-title small{text-transform:none;letter-spacing:0;opacity:.8}.wra-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}' +
-      '.wra-grid label{min-width:0}.wra-grid input{width:100%;box-sizing:border-box}.wra-out{margin:6px 0 0;font-size:12px;line-height:1.35;opacity:.9}.wra-out.is-warn{color:#ffb4b4}';
+      '.wra-grid label{min-width:0}.wra-grid input{width:100%;box-sizing:border-box}.wra-out{margin:6px 0 0;font-size:12px;line-height:1.35;opacity:.9}.wra-out.is-warn{color:#ffb4b4}.wra-review{color:#ff7ac0;opacity:1}';
     document.head.appendChild(st);
   }
 
