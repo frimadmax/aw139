@@ -10,7 +10,8 @@
 
   function render(s) {
     last = s;
-    card.hidden = false;
+    // Concluído: some o cartão e fica só o selo "Offline OK" do cabeçalho.
+    card.hidden = s.state === 'ready';
     const p = s.total ? Math.floor(100 * s.done / s.total) : 0;
     const online = navigator.onLine;
     card.dataset.state = s.state;
