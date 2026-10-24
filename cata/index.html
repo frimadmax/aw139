@@ -66,9 +66,20 @@
               <span>Base</span>
               <select id="baseSelect"></select>
             </label>
-            <label class="field">
+            <label class="field" id="departureField">
               <span>Cabeceira</span>
               <select id="departureEndSelect"></select>
+            </label>
+          </div>
+
+          <div class="form-grid form-grid-2" id="manualRow" hidden>
+            <label class="field">
+              <span>Elevação (ft)</span>
+              <input id="manualElev" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="0" maxlength="5">
+            </label>
+            <label class="field">
+              <span>Proa de decolagem (°M)</span>
+              <input id="manualHdg" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" placeholder="360" maxlength="3">
             </label>
           </div>
 
@@ -130,7 +141,7 @@
               <div class="calc-value" id="calcPaDisplay">—</div>
             </div>
             <div class="calc-item">
-              <div class="calc-label">Vento de Frente</div>
+              <div class="calc-label">Vento de proa · través</div>
               <div class="calc-value" id="calcHwDisplay">—</div>
             </div>
           </div>
@@ -297,6 +308,7 @@
   <script src="../shared/clear/clw-data.js"></script>
   <script src="../shared/clear/clr-data.js"></script>
   <script src="../shared/clear/clr-engine.js"></script>
+  <script src="../shared/wra.js"></script>
   <script src="cl-data.js" defer></script>
   <script src="cl-engine.js" defer></script>
   <script src="../shared/landing-oei.js" defer></script>

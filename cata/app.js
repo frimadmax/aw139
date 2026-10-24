@@ -35,6 +35,10 @@ const vizRuntime = { renderSeq: 0, adcSyncSeq: 0, adcDecisionSeq: 0, adcDirty: f
 const els = {
   base: document.getElementById('baseSelect'),
   departure: document.getElementById('departureEndSelect'),
+  departureField: document.getElementById('departureField'),
+  manualRow: document.getElementById('manualRow'),
+  manualElev: document.getElementById('manualElev'),
+  manualHdg: document.getElementById('manualHdg'),
   aircraftSet: document.getElementById('aircraftSetSelect'),
   config: document.getElementById('configurationSelect'),
   qnh: document.getElementById('qnh'),
@@ -725,6 +729,19 @@ async function waitForFieldValue(doc, id, expected, timeoutMs = 3000) {
 }
 
 
+// "Nenhum aeroporto": elevação e proa de decolagem digitadas; sem pista não há ADC (RTO/CTO só como distâncias)
+const NO_BASE = '__NONE__';
+const isNoBase = () => els.base?.value === NO_BASE;
+function applyBaseMode() {
+  const none = isNoBase();
+  if (els.manualRow) { els.manualRow.hidden = !none; els.manualRow.style.display = none ? '' : 'none'; }
+  if (els.departureField) { els.departureField.hidden = none; els.departureField.style.visibility = none ? 'hidden' : ''; }
+  if (els.metarBtn) els.metarBtn.disabled = none;
+}
+function addNoBaseOption() {
+  if (![...els.base.options].some(o => o.value === NO_BASE)) els.base.insertAdjacentHTML('beforeend', `<option value="${NO_BASE}">Nenhum (proa manual)</option>`);
+}
+
 async function populateBaseOptions() {
   const doc = await waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']);
   const baseSelect = doc.getElementById('baseSelect');
@@ -733,9 +750,11 @@ async function populateBaseOptions() {
   els.departure.innerHTML = depSelect.innerHTML;
   if (!els.base.value) els.base.value = baseSelect.value;
   if (!els.departure.value) els.departure.value = depSelect.value;
+  addNoBaseOption();
 }
 
 async function syncAdcSelection({ renderPreviewIfActive = false } = {}) {
+  if (isNoBase()) return '';
   const syncSeq = ++vizRuntime.adcSyncSeq;
   const activeAdc = (els.visualSelect.value || '') === 'adc';
   if (renderPreviewIfActive && activeAdc) {
@@ -771,6 +790,7 @@ async function syncAdcSelection({ renderPreviewIfActive = false } = {}) {
   if (syncSeq !== vizRuntime.adcSyncSeq) return selectedToken;
 
   els.base.innerHTML = baseSelect.innerHTML;
+  addNoBaseOption();
   if (baseSelect.value) els.base.value = baseSelect.value;
   els.departure.innerHTML = depSelect.innerHTML;
   selectedToken = selectDepartureOption(els.departure, depSelect.value || desired.token, desired.dep);
@@ -793,9 +813,19 @@ function calcPressureAltitude(qnh, elevationFt) {
   return Math.round(elevationFt + (1013.25 - qnh) * 30);
 }
 
+// Fig. 4K-4: proa = V·cos(WRA), través = V·sen(WRA) (shared/wra.js). Crédito de proa arredondado para baixo;
+// cauda arredondada ao kt mais próximo (regra de vento de cauda da tela, como antes).
 function calcHeadwindComponent(windDirMag, windSpeedKt, runwayMagHeading) {
-  const angleDiff = (runwayMagHeading - windDirMag) * Math.PI / 180;
-  return Math.round(windSpeedKt * Math.cos(angleDiff));
+  const r = WRA.decompose(windDirMag, windSpeedKt, runwayMagHeading);
+  return r.head >= 0 ? Math.floor(r.head + 1e-9) : Math.round(r.head);
+}
+function takeoffHeading(baseId, departure) {
+  if (baseId === NO_BASE) { const v = String(els.manualHdg?.value ?? '').trim(); return v === '' ? null : Number(v) % 360; }
+  return departure.runwayId ? getRunwayMagHeading(baseId, departure.runwayId, departure.dep) : null;
+}
+function baseElevation(baseId) {
+  if (baseId === NO_BASE) { const v = String(els.manualElev?.value ?? '').trim(); return v === '' ? null : Number(v); }
+  return AERODROME_DB[baseId]?.elevationFt ?? null;
 }
 
 function getRunwayMagHeading(baseId, runwayId, departureEnd) {
@@ -811,11 +841,11 @@ function getRunwayMagHeading(baseId, runwayId, departureEnd) {
 function updateCalcDisplay() {
   const baseId = els.base?.value;
   const departure = parseDepartureSelection(els.departure?.value);
-  const dbEntry = AERODROME_DB[baseId];
+  const elev = baseElevation(baseId);
   const qnh = Number(els.qnh?.value || 0);
   if (els.calcPaDisplay) {
-    if (qnh >= 800 && qnh <= 1100 && dbEntry) {
-      els.calcPaDisplay.textContent = `${calcPressureAltitude(qnh, dbEntry.elevationFt)} ft`;
+    if (qnh >= 800 && qnh <= 1100 && elev != null) {
+      els.calcPaDisplay.textContent = `${calcPressureAltitude(qnh, elev)} ft`;
     } else {
       els.calcPaDisplay.textContent = '—';
     }
@@ -823,10 +853,12 @@ function updateCalcDisplay() {
   const windDirVal = els.windDir?.value;
   const windSpeedKt = Number(els.windSpeed?.value || 0);
   if (els.calcHwDisplay) {
-    const rwyHeading = departure.runwayId ? getRunwayMagHeading(baseId, departure.runwayId, departure.dep) : null;
+    const rwyHeading = takeoffHeading(baseId, departure);
     if (rwyHeading != null && windDirVal !== '' && windSpeedKt >= 0) {
       const hw = calcHeadwindComponent(Number(windDirVal || 0), windSpeedKt, rwyHeading);
-      els.calcHwDisplay.textContent = hw >= 0 ? `${hw} kt` : `${Math.abs(hw)} kt (cauda)`;
+      const w = WRA.decompose(Number(windDirVal || 0), windSpeedKt, rwyHeading);
+      const xw = `través ${Math.round(w.cross)} kt${w.side ? (w.side === 'direita' ? ' D' : ' E') : ''}${w.cross > WRA.MAX_XWIND ? ' (acima de 20 kt)' : ''}`;
+      els.calcHwDisplay.textContent = `${hw >= 0 ? `${hw} kt` : `${Math.abs(hw)} kt (cauda)`} · ${xw}`;
     } else {
       els.calcHwDisplay.textContent = '—';
     }
@@ -900,7 +932,10 @@ async function handleMetarFetch() {
     if (metar.altim != null && els.qnh) els.qnh.value = String(Math.round(metar.altim));
     if (metar.temp != null && els.oat) els.oat.value = String(Math.round(metar.temp));
     if (metar.wdir && els.windDir) {
-      els.windDir.value = String(Math.round(metar.wdir) || 360);
+      // METAR dá o vento em graus verdadeiros; a pista está em graus magnéticos (magVar negativo = W: magnético = verdadeiro - magVar)
+      const mv = AERODROME_DB[icao]?.magVar || 0;
+      const mag = Math.round(((Number(metar.wdir) - mv) % 360 + 360) % 360) || 360;
+      els.windDir.value = String(mag);
     }
     if (metar.wspd != null && els.windSpeed) els.windSpeed.value = String(Math.round(metar.wspd));
     updateCalcDisplay();
@@ -908,7 +943,7 @@ async function handleMetarFetch() {
     const rawMetar = String(metar.rawOb || metar.raw_text || metar.raw || '').trim();
     const reportLabel = metar.reportType || 'METAR';
     if (rawMetar) {
-      setMetarInfoLine(`${reportLabel} ${icao}: ${rawMetar}`);
+      setMetarInfoLine(`${reportLabel} ${icao}: ${rawMetar}${metar.wdir ? ` · vento convertido para °M (${els.windDir.value}°M)` : ''}`);
     } else {
       const metarTime = String(metar.obsTime || metar.observationTime || metar.reportTime || metar.receiptTime || '—');
       setMetarInfoLine(`${reportLabel} ${icao}: Hora ${metarTime} • QNH ${Math.round(Number(metar.altim || 0)) || "—"} • OAT ${Math.round(Number(metar.temp || 0)) || "—"}°C • Vento ${Math.round(Number(metar.wdir || 0)) || "---"}/${Math.round(Number(metar.wspd || 0)) || "--"}kt`);
@@ -927,24 +962,25 @@ async function handleMetarFetch() {
 function collectInputs() {
   const departure = parseDepartureSelection(els.departure.value);
   const baseId = els.base.value;
-  const dbEntry = AERODROME_DB[baseId];
+  const elev = baseElevation(baseId);
   const qnh = Number(els.qnh?.value || 0);
   const windDirMag = Number(els.windDir?.value || 0);
   const windSpeedKt = Number(els.windSpeed?.value || 0);
   let pressureAltitudeFt = 0;
-  if (qnh >= 800 && qnh <= 1100 && dbEntry) {
-    pressureAltitudeFt = calcPressureAltitude(qnh, dbEntry.elevationFt);
+  if (qnh >= 800 && qnh <= 1100 && elev != null) {
+    pressureAltitudeFt = calcPressureAltitude(qnh, elev);
   }
   let headwindKt = 0;
-  if (departure.runwayId && els.windDir?.value !== '') {
-    const rwyHeading = getRunwayMagHeading(baseId, departure.runwayId, departure.dep);
-    if (rwyHeading != null) headwindKt = calcHeadwindComponent(windDirMag, windSpeedKt, rwyHeading);
-  }
+  const rwyHeading = takeoffHeading(baseId, departure);
+  if (rwyHeading != null && els.windDir?.value !== '') headwindKt = calcHeadwindComponent(windDirMag, windSpeedKt, rwyHeading);
   return {
     base: baseId,
     departureToken: departure.token,
     runwayId: departure.runwayId,
-    departureEnd: departure.dep || els.departure.options[els.departure.selectedIndex]?.text || '',
+    departureEnd: baseId === NO_BASE ? '' : (departure.dep || els.departure.options[els.departure.selectedIndex]?.text || ''),
+    noBase: baseId === NO_BASE,
+    manualElevFt: baseId === NO_BASE ? elev : null,
+    takeoffHeadingMag: rwyHeading,
     aircraftSet: els.aircraftSet.value || '7000',
     configuration: els.config.value,
     qnh,
@@ -967,7 +1003,10 @@ function pushSharedContext(input, patch = {}) {
     qnh: input.qnh,
     windDirMag: input.windDirMag,
     windSpeedKt: input.windSpeedKt,
-    adcBase: input.base,
+    ...(input.noBase ? {} : { adcBase: input.base }),
+    cataNoBase: !!input.noBase,
+    cataManualElevFt: input.noBase ? input.manualElevFt : undefined,
+    cataManualHeading: input.noBase ? input.takeoffHeadingMag : undefined,
     adcDepartureEnd: input.departureEnd,
     adcDepartureToken: input.departureToken || '',
     adcRunwayId: input.runwayId || '',
@@ -985,6 +1024,12 @@ function pushSharedContext(input, patch = {}) {
 function restoreInputsFromContext() {
   const ctx = loadCtx();
   if (ctx.adcBase) els.base.value = ctx.adcBase;
+  if (ctx.cataNoBase) {
+    els.base.value = NO_BASE;
+    if (ctx.cataManualElevFt != null && els.manualElev) els.manualElev.value = String(ctx.cataManualElevFt);
+    if (ctx.cataManualHeading != null && els.manualHdg) els.manualHdg.value = String(ctx.cataManualHeading);
+  }
+  applyBaseMode();
   selectDepartureOption(els.departure, ctx.adcDepartureToken || ctx.adcDepartureEnd || '', ctx.adcDepartureEnd || '');
   if (ctx.cataAircraftSet) els.aircraftSet.value = ctx.cataAircraftSet;
   if (ctx.cataConfiguration) els.config.value = ctx.cataConfiguration;
@@ -1136,7 +1181,8 @@ function renderResults(wat, rto, adc, cto) {
     }, null);
   const runwayAsdaOk = fullRunwayRow ? fullRunwayRow.go : false;
   const tailwindNoGo = Number.isFinite(Number(adc?.input?.headwindKt)) && Number(adc?.input?.headwindKt) < 0;
-  const overallOk = watOk && runwayAsdaOk && !tailwindNoGo;
+  const noBase = !!adc?.noBase || !!adc?.input?.noBase;
+  const overallOk = watOk && (runwayAsdaOk || noBase) && !tailwindNoGo;
 
   if (wat?.maxWeightKg != null) {
     els.watMax.textContent = `${weightFromKg(wat.maxWeightKg, weightUnit)} ${weightUnit}`;
@@ -1161,7 +1207,9 @@ function renderResults(wat, rto, adc, cto) {
   }
 
   if (tailwindNoGo) {
-    els.rtoSummary.textContent = 'NO GO — vento de cauda na cabeceira selecionada. Selecione a cabeceira oposta.';
+    els.rtoSummary.textContent = noBase ? 'NO GO — vento de cauda na proa de decolagem informada.' : 'NO GO — vento de cauda na cabeceira selecionada. Selecione a cabeceira oposta.';
+  } else if (noBase) {
+    els.rtoSummary.textContent = `${rto?.summary || ''}${rto?.summary ? ' · ' : ''}Sem pista: comparar o RTO com a área disponível.`;
   } else if (!decisionRows.length) {
     els.rtoSummary.textContent = rto?.summary || 'Sem cálculo ainda.';
   } else if (runwayAsdaOk) {
@@ -1179,13 +1227,13 @@ function renderResults(wat, rto, adc, cto) {
   if (wat?.marginKg != null) els.watBox.classList.add(watOk ? 'ok' : 'bad');
   if (decisionRows.length) els.rtoBox.classList.add(runwayAsdaOk ? 'ok' : 'bad');
 
-  els.statusChip.textContent = overallOk ? 'OK para decolagem' : 'NO GO / revisar limites';
+  els.statusChip.textContent = overallOk ? (noBase ? 'W.A.T. OK · conferir área' : 'OK para decolagem') : 'NO GO / revisar limites';
   els.statusChip.className = 'status-chip ' + (overallOk ? 'ok' : 'bad');
   els.resultCard.classList.remove('result-ok', 'result-bad', 'pending');
   els.resultCard.classList.add(overallOk ? 'result-ok' : 'result-bad');
 
   if (!decisionRows.length) {
-    els.decisionBody.innerHTML = '<tr><td colspan="2" class="muted-cell">Sem análise ainda.</td></tr>';
+    els.decisionBody.innerHTML = `<tr><td colspan="2" class="muted-cell">${noBase ? 'Sem aeroporto selecionado: sem tabela de pista.' : 'Sem análise ainda.'}</td></tr>`;
     return;
   }
   els.decisionBody.innerHTML = decisionRows.map(row => `
@@ -2517,14 +2565,15 @@ async function runFlow() {
       adc = { input, rows: [], basisMetric: 'ASDA' };
     } else {
       rto = await runRTO(input);
-      adc = rto.rtoMeters == null ? { input, rows: [], basisMetric: 'ASDA' } : await runADC(input, rto);
+      adc = input.noBase ? { input, rows: [], basisMetric: 'ASDA', noBase: true }
+        : rto.rtoMeters == null ? { input, rows: [], basisMetric: 'ASDA' } : await runADC(input, rto);
     }
 
     clearAllModeDirty();
     clearAdcDirty();
     renderResults(wat, rto, adc, cto);
     saveResultSnapshot(input, wat, rto, adc, cto);
-    setVisualization(els.visualSelect.value || 'adc');
+    setVisualization(input.noBase && (!els.visualSelect.value || els.visualSelect.value === 'adc') ? 'wat' : (els.visualSelect.value || 'adc'));
   } catch (error) {
     console.error(error);
     clearAdcDirty();
@@ -2547,7 +2596,13 @@ function bindEvents() {
   els.resetBtn?.addEventListener('click', resetFlowForm);
   els.visualSelect.addEventListener('change', e => setVisualization(e.target.value, !!e.target.value));
   document.querySelectorAll('.viewer-tab').forEach(btn => btn.addEventListener('click', () => setVisualization(btn.dataset.viz, true)));
-  els.base.addEventListener('change', () => { updateCalcDisplay(); refreshAdcDecisionForSelection('a base').catch(console.warn); });
+  els.base.addEventListener('change', () => {
+    applyBaseMode();
+    updateCalcDisplay();
+    if (isNoBase()) { markCalculationDirty('aeroporto alterado'); pushSharedContext(collectInputs()); return; }
+    refreshAdcDecisionForSelection('a base').catch(console.warn);
+  });
+  [els.manualElev, els.manualHdg].forEach(el => el?.addEventListener('input', () => { updateCalcDisplay(); markCalculationDirty('proa/elevação alteradas'); }));
   els.departure.addEventListener('change', () => { updateCalcDisplay(); refreshAdcDecisionForSelection('a cabeceira').catch(console.warn); });
   [els.aircraftSet, els.config, els.qnh, els.oat, els.weight, els.windDir, els.windSpeed].forEach(el => el?.addEventListener('change', () => { markCalculationDirty('parâmetros alterados'); }));
   els.weightUnitBtn?.addEventListener('click', () => {
