@@ -21,3 +21,5 @@ O eixo do gradiente é calibrado pela moldura do painel (os rótulos do PDF fica
 
 Power Check (Supl. 12 Fig. 4K-2/4K-3, Supl. 86 Fig. 4-1A, NR 102%): `ex_pwc.py` → `pwc.json` (gera `pwc_<pág>.pdf` sem o exemplo
 tracejado vermelho), `build.py ../../power-check PWC_CHARTS pwc.json pwc-data.js`. `ov_pwc.py <dir>` desenha a extração.
+
+Pouso Heliport (Parte G, Fig. 4G-2 Balked Landing Distance): `ex_hb.py` → `hb.json`, `build.py ../../pouso-heliport HB_CHARTS hb.json hb-data.js`.
