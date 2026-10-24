@@ -57,17 +57,17 @@ function drawWAT(){
 function calc(){
   const qnh=Number($('qnh').value),elev=Number($('elevation').value||0),pa=calcPA(qnh,elev);
   const oat=Number($('oat').value||0),wRaw=Number($('weight').value||0),w=isLbUnit()?wRaw/KG_TO_LB:wRaw,hw=Number($('wind').value||0);
-  const ac=Number($('aircraft').value||7000),profile=$('profile').value,cfg=$('config').value;
+  const profile=$('profile').value,cfg=$('config').value;
   const vw=OFSEngine.wat(cfg,pa,oat,hw);
-  const save=()=>localStorage.setItem('aw139_offshore_landing_v1',JSON.stringify({qnh,elev,pa,oat,w,wRaw,weightUnit:isLbUnit()?'lb':'kg',hw,ac,profile,cfg,vec:true}));
-  if(!vw.ok){state.last={error:vw.msg,profile,cfg,qnh,elev,pa,oat,w,wRaw,hw,ac,vw,vd:null};render();save();return;}
+  const save=()=>localStorage.setItem('aw139_offshore_landing_v1',JSON.stringify({qnh,elev,pa,oat,w,wRaw,weightUnit:isLbUnit()?'lb':'kg',hw,profile,cfg,vec:true}));
+  if(!vw.ok){state.last={error:vw.msg,profile,cfg,qnh,elev,pa,oat,w,wRaw,hw,vw,vd:null};render();save();return;}
   const vd=OFSEngine.dd(w,pa,oat,hw,{phase:'landing',descending:profile==='descending'});
   const maxWeight=vw.kg,margin=Math.round(maxWeight-w),ok=margin>=0;
   const dropdown=vd.ok?Math.ceil(vd.final):null;
-  state.last={qnh,elev,pa,oat,w,wRaw,hw,ac,profile,cfg,wat:maxWeight,vw,vd,dropdown,margin,ok};
+  state.last={qnh,elev,pa,oat,w,wRaw,hw,profile,cfg,wat:maxWeight,vw,vd,dropdown,margin,ok};
   state.last.obl=calcOBL(state.last);
   render();save();
-  localStorage.setItem('aw139_companion_shared_context_v1',JSON.stringify({lastModule:'pouso-offshore',updatedAt:new Date().toISOString(),weightKg:w,oatC:oat,pressureAltitudeFt:pa,headwindKt:hw,cataAircraftSet:String(ac),cataConfiguration:cfg}));
+  localStorage.setItem('aw139_companion_shared_context_v1',JSON.stringify({lastModule:'pouso-offshore',updatedAt:new Date().toISOString(),weightKg:w,oatC:oat,pressureAltitudeFt:pa,headwindKt:hw,cataConfiguration:cfg}));
 }
 function render(){
   if(!state.last)return;const s=state.last;
@@ -95,7 +95,7 @@ function restore(){
   try{
     const s=JSON.parse(localStorage.getItem('aw139_offshore_landing_v1')||'null');
     if(!s){requestAnimationFrame(()=>drawWAT());return;}
-    if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('aircraft').value=String(s.ac);$('profile').value=s.profile;$('config').value=s.cfg;updateWeightUi();
+    if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('profile').value=s.profile;$('config').value=s.cfg;updateWeightUi();
     if(s.vec)calc();else requestAnimationFrame(()=>drawWAT());
   }catch{}
 }

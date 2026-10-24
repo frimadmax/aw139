@@ -44,13 +44,6 @@
           <div class="section-label">Operação</div>
           <div class="form-grid form-grid-2">
             <label class="field">
-              <span>Aeronave</span>
-              <select id="aircraftSetSelect">
-                <option value="6800">6800 kg</option>
-                <option value="7000" selected>7000 kg / Sup 90</option>
-              </select>
-            </label>
-            <label class="field">
               <span>Configuration</span>
               <select id="configurationSelect">
                 <option value="standard" selected>Clean Air Intake</option>
@@ -146,6 +139,8 @@
               <div class="calc-value" id="calcHwDisplay">—</div>
             </div>
           </div>
+
+          <p class="ldg-review" id="acReview" role="note">Em conferência: sem seleção de aeronave. A carta sai do peso digitado: acima de 6800 kg Supl. 90; até 6800 kg Supl. 50; abaixo de 6400 kg Supl. 12 (no W.A.T., quando o limite do Supl. 50 cai abaixo de 6400 kg).</p>
 
           <div class="action-row">
             <button id="runBtn" class="run-btn" type="button">Calcular Cat A</button>
@@ -315,7 +310,7 @@
   <script src="cl-data.js" defer></script>
   <script src="cl-engine.js" defer></script>
   <script src="../shared/landing-oei.js" defer></script>
-  <script src="app.js?v=56"></script>
+  <script src="app.js?v=57"></script>
 <script src="../shared/pwa.js"></script>
 </body>
 </html>

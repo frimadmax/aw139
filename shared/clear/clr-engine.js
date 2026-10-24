@@ -1,6 +1,7 @@
 /* AW139 Clear Area — W.A.T. e RTO pelas cartas vetoriais do RFM Rev 30 (clw-data.js e clr-data.js).
- * W.A.T.: Supl. 50 Fig. 4-1 (Standard), 4-2 (EAPS OFF), 4-3 (EAPS ON), 4-9A (IBF), até 6800 kg.
- *   Aeronave 7000 kg: Supl. 90 Fig. 4-5 a 4-8 (linha MAX OAT ISA+20). Onde a carta do Supl. 90 não dá leitura
+ * A carta sai do peso digitado (não há seleção de aeronave).
+ * W.A.T.: peso até 6800 kg: Supl. 50 Fig. 4-1 (Standard), 4-2 (EAPS OFF), 4-3 (EAPS ON), 4-9A (IBF), até 6800 kg.
+ *   Peso acima de 6800 kg: Supl. 90 Fig. 4-5 a 4-8 (linha MAX OAT ISA+20). Onde a carta do Supl. 90 não dá leitura
  *   (acima do topo dela ou acima de ISA+20), vale a carta do Supl. 50, limitada a 6800 kg.
  *   A leitura é a do SFEngine.wat (mesma rotina do Short Field, Back Up, Vertical, Confined e Offshore).
  *   Limite abaixo de 6400 kg (a Fig. 4-1 começa em 6400 kg): Supl. 12 Fig. 4F-1, 4F-2, 4F-3, 4F-3A.
@@ -39,7 +40,7 @@
   const yOn = (pts, x) => on(pts, x, 0, 1), xOn = (pts, y) => on(pts, y, 1, 0);
 
   // ---------- W.A.T. ----------
-  function wat(cfg, ac, pa, oat, hw) {
+  function wat(cfg, gw, pa, oat, hw) {
     const [s50, s90, s12] = WAT[cfg] || WAT.standard;
     const run = fig => {
       const r = root.SFEngine.wat(fig, pa, oat, hw || 0);
@@ -54,7 +55,7 @@
       if (!c.ok) return b.ok ? b : Object.assign(b, { msg: `${b.msg} (Fig. ${s12}: ${c.msg})` });
       return Object.assign(c, { below: true, note: `Limite abaixo de 6400 kg: vale a Fig. ${s12} do Supl. 12.` });
     };
-    if (String(ac) !== '7000') return run50();
+    if (!(gw > 6800 + 1e-9)) return run50();
     const r = run(s90);
     if (r.ok) return r;
     const b = run50();
@@ -68,14 +69,13 @@
     return gw > 6800 + 1e-9 ? s90 : gw < 6400 - 1e-9 ? s12 : s50;
   }
   const rtoFig = (cfg, gw) => distFig('rto', cfg, gw);
-  const rto = (cfg, gw, pa, oat, hw, ac) => dist('rto', cfg, gw, pa, oat, hw, ac);
-  const cto = (cfg, gw, pa, oat, hw, ac) => dist('cto', cfg, gw, pa, oat, hw, ac);
-  function dist(kind, cfg, gw, pa, oat, hw, ac) {
-    const fig = distFig(kind, cfg, String(ac) === '6800' ? Math.min(gw, 6800) : gw), ch = root.CLR_CHARTS[fig];
+  const rto = (cfg, gw, pa, oat, hw) => dist('rto', cfg, gw, pa, oat, hw);
+  const cto = (cfg, gw, pa, oat, hw) => dist('cto', cfg, gw, pa, oat, hw);
+  function dist(kind, cfg, gw, pa, oat, hw) {
+    const fig = distFig(kind, cfg, gw), ch = root.CLR_CHARTS[fig];
     const base = { kind, fig, supl: supl(fig), name: figName(fig), ch };
     const F = (msg, extra) => fail(fig, msg, Object.assign({}, base, extra));
     if (!ch) return F('Carta não encontrada.');
-    if (String(ac) === '6800' && gw > 6800 + 1e-9) return F('Peso acima de 6800 kg: aeronave 6800 kg.');
     const gws = ch.gw.map(c => c.v), gMin = gws[0], gMax = gws[gws.length - 1];
     if (gw < gMin - 1e-9) return F(`Peso abaixo de ${gMin} kg: a Fig. ${base.name} começa em ${gMin} kg.`);
     if (gw > gMax + 1e-9) return F(`Peso acima de ${gMax} kg.`);

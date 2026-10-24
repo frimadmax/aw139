@@ -57,15 +57,15 @@ function drawWAT(){if(VEC)return drawVecWAT();drawWATCanvas($('watCanvas'),state
 function calc(){
   const qnh=Number($('qnh').value),elev=Number($('elevation').value||0),pa=calcPA(qnh,elev);
   const oat=Number($('oat').value||0),wRaw=Number($('weight').value||0),w=isLbUnit()?wRaw/KG_TO_LB:wRaw,hw=Number($('wind').value||0);
-  const ac=Number($('aircraft').value||7000),proc=$('procedure').value,cfg=$('config').value;
+  const proc=$('procedure').value,cfg=$('config').value;
   let wat;
   if(VEC){
     const vw=ENH?EWEngine.wat(cfg,pa,oat):OFSEngine.wat(cfg,pa,oat,hw);
-    if(!vw.ok){state.last={error:vw.msg,proc,cfg,qnh,elev,pa,oat,w,wRaw,hw,ac,vw,vd:null};render();saveInputs();return;}
+    if(!vw.ok){state.last={error:vw.msg,proc,cfg,qnh,elev,pa,oat,w,wRaw,hw,vw,vd:null};render();saveInputs();return;}
     const vd=ENH?EWEngine.dd(w,pa,oat,hw):OFSEngine.dd(w,pa,oat,hw,{phase:'takeoff'});
     const maxWeight=vw.kg,margin=Math.round(maxWeight-w),ok=margin>=0;
     const dropdown=vd.ok?Math.ceil(vd.final):null;
-    state.last={qnh,elev,pa,oat,w,wRaw,hw,ac,proc,cfg,wat:maxWeight,vw,vd,dropdown,margin,ok};
+    state.last={qnh,elev,pa,oat,w,wRaw,hw,proc,cfg,wat:maxWeight,vw,vd,dropdown,margin,ok};
     render();saveInputs();return;
   }
   if(proc==='enhanced'){
@@ -84,19 +84,19 @@ function calc(){
     else if(cfg==='ibf')wat=calculateExactIbfInstalled(pa,oat,w,hw);
     else wat=calculateExactOffshoreStandard(pa,oat,w,hw);
   }
-  if(wat.error){state.last={error:wat.error,proc,cfg,qnh,elev,pa,oat,w,hw,ac,watResult:null,ddResult:null};render();return;}
+  if(wat.error){state.last={error:wat.error,proc,cfg,qnh,elev,pa,oat,w,hw,watResult:null,ddResult:null};render();return;}
   let ddResult=null;
   try{
     if(proc!=='confined')ddResult=proc==='enhanced'?calculateEnhancedDropdown(pa,oat,w,hw):calculateOffshoreDropdown(pa,oat,w,hw,'offshore',mapCfg(cfg));
   }catch(e){}
   const maxWeight=wat.maxWeight,margin=Math.round(maxWeight-w),ok=margin>=0;
   const dropdown=ddResult?Math.round(ddResult.finalFt):null;
-  state.last={qnh,elev,pa,oat,w,wRaw,hw,ac,proc,cfg,wat:maxWeight,watResult:wat,dropdown,margin,ok,ddResult};
+  state.last={qnh,elev,pa,oat,w,wRaw,hw,proc,cfg,wat:maxWeight,watResult:wat,dropdown,margin,ok,ddResult};
   render();
-  localStorage.setItem('aw139_offshore_takeoff_v1',JSON.stringify({qnh,elev,pa,oat,w,wRaw,weightUnit:isLbUnit()?'lb':'kg',hw,ac,proc,cfg,wat:maxWeight,dropdown,margin,ok}));
-  localStorage.setItem('aw139_companion_shared_context_v1',JSON.stringify({lastModule:'decolagem-offshore',updatedAt:new Date().toISOString(),weightKg:w,oatC:oat,pressureAltitudeFt:pa,headwindKt:hw,cataAircraftSet:String(ac),cataConfiguration:cfg}));
+  localStorage.setItem('aw139_offshore_takeoff_v1',JSON.stringify({qnh,elev,pa,oat,w,wRaw,weightUnit:isLbUnit()?'lb':'kg',hw,proc,cfg,wat:maxWeight,dropdown,margin,ok}));
+  localStorage.setItem('aw139_companion_shared_context_v1',JSON.stringify({lastModule:'decolagem-offshore',updatedAt:new Date().toISOString(),weightKg:w,oatC:oat,pressureAltitudeFt:pa,headwindKt:hw,cataConfiguration:cfg}));
 }
-function saveInputs(){const s=state.last;try{localStorage.setItem('aw139_offshore_takeoff_v1',JSON.stringify({qnh:s.qnh,elev:s.elev,pa:s.pa,oat:s.oat,w:s.w,wRaw:s.wRaw,weightUnit:isLbUnit()?'lb':'kg',hw:s.hw,ac:s.ac,proc:s.proc,cfg:s.cfg,vec:true}));}catch(e){}}
+function saveInputs(){const s=state.last;try{localStorage.setItem('aw139_offshore_takeoff_v1',JSON.stringify({qnh:s.qnh,elev:s.elev,pa:s.pa,oat:s.oat,w:s.w,wRaw:s.wRaw,weightUnit:isLbUnit()?'lb':'kg',hw:s.hw,proc:s.proc,cfg:s.cfg,vec:true}));}catch(e){}}
 function render(){
   if(!state.last)return;const s=state.last;
   document.querySelector('.result-panel')?.classList.remove('pending');
@@ -126,7 +126,7 @@ function restore(){
   try{
     const s=JSON.parse(localStorage.getItem('aw139_offshore_takeoff_v1')||'null');
     if(!s){requestAnimationFrame(()=>drawWAT());return;}
-    if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('aircraft').value=String(s.ac);$('config').value=s.cfg;updateWeightUi();
+    if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('config').value=s.cfg;updateWeightUi();
     if(s.proc!==PROC){requestAnimationFrame(()=>drawWAT());return;}
     if(VEC){if(s.vec)calc();else requestAnimationFrame(()=>drawWAT());return;}
     state.last=s;

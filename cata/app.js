@@ -41,7 +41,6 @@ const els = {
   manualRow: document.getElementById('manualRow'),
   manualElev: document.getElementById('manualElev'),
   manualHdg: document.getElementById('manualHdg'),
-  aircraftSet: document.getElementById('aircraftSetSelect'),
   config: document.getElementById('configurationSelect'),
   qnh: document.getElementById('qnh'),
   oat: document.getElementById('oat'),
@@ -983,7 +982,6 @@ function collectInputs() {
     noBase: baseId === NO_BASE,
     manualElevFt: baseId === NO_BASE ? elev : null,
     takeoffHeadingMag: rwyHeading,
-    aircraftSet: els.aircraftSet.value || '7000',
     configuration: els.config.value,
     qnh,
     windDirMag,
@@ -1012,7 +1010,6 @@ function pushSharedContext(input, patch = {}) {
     adcDepartureEnd: input.departureEnd,
     adcDepartureToken: input.departureToken || '',
     adcRunwayId: input.runwayId || '',
-    cataAircraftSet: input.aircraftSet,
     cataConfiguration: input.configuration,
     aircraftRegistration: input.registration || '',
     cataProcedure: 'clear',
@@ -1033,7 +1030,6 @@ function restoreInputsFromContext() {
   }
   applyBaseMode();
   selectDepartureOption(els.departure, ctx.adcDepartureToken || ctx.adcDepartureEnd || '', ctx.adcDepartureEnd || '');
-  if (ctx.cataAircraftSet) els.aircraftSet.value = ctx.cataAircraftSet;
   if (ctx.cataConfiguration) els.config.value = ctx.cataConfiguration;
   if (ctx.aircraftRegistration && els.registration) els.registration.value = ctx.aircraftRegistration;
   if (ctx.qnh != null && els.qnh) els.qnh.value = String(ctx.qnh);
@@ -1058,9 +1054,9 @@ function calcNative(mode, input) {
     const msg = !w ? (input.noBase ? 'Preencha o vento e a proa de decolagem para ver a leitura.' : 'Preencha o vento para ver a leitura.') : v.msg;
     return { ok: !!w && v.traces.length > 0, ch: v.ch, name: v.ch?.fig, supl: v.ch?.supl, traces: v.traces, dots: v.dots, msg, w };
   }
-  if (mode === 'wat') return CLREngine.wat(input.configuration, input.aircraftSet, input.pressureAltitudeFt, input.oatC, input.headwindKt);
-  if (mode === 'cto') return CLREngine.cto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
-  return CLREngine.rto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
+  if (mode === 'wat') return CLREngine.wat(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt);
+  if (mode === 'cto') return CLREngine.cto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt);
+  return CLREngine.rto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt);
 }
 
 async function runWAT(input) {
@@ -1272,7 +1268,6 @@ function getSavedResultsSnapshot() {
 
 function sameCalcInputsExceptAdc(current, saved = {}) {
   return [
-    current.aircraftSet === saved.aircraftSet,
     current.configuration === saved.configuration,
     Number(current.pressureAltitudeFt || 0) === Number(saved.pressureAltitudeFt || 0),
     Number(current.oatC || 0) === Number(saved.oatC || 0),
@@ -1355,7 +1350,6 @@ function restoreSavedResults() {
     current.base === saved.base,
     current.departureEnd === saved.departureEnd,
     current.runwayId === saved.runwayId,
-    current.aircraftSet === saved.aircraftSet,
     current.configuration === saved.configuration,
     Number(current.pressureAltitudeFt || 0) === Number(saved.pressureAltitudeFt || 0),
     Number(current.oatC || 0) === Number(saved.oatC || 0),
@@ -2484,7 +2478,6 @@ function resetResultsPanel() {
 function resetFlowForm() {
   clearAllModeDirty();
   clearAdcDirty();
-  if (els.aircraftSet) els.aircraftSet.value = '7000';
   if (els.config) els.config.value = 'standard';
   if (els.registration) els.registration.value = '';
   if (els.qnh) els.qnh.value = '';
@@ -2507,7 +2500,6 @@ function resetFlowForm() {
 
 function setupAutoAdvance() {
   const rules = [
-    { el: els.aircraftSet, next: els.config },
     { el: els.config, next: els.base },
     { el: els.base, next: els.departure },
     { el: els.departure, next: els.qnh },
@@ -2615,7 +2607,7 @@ function bindEvents() {
   });
   [els.manualElev, els.manualHdg].forEach(el => el?.addEventListener('input', () => { updateCalcDisplay(); markCalculationDirty('proa/elevação alteradas'); }));
   els.departure.addEventListener('change', () => { updateCalcDisplay(); refreshAdcDecisionForSelection('a cabeceira').catch(console.warn); });
-  [els.aircraftSet, els.config, els.qnh, els.oat, els.weight, els.windDir, els.windSpeed].forEach(el => el?.addEventListener('change', () => { markCalculationDirty('parâmetros alterados'); }));
+  [els.config, els.qnh, els.oat, els.weight, els.windDir, els.windSpeed].forEach(el => el?.addEventListener('change', () => { markCalculationDirty('parâmetros alterados'); }));
   els.weightUnitBtn?.addEventListener('click', () => {
     setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg');
     markCalculationDirty('unidade de peso alterada');
