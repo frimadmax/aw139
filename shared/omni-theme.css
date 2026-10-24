@@ -377,7 +377,6 @@ html body .ldg-conditions{margin:10px 0 0;font-size:11px;line-height:1.45;color:
 /* Pouso Clear Area: cartas do RFM */
 html body .ldg-panel .result-label small{font-size:9px;letter-spacing:.06em;opacity:.75;text-transform:none;margin-left:4px}
 html body .ldg-panel .ldg-balked{margin-top:8px}
-html body .ldg-review{margin:0 0 10px;padding:8px 10px;border-radius:9px;font-size:12px;line-height:1.4;background:rgba(230,0,126,.14);border:1px solid rgba(230,0,126,.55);color:#ffd0e7}
 html body .ldg-chart-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
 html body .ldg-tabs{display:flex;gap:4px;flex-wrap:wrap}
 html body .ldg-tabs button,html body .ldg-zoom{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--omni-line-strong);background:rgba(3,5,28,.4);color:#cfe3ff;font:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;cursor:pointer}
