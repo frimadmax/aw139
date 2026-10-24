@@ -206,23 +206,39 @@
           </div>
           <button id="ldgPullBtn" class="ghost-btn ldg-pull" type="button">Usar dados do Cat A</button>
 
+          <p class="ldg-review" role="note">Em conferência: leitura pelas cartas do RFM ainda sendo validada. Não usar para planejamento real até a liberação.</p>
           <div class="result-grid">
             <div class="result-box">
-              <div class="result-label">Landing OEI</div>
+              <div class="result-label">Landing OEI <small>LDP → toque</small></div>
               <div class="result-value" id="ldgLanding">—</div>
             </div>
             <div class="result-box">
-              <div class="result-label">Braking</div>
+              <div class="result-label">Braking <small>toque → parada</small></div>
               <div class="result-value" id="ldgBraking">—</div>
             </div>
           </div>
           <div class="result-box ldg-total">
-            <div class="result-label">Distância total</div>
+            <div class="result-label">Distância total de pouso OEI</div>
             <div class="result-value" id="ldgTotal">—</div>
           </div>
           <div class="result-band" id="ldgBand">—</div>
+          <div class="result-box ldg-balked">
+            <div class="result-label">Balked landing <small>LDP → 35 ft a V<sub>BLSS</sub></small></div>
+            <div class="result-value" id="ldgBalked">—</div>
+          </div>
           <div class="ldg-notice" id="ldgNotice" hidden></div>
-          <p class="ldg-conditions">Clean Air Intake / EAPS OFF ou ON · Power 2.5 min OEI · Electrical Load 300 A · V<sub>LDP</sub> 50 KIAS · RoD &lt; 350 ft/min</p>
+          <p class="ldg-conditions" id="ldgSrc">Clean Air Intake / EAPS OFF / EAPS ON / IBF · Power 2.5 min OEI · Electrical Load 300 A · V<sub>LDP</sub> 50 KIAS · RoD &lt; 350 ft/min · GS<sub>max</sub> 30 kt no toque</p>
+          <div class="ldg-chart-head">
+            <div class="ldg-tabs" role="tablist">
+              <button type="button" data-ldg="land" aria-selected="true">Landing</button>
+              <button type="button" data-ldg="brake" aria-selected="false">Braking</button>
+              <button type="button" data-ldg="balked" aria-selected="false">Balked</button>
+            </div>
+            <button type="button" class="ldg-zoom" id="ldgZoom">Ampliar</button>
+          </div>
+          <p class="ldg-chart-cap" id="ldgCap"></p>
+          <div class="ldg-chart-wrap"><div class="ldg-chart" id="ldgChart"><img id="ldgImg" alt=""><svg id="ldgSvg" aria-hidden="true"></svg></div></div>
+          <p class="ldg-conditions">Linha magenta: caminho da leitura feito pelo app.</p>
         </section>
       </aside>
 
@@ -273,6 +289,8 @@
     </div>
   </div>
 
+  <script src="cl-data.js" defer></script>
+  <script src="cl-engine.js" defer></script>
   <script src="../shared/landing-oei.js" defer></script>
   <script src="app.js?v=55"></script>
 <script src="../shared/pwa.js"></script>

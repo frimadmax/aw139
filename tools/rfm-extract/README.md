@@ -23,3 +23,8 @@ Power Check (Supl. 12 Fig. 4K-2/4K-3, Supl. 86 Fig. 4-1A, NR 102%): `ex_pwc.py` 
 tracejado vermelho), `build.py ../../power-check PWC_CHARTS pwc.json pwc-data.js`. `ov_pwc.py <dir>` desenha a extração.
 
 Pouso Heliport (Parte G, Fig. 4G-2 Balked Landing Distance): `ex_hb.py` → `hb.json`, `build.py ../../pouso-heliport HB_CHARTS hb.json hb-data.js`.
+
+Pouso Clear Area OEI (Supl. 12 Parte J Fig. 4J-2/1, 4J-2/2, 4J-1; Supl. 50 Fig. 4-60/61/62; Supl. 90 Fig. 4-100/101/102):
+`ex_cl.py` → `cl_ldg.json`, `build.py ../../cata CL_LDG cl_ldg.json cl-data.js`. `ov_cl.py <dir> <figs>` desenha a extração, `rd_cl.py` testa a leitura.
+Na 4J-2/2 as linhas de OAT são polígonos preenchidos, a linha de 50 °C é o próprio MAX OAT e a 1ª curva de peso (sem rótulo) é 4400 kg.
+Na 4-100 os rótulos de peso são ambíguos; a curva de 6800 kg foi conferida contra a 6800 da Fig. 4-60.

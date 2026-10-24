@@ -374,3 +374,19 @@ html body .ldg-panel .ldg-total .result-value{color:var(--omni-sky)}
 html body .ldg-panel .result-band{margin-top:8px}
 html body .ldg-notice{margin-top:8px;padding:10px 12px;border-radius:10px;font-size:13px;background:rgba(217,164,65,.16);border:1px solid rgba(217,164,65,.5);color:#ffe7b0}
 html body .ldg-conditions{margin:10px 0 0;font-size:11px;line-height:1.45;color:var(--omni-muted)}
+/* Pouso Clear Area: cartas do RFM */
+html body .ldg-panel .result-label small{font-size:9px;letter-spacing:.06em;opacity:.75;text-transform:none;margin-left:4px}
+html body .ldg-panel .ldg-balked{margin-top:8px}
+html body .ldg-review{margin:0 0 10px;padding:8px 10px;border-radius:9px;font-size:12px;line-height:1.4;background:rgba(230,0,126,.14);border:1px solid rgba(230,0,126,.55);color:#ffd0e7}
+html body .ldg-chart-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
+html body .ldg-tabs{display:flex;gap:4px;flex-wrap:wrap}
+html body .ldg-tabs button,html body .ldg-zoom{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--omni-line-strong);background:rgba(3,5,28,.4);color:#cfe3ff;font:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;cursor:pointer}
+html body .ldg-tabs button[aria-selected="true"]{background:linear-gradient(180deg,rgba(63,182,239,.4),rgba(38,71,166,.6));color:#fff;border-color:var(--omni-sky)}
+html body .ldg-chart-cap{margin:8px 0 6px;font-size:11.5px;line-height:1.45;color:var(--omni-muted)}
+html body .ldg-chart-wrap{position:relative;overflow:auto;border-radius:10px;background:#fff;border:1px solid var(--omni-line-strong);-webkit-overflow-scrolling:touch}
+html body .ldg-chart{position:relative;width:100%}
+html body .ldg-chart.is-zoom{width:220%}
+html body .ldg-chart img{display:block;width:100%;height:auto}
+html body .ldg-chart svg{position:absolute;inset:0;width:100%;height:100%}
+html body .ldg-chart .trace{fill:none;stroke:#e6007e;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+html body .ldg-chart .dot{fill:#e6007e}
