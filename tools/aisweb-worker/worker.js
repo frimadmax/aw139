@@ -32,12 +32,15 @@ export default {
       const q = new URLSearchParams({ apiKey: env.AISWEB_KEY, apiPass: env.AISWEB_PASS, area: url.pathname.slice(1), icaoCode: icao });
       if (url.pathname === '/cartas') q.set('tipo', 'ADC');
       const r = await fetch(`${API}?${q}`, { cf: { cacheTtl: 3600 } });
-      return new Response(r.body, { status: r.status, headers: { ...cors(req), 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-store' } });
+      // os links de download do AISWEB trazem a chave: troca por marcadores antes de mandar ao app
+      const xml = (await r.text()).split(env.AISWEB_KEY).join('{K}').split(env.AISWEB_PASS).join('{P}');
+      return new Response(xml, { status: r.status, headers: { ...cors(req), 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-store' } });
     }
 
     if (url.pathname === '/pdf') {
       let target;
-      try { target = new URL(url.searchParams.get('url') || ''); } catch { return fail(req, 400, 'Link inválido'); }
+      const raw = (url.searchParams.get('url') || '').split('{K}').join(env.AISWEB_KEY).split('{P}').join(env.AISWEB_PASS);
+      try { target = new URL(raw); } catch { return fail(req, 400, 'Link inválido'); }
       if (target.protocol !== 'https:' || target.hostname !== 'aisweb.decea.mil.br') return fail(req, 400, 'Só cartas do AISWEB');
       const r = await fetch(target.toString(), { cf: { cacheTtl: 86400 } });
       return new Response(r.body, { status: r.status, headers: { ...cors(req), 'Content-Type': 'application/pdf', 'Cache-Control': 'no-store' } });
