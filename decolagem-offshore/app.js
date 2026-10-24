@@ -1,4 +1,13 @@
 const $=id=>document.getElementById(id);
+// Procedimento vem do menu CAT A (?procedure=offshore|enhanced); não há seletor na tela.
+const PROC=new URLSearchParams(location.search).get('procedure')==='enhanced'?'enhanced':'offshore';
+$('procedure').value=PROC;
+if(PROC==='enhanced'){
+  const t='Decolagem Enhanced Offshore';
+  document.title=document.title.replace('Decolagem Offshore',t);
+  document.querySelectorAll('.product-sub,.panel-title-row h1').forEach(e=>{if(e.textContent.trim()==='Decolagem Offshore')e.textContent=t;});
+  $('runBtn').textContent='Calcular '+t;
+}
 _loadConfinedDataFrom('../wat/data/');
 const KG_TO_LB=2.2046226218;
 function isLbUnit(){return $('weightUnit')?.value==='lb';}
@@ -73,7 +82,8 @@ function restore(){
   try{
     const s=JSON.parse(localStorage.getItem('aw139_offshore_takeoff_v1')||'null');
     if(!s){requestAnimationFrame(()=>drawWAT());return;}
-    if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('aircraft').value=String(s.ac);$('procedure').value=s.proc;$('config').value=s.cfg;updateWeightUi();
+    if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('aircraft').value=String(s.ac);$('config').value=s.cfg;updateWeightUi();
+    if(s.proc!==PROC){requestAnimationFrame(()=>drawWAT());return;}
     state.last=s;
     requestAnimationFrame(()=>render());
   }catch{}
@@ -107,7 +117,7 @@ document.querySelectorAll('.viewer-tab').forEach(b=>b.addEventListener('click',(
 }));
 $('watCanvas').addEventListener('click',openFS);$('ddCanvas').addEventListener('click',openFS);
 $('fsClose').addEventListener('click',closeFS);document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeFS();});
-$('procedure').addEventListener('change',render);$('runBtn').onclick=calc;$('resetBtn').onclick=()=>location.reload();$('pdfBtn').onclick=exportPDF;
+$('runBtn').onclick=calc;$('resetBtn').onclick=()=>location.reload();$('pdfBtn').onclick=exportPDF;
 $('weightUnit')?.addEventListener('change',updateWeightUi);
 const _fields=['weight','qnh','elevation','oat','wind'];
 _fields.forEach((id,i)=>{$(id).addEventListener('keydown',(e)=>{if(e.key!=='Enter')return;e.preventDefault();if(i<_fields.length-1)$(_fields[i+1]).focus();else calc();});});
