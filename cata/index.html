@@ -80,6 +80,7 @@
                 <option value="adc">ADC</option>
                 <option value="wat">WAT</option>
                 <option value="rto">RTO</option>
+                <option value="cto">CTO</option>
               </select>
             </label>
           </div>
@@ -161,9 +162,15 @@
               <div class="result-value" id="rtoMetric">—</div>
               <div class="result-sub" id="rtoSummary">Sem cálculo ainda.</div>
             </div>
+            <div id="ctoBox" class="result-box">
+              <div class="result-label">CTO <small>comparar com a TODA</small></div>
+              <div class="result-value" id="ctoMetric">—</div>
+              <div class="result-sub" id="ctoSummary">Sem cálculo ainda.</div>
+            </div>
           </div>
 
           <div class="result-band" id="watMarginSummary">—</div>
+          <p class="ldg-review" id="clrReview" role="note">Em conferência: CTO e as cartas abaixo de 6400 kg (Supl. 12) refeitos pelas cartas vetoriais do RFM, ainda sendo validados. Não usar para planejamento real até a liberação. W.A.T. e RTO de 6400 kg para cima já estão liberados.</p>
 
           <div class="mini-row">
             <h3>Tabela de decisão</h3>
@@ -251,6 +258,7 @@
             <button class="viewer-tab" data-viz="adc" type="button">ADC</button>
             <button class="viewer-tab" data-viz="wat" type="button">WAT</button>
             <button class="viewer-tab" data-viz="rto" type="button">RTO</button>
+            <button class="viewer-tab" data-viz="cto" type="button">CTO</button>
           </div>
         </div>
 

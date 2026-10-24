@@ -60,6 +60,7 @@ button,input,select{font:inherit}
 .action-row .ghost-btn{height:38px;border-radius:8px;cursor:pointer}
 .helper{margin:10px 0 0;color:#eef3ff;opacity:.78;font-size:12px;line-height:1.35}
 .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#ctoBox{grid-column:1/-1}
 .result-box{background:#162270;border:1px solid rgba(255,255,255,.12);padding:10px;min-height:102px;border-radius:10px}
 .result-box.ok{background:linear-gradient(180deg, rgba(98,255,156,.20), rgba(22,56,40,.92));border-color:rgba(98,255,156,.74);box-shadow:0 0 0 1px rgba(98,255,156,.24), 0 0 24px rgba(98,255,156,.18)}
 .result-box.bad{background:linear-gradient(180deg, rgba(255,64,64,.20), rgba(58,27,27,.92));border-color:rgba(255,64,64,.76);box-shadow:0 0 0 1px rgba(255,64,64,.26), 0 0 24px rgba(255,64,64,.18)}

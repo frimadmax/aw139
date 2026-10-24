@@ -25,8 +25,9 @@ const adcFrame = document.getElementById('adcFrame');
 // W.A.T. e RTO: cartas vetoriais do RFM (shared/clear/clr-engine.js), desenhadas aqui num canvas próprio.
 const frameMap = { adc: adcFrame };
 const CLEAR_BASE = '../shared/clear/';
-const nativeViz = { wat: null, rto: null };
-const nativeCanvas = { wat: document.createElement('canvas'), rto: document.createElement('canvas') };
+const nativeViz = { wat: null, rto: null, cto: null };
+const nativeCanvas = { wat: document.createElement('canvas'), rto: document.createElement('canvas'), cto: document.createElement('canvas') };
+const isNativeMode = mode => mode === 'wat' || mode === 'rto' || mode === 'cto';
 const adcPreviewState = { payload: null };
 const imageCache = new Map();
 const vizRuntime = { renderSeq: 0, adcSyncSeq: 0, adcDecisionSeq: 0, adcDirty: false, modeDirty: { adc: false, wat: false, rto: false } };
@@ -61,6 +62,8 @@ const els = {
   rtoBox: document.getElementById('rtoBox'),
   rtoMetric: document.getElementById('rtoMetric'),
   rtoSummary: document.getElementById('rtoSummary'),
+  ctoMetric: document.getElementById('ctoMetric'),
+  ctoSummary: document.getElementById('ctoSummary'),
   decisionBody: document.getElementById('decisionTableBody'),
   vizSubtitle: document.getElementById('vizSubtitle'),
   vizPlaceholder: document.getElementById('vizPlaceholder'),
@@ -147,7 +150,7 @@ function setModeDirty(mode, reason = '') {
 }
 
 function markCalculationDirty(reason = 'o cálculo') {
-  ['adc', 'wat', 'rto'].forEach(mode => setModeDirty(mode, reason));
+  ['adc', 'wat', 'rto', 'cto'].forEach(mode => setModeDirty(mode, reason));
 }
 
 function clearModeDirty(mode) {
@@ -156,7 +159,7 @@ function clearModeDirty(mode) {
 }
 
 function clearAllModeDirty() {
-  ['adc', 'wat', 'rto'].forEach(clearModeDirty);
+  ['adc', 'wat', 'rto', 'cto'].forEach(clearModeDirty);
 }
 
 function setViewerLoading(title = 'Atualizando visualização', sub = 'Aguarde a carta ser atualizada.') {
@@ -634,7 +637,7 @@ function selectDepartureOption(select, preferredToken = '', preferredDep = '') {
   if (match) select.value = match.value;
   return match?.value || '';
 }
-function mapVizLabel(v) { return ({ adc: 'Carta ADC', wat: 'Carta WAT', rto: 'Carta RTO', '': 'Em branco' })[v] || 'Em branco'; }
+function mapVizLabel(v) { return ({ adc: 'Carta ADC', wat: 'Carta WAT', rto: 'Carta RTO', cto: 'Carta CTO', '': 'Em branco' })[v] || 'Em branco'; }
 
 function sanitizeDigitsInput(el, maxLen = null) {
   const allowNegative = el === els.oat;
@@ -1002,6 +1005,7 @@ function restoreInputsFromContext() {
 
 function calcNative(mode, input) {
   if (mode === 'wat') return CLREngine.wat(input.configuration, input.aircraftSet, input.pressureAltitudeFt, input.oatC, input.headwindKt);
+  if (mode === 'cto') return CLREngine.cto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
   return CLREngine.rto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
 }
 
@@ -1014,7 +1018,8 @@ async function runWAT(input) {
     marginText: `${Math.round(r.kg - input.weightKg)} kg`,
     maxWeightKg: r.kg,
     marginKg: r.kg - input.weightKg,
-    summary: r.note ? `${ref} · ${r.note}` : ref
+    summary: r.note ? `${ref} · ${r.note}` : ref,
+    note: r.note || ''
   } : { maxText: '—', marginText: '—', maxWeightKg: null, marginKg: null, summary: `${ref}: ${r.msg}` };
   pushSharedContext(input, { watMaxWeightKg: result.maxWeightKg, watMarginKg: result.marginKg });
   return result;
@@ -1028,11 +1033,28 @@ async function runRTO(input) {
   if (r.ok) {
     const m = Math.round(r.dist);
     const wind = r.hw > 0 ? ` · carta ${Math.round(r.dist0)} m, vento ${r.hw.toFixed(0)} kt: ${Math.round(r.corr)} m` : '';
-    result = { metricText: `${m} m`, rtoMeters: m, summary: `${ref}${wind}` };
+    result = { metricText: `${m} m`, rtoMeters: m, summary: `${ref}${wind}${r.note ? ' · ' + r.note : ''}` };
   } else {
     result = { metricText: '—', rtoMeters: null, summary: `${ref}: ${r.msg}` };
   }
   pushSharedContext(input, { rtoMeters: result.rtoMeters });
+  return result;
+}
+
+// CTO (Clear Area Take-Off): distância informativa para comparar com a TODA; a tabela de decisão segue pelo RTO
+async function runCTO(input) {
+  const r = calcNative('cto', input);
+  nativeViz.cto = r;
+  const ref = `Fig. ${r.name} · ${r.supl}`;
+  let result;
+  if (r.ok) {
+    const m = Math.round(r.dist);
+    const wind = r.hw > 0 ? ` · carta ${Math.round(r.dist0)} m, vento ${r.hw.toFixed(0)} kt: ${Math.round(r.corr)} m` : '';
+    result = { metricText: `${m} m`, ctoMeters: m, summary: `${ref}${wind}${r.note ? ' · ' + r.note : ''}` };
+  } else {
+    result = { metricText: '—', ctoMeters: null, summary: `${ref}: ${r.msg}` };
+  }
+  pushSharedContext(input, { ctoMeters: result.ctoMeters });
   return result;
 }
 
@@ -1099,7 +1121,7 @@ async function runADC(input, rtoResult) {
   };
 }
 
-function renderResults(wat, rto, adc) {
+function renderResults(wat, rto, adc, cto) {
   els.resultCard.classList.remove('pending');
   const decisionRows = adc?.rows || [];
   const basisMetric = adc?.basisMetric || 'ASDA';
@@ -1122,17 +1144,19 @@ function renderResults(wat, rto, adc) {
     els.watMax.textContent = wat?.maxText || '—';
   }
   els.rtoMetric.textContent = rto?.metricText || '—';
+  els.ctoMetric.textContent = tailwindNoGo ? '—' : (cto?.metricText || '—');
+  els.ctoSummary.textContent = tailwindNoGo ? 'Vento de cauda: sem cálculo.' : (cto?.summary || 'Sem cálculo ainda.');
 
   if (wat?.marginKg == null) {
     els.watSummary.textContent = wat?.summary || 'Sem cálculo ainda.';
     els.watMarginSummary.textContent = '—';
   } else if (watOk) {
     const marginDisp = weightFromKg(Math.round(wat.marginKg), weightUnit);
-    els.watSummary.textContent = 'GO — peso dentro do limite WAT.';
+    els.watSummary.textContent = `GO — peso dentro do limite WAT.${wat.note ? ' ' + wat.note : ''}`;
     els.watMarginSummary.textContent = `+${marginDisp} ${weightUnit} de margem`;
   } else {
     const marginDisp = weightFromKg(Math.abs(Math.round(wat.marginKg)), weightUnit);
-    els.watSummary.textContent = 'NO GO — item negativo: WAT abaixo do peso requerido.';
+    els.watSummary.textContent = `NO GO — item negativo: WAT abaixo do peso requerido.${wat.note ? ' ' + wat.note : ''}`;
     els.watMarginSummary.textContent = `${marginDisp} ${weightUnit} acima do limite`;
   }
 
@@ -1172,12 +1196,13 @@ function renderResults(wat, rto, adc) {
   `).join('');
 }
 
-function saveResultSnapshot(input, wat, rto, adc) {
+function saveResultSnapshot(input, wat, rto, adc, cto) {
   pushSharedContext(input, {
     cataLastResults: {
       input,
       wat: wat || null,
       rto: rto || null,
+      cto: cto || null,
       adc: adc || null,
       savedAt: new Date().toISOString()
     }
@@ -1282,7 +1307,7 @@ function restoreSavedResults() {
   ].every(Boolean);
   if (!sameInput) return false;
   adcPreviewState.payload = snap?.adc?.payload || null;
-  renderResults(snap.wat, snap.rto, snap.adc);
+  renderResults(snap.wat, snap.rto, snap.adc, snap.cto);
   return true;
 }
 
@@ -1450,7 +1475,7 @@ async function drawNative(mode) {
 }
 
 async function prepareEmbeddedView(mode) {
-  if (mode === 'wat' || mode === 'rto') return drawNative(mode);
+  if (isNativeMode(mode)) return drawNative(mode);
   try {
     const doc = await waitForIframe(frameMap[mode]);
     applyUnifiedChartView(doc, mode);
@@ -1478,7 +1503,7 @@ function parseReferenceHtml(html) {
 }
 
 function getLegendForMode(mode) {
-  if (mode === 'wat' || mode === 'rto') return [
+  if (isNativeMode(mode)) return [
     { color: '#e6007e', label: 'Caminho da leitura feito pelo app' },
   ];
   if (mode === 'adc') return [
@@ -1510,7 +1535,7 @@ function getVisualizationMeta(mode) {
   const facts = ch ? [
     { label: 'Gráfico', value: `Fig. ${r.name} — ${ch.title}` },
     { label: 'Fonte', value: `RFM AW139 Rev 30, ${r.supl}, pág. ${ch.rfmPage} (pág. ${ch.page} do PDF)` },
-    { label: 'Leitura', value: !r.ok ? r.msg : mode === 'wat' ? `${r.kg} kg${r.note ? ' · ' + r.note : ''}` : `${Math.round(r.dist0)} m na carta${r.hw > 0 ? ` · vento ${r.hw.toFixed(0)} kt: ${r.perKt.toFixed(1)} m/kt = ${Math.round(r.corr)} m` : ''} · RTO ${Math.round(r.dist)} m` },
+    { label: 'Leitura', value: !r.ok ? r.msg : mode === 'wat' ? `${r.kg} kg${r.note ? ' · ' + r.note : ''}` : `${Math.round(r.dist0)} m na carta${r.hw > 0 ? ` · vento ${r.hw.toFixed(0)} kt: ${r.perKt.toFixed(1)} m/kt = ${Math.round(r.corr)} m` : ''} · ${mode.toUpperCase()} ${Math.round(r.dist)} m${r.note ? ' · ' + r.note : ''}` },
   ] : [];
   return {
     legend: getLegendForMode(mode),
@@ -1560,14 +1585,14 @@ function getModeContentHeight(doc, mode) {
 function getSourceCanvas(mode) {
   try {
     if (mode === 'adc') return adcFrame.contentDocument?.getElementById('vizCanvas') || null;
-    if (mode === 'wat' || mode === 'rto') return nativeCanvas[mode];
+    if (isNativeMode(mode)) return nativeCanvas[mode];
   } catch {}
   return null;
 }
 
 function getCanvasCrop(source, mode = '') {
   if (!source) return null;
-  if (mode === 'wat' || mode === 'rto') return { x: 0, y: 0, w: source.width, h: source.height };
+  if (isNativeMode(mode)) return { x: 0, y: 0, w: source.width, h: source.height };
   try {
     if (mode === 'adc') {
       const rect = adcFrame.contentWindow?.__cataEmbedSourceRect;
@@ -2307,7 +2332,7 @@ async function exportFlowPdf() {
   const previousMode = els.visualSelect.value || 'adc';
   showModeLoading(previousMode, 'gerando PDF');
   try {
-    await Promise.all(['adc', 'wat', 'rto'].map(async (mode) => {
+    await Promise.all(['adc', 'wat', 'rto', 'cto'].map(async (mode) => {
       try {
         await prepareEmbeddedView(mode);
         await nextFrame(2);
@@ -2317,10 +2342,12 @@ async function exportFlowPdf() {
     const adcCanvas = getModePdfCanvas('adc');
     const watCanvas = getModePdfCanvas('wat');
     const rtoCanvas = getModePdfCanvas('rto');
+    const ctoCanvas = getModePdfCanvas('cto');
     const pages = [
       createCataPdfModulePageCanvas('adc', 'ADC', adcCanvas),
       createCataPdfModulePageCanvas('wat', 'WAT', watCanvas),
       createCataPdfModulePageCanvas('rto', 'RTO', rtoCanvas),
+      createCataPdfModulePageCanvas('cto', 'CTO', ctoCanvas),
     ];
     const blob = buildPdfBlobFromCanvases(pages);
     const safeBase = String((collectInputs().base || 'base')).toLowerCase();
@@ -2391,6 +2418,8 @@ function resetResultsPanel() {
   els.rtoBox.classList.remove('ok', 'bad');
   els.rtoMetric.textContent = '—';
   els.rtoSummary.textContent = 'Sem cálculo ainda.';
+  els.ctoMetric.textContent = '—';
+  els.ctoSummary.textContent = 'Sem cálculo ainda.';
   els.decisionBody.innerHTML = '<tr><td colspan="2" class="muted-cell">Sem análise ainda.</td></tr>';
 }
 
@@ -2411,7 +2440,7 @@ function resetFlowForm() {
   if (els.base?.options?.length) els.base.selectedIndex = 0;
   if (els.departure?.options?.length) els.departure.selectedIndex = 0;
   resetResultsPanel();
-  nativeViz.wat = nativeViz.rto = null;
+  nativeViz.wat = nativeViz.rto = nativeViz.cto = null;
   clearVisualization();
   const input = collectInputs();
   pushSharedContext(input, { cataLastResults: null, watMaxWeightKg: null, watMarginKg: null, rtoMeters: null, ctoMeters: null });
@@ -2475,6 +2504,7 @@ async function runFlow() {
   try {
     const tailwindNoGo = Number.isFinite(Number(input.headwindKt)) && Number(input.headwindKt) < 0;
     const wat = await runWAT(input);
+    const cto = await runCTO(input);
     let rto;
     let adc;
 
@@ -2492,8 +2522,8 @@ async function runFlow() {
 
     clearAllModeDirty();
     clearAdcDirty();
-    renderResults(wat, rto, adc);
-    saveResultSnapshot(input, wat, rto, adc);
+    renderResults(wat, rto, adc, cto);
+    saveResultSnapshot(input, wat, rto, adc, cto);
     setVisualization(els.visualSelect.value || 'adc');
   } catch (error) {
     console.error(error);
@@ -2626,7 +2656,7 @@ window.addEventListener('load', async () => {
     await syncAdcSelection({ renderPreviewIfActive: false });
     clearAdcDirty();
     const hadSavedResults = restoreSavedResults();
-    await Promise.all([prepareEmbeddedView('adc'), prepareEmbeddedView('wat'), prepareEmbeddedView('rto')]);
+    await Promise.all([prepareEmbeddedView('adc'), prepareEmbeddedView('wat'), prepareEmbeddedView('rto'), prepareEmbeddedView('cto')]);
     if (els.visualSelect.value) setVisualization(els.visualSelect.value, true);
     else if (hadSavedResults) setVisualization('adc', true);
   } catch (error) {

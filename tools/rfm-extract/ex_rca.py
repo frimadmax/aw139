@@ -27,11 +27,19 @@ def extract(n,fig,cfg):
     G=[g for g in groups(row) if len(g)>=3]
     assert len(G)==3,(fig,G)
     gHp,gD,gC=G
-    PA=lin([(x,v*1000 if max(abs(w) for w,_ in gHp)<=30 else v) for v,x in gHp])
+    # escala de Hp pelo título do eixo de baixo: [ft x 1000] ou [ft x 100]
+    hpt=[t for t,x,y in T if 'ft x 10' in t and 'Pressure' in t and y>yb]
+    pm=cfg.get('paMul') or (100 if hpt and 'ft x 100]' in hpt[0] else 1000 if max(abs(w) for w,_ in gHp)<=30 else 1)
+    # o centro do rótulo desloca com o sinal de menos: encaixa cada rótulo na linha de grade vertical mais próxima
+    dv=sorted(set(q['pts'][0][0] for q in P if q['c'] and len(q['pts'])==2 and abs(q['pts'][0][0]-q['pts'][1][0])<0.1 and abs(q['pts'][0][1]-q['pts'][1][1])>50))
+    snapx=lambda x: (lambda g: g if abs(g-x)<4 else x)(min(dv,key=lambda g:abs(g-x))) if dv else x
+    PA=min(lin([(x,v*pm) for v,x in gHp]),lin([(snapx(x),v*pm) for v,x in gHp]),key=lambda r:r['resid'])
     dm=100 if max(v for v,_ in gD)<=30 else 1
-    DIST=lin([(x,v*dm) for v,x in gD]); CORR=lin([(x,v) for v,x in gC])
+    # rótulo encaixado na grade só quando isso melhora o ajuste
+    best=lambda g,m=1: min(lin([(x,v*m) for v,x in g]),lin([(snapx(x),v*m) for v,x in g]),key=lambda r:r['resid'])
+    DIST=best(gD,dm); CORR=best(gC)
     blue=lambda q: q['c'] and q['c'][2]>0.45 and q['c'][1]<0.45 and q['w']>=0.4
-    grid=[q for q in P if q['c'] and q['c'][1]>0.5 and q['c'][2]>0.7 and len(q['pts'])==2]
+    grid=[q for q in P if q['c'] and q['c'][1]>0.5 and (q['c'][2]>0.7 or q['c'][0]<0.1) and len(q['pts'])==2]  # grade azul (Supl. 50/90) ou verde (Supl. 12)
     vx=sorted(set(round(q['pts'][0][0],1) for q in grid if abs(q['pts'][0][0]-q['pts'][1][0])<0.1))
     hy=[q['pts'][0][1] for q in grid if abs(q['pts'][0][1]-q['pts'][1][1])<0.1]
     hys=[q['pts'][1][1] for q in grid if abs(q['pts'][0][0]-q['pts'][1][0])<0.1]+[q['pts'][0][1] for q in grid if abs(q['pts'][0][0]-q['pts'][1][0])<0.1]
@@ -50,9 +58,39 @@ def extract(n,fig,cfg):
     L=(near(gHp[0][1]),s1); C=(s1,s2); R=(s2,near(gC[-1][1]))
     lL=[q for q in lines if inside(q,(0,s1))]; lC=[q for q in lines if inside(q,(s1,s2))]; lR=[q for q in lines if inside(q,(s2,2000))]
     oatc=join([q['pts'] for q in lL if solid(q)],tol=0.4); mo=join([q['pts'] for q in lL if not solid(q)],tol=0.6)
-    gwc=join([q['pts'] for q in lC],tol=0.4); ref=join([q['pts'] for q in lR],tol=0.4)
+    if not mo:  # Supl. 12: a MAX OAT LIMIT é tracejada em preto
+        mo=join([q['pts'] for q in P if q['c'] and max(q['c'])<0.3 and not solid(q) and inside(q,(L[0],s1)) and min(pt[1] for pt in q['pts'])>yTop-1],tol=0.6)
+    # curvas de peso: o piso vertical (distância mínima) é comum a várias curvas e as emendaria entre si.
+    # Corta os trechos verticais, junta só as diagonais e depois devolve a cada curva o seu pé no piso.
+    isv=lambda a_,b_: abs(a_[0]-b_[0])<0.05 and abs(a_[1]-b_[1])>0.3
+    vl={}
+    for q in lC:
+        for a_,b_ in zip(q['pts'],q['pts'][1:]):
+            if isv(a_,b_): vl[round(a_[0],1)]=vl.get(round(a_[0],1),0)+abs(a_[1]-b_[1])
+    fx0=max(vl,key=vl.get) if vl and max(vl.values())>10 else None
+    runs=[];vert=[]
+    for q in lC:
+        cur=[q['pts'][0]]
+        for a_,b_ in zip(q['pts'],q['pts'][1:]):
+            if fx0 is not None and isv(a_,b_) and abs(a_[0]-fx0)<0.3:
+                vert.append((a_[0],min(a_[1],b_[1]),max(a_[1],b_[1])))
+                if len(cur)>1: runs.append(cur)
+                cur=[b_]
+            else: cur.append(b_)
+        if len(cur)>1: runs.append(cur)
+    gwc=join(runs,tol=0.4); ref=join([q['pts'] for q in lR],tol=0.4)
+    floor=None
+    if vert:
+        fx=max(vert,key=lambda v:v[2]-v[1])[0]; fb=max(v[2] for v in vert if abs(v[0]-fx)<0.3)
+        floor=(fx,fb)
     big=lambda c: max(pt[0] for pt in c)-min(pt[0] for pt in c)+max(pt[1] for pt in c)-min(pt[1] for pt in c)>6
     oatc=[c for c in oatc if big(c)]; gwc=[c for c in gwc if big(c) and max(pt[0] for pt in c)-min(pt[0] for pt in c)>1]; ref=max(ref,key=len)
+    if floor:
+        for c in gwc:
+            lo=max(c,key=lambda pt:pt[1])
+            if abs(lo[0]-floor[0])<0.6 and floor[1]>lo[1]+0.3:
+                if c[-1] is lo: c.append((floor[0],floor[1]))
+                elif c[0] is lo: c.insert(0,(floor[0],floor[1]))
     def label(curves,vals,region):
         labs=[(v,x,y) for v,x,y in nums if v in vals and region[0]-2<x<region[1]+2 and yTop-2<y<yBot+2]
         best={}
@@ -61,7 +99,14 @@ def extract(n,fig,cfg):
             if d<14 and (i not in best or d<best[i][0]): best[i]=(d,v)
         return best
     ob=label(oatc,set(range(-40,51,10)),L)
-    gb=label(gwc,set(cfg.get('gws',[4400,4800,5200,5600,6000,6400,6600,6800,7000])),C)
+    gws=cfg.get('gws',[4400,4800,5200,5600,6000,6400,6600,6800,7000])
+    gb=label(gwc,set(gws),C)
+    # rótulos de peso escritos entre as curvas: se há tantos valores quanto curvas, vale a ordem da esquerda para a direita
+    gv=sorted(set(v for v,x,y in nums if v in gws and C[0]-2<x<C[1]+2 and yTop-2<y<yBot+2))
+    if len(gv)==len(gwc) and len(gwc)>1:
+        yc0=max(min(pt[1] for pt in c) for c in gwc)+1
+        order=sorted(range(len(gwc)),key=lambda i:x_at_y(sorted(gwc[i],key=lambda pt:pt[1]),yc0) or 0)
+        gb={i:(0,v) for i,v in zip(order,gv)}
     # pedaços sem rótulo (ex.: o 50 °C curto do lado da MAX OAT) entram só se cfg mandar
     def fill(best,curves,full,key,what):
         # curvas sem rótulo: valor deduzido pela ordem (posição entre as rotuladas) e pelo buraco na sequência de valores
@@ -84,7 +129,12 @@ def extract(n,fig,cfg):
     yat=lambda c,x: (lambda pts:pts[min(range(len(pts)),key=lambda i:abs(pts[i][0]-x))][1])(c)
     # OAT: mais quente = mais alto na página na borda esquerda (ou no ponto mais à esquerda em comum)
     xc=max(min(pt[0] for pt in c) for c in oatc)
-    ob=fill(ob,oatc,list(range(-40,51,10)),lambda i:-y_at_x(sorted(oatc[i]),xc+0.5) if y_at_x(sorted(oatc[i]),xc+0.5) is not None else -yat(oatc[i],xc),'oat')
+    okey=lambda i:-y_at_x(sorted(oatc[i]),xc+0.5) if y_at_x(sorted(oatc[i]),xc+0.5) is not None else -yat(oatc[i],xc)
+    # rótulos de OAT amontoados (ex.: 4F-9A): se há tantos valores quanto curvas, vale a ordem de baixo para cima
+    ov=sorted(set(v for v,x,y in nums if v in set(range(-40,51,10)) and L[0]-2<x<L[1]+2 and yTop-2<y<yBot+2))
+    if len(ov)==len(oatc) and len(oatc)>1:
+        ob={i:(0,v) for i,v in zip(sorted(range(len(oatc)),key=okey),ov)}
+    ob=fill(ob,oatc,list(range(-40,51,10)),okey,'oat')
     # peso: mais pesado = mais à direita numa altura comum
     yc=max(min(pt[1] for pt in c) for c in gwc)+1
     gb=fill(gb,gwc,cfg.get('gws',[4400,4800,5200,5600,6000,6400,6600,6800,7000]),lambda i:x_at_y(sorted(gwc[i],key=lambda pt:pt[1]),yc) or 0,'gw')
