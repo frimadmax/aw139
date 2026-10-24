@@ -36,7 +36,7 @@
   const lin = (c, v) => c.a * v + c.b;          // coordenada -> valor
   const inv = (c, v) => (v - c.b) / c.a;        // valor -> coordenada
   // cartas: Short Field (SF_CHARTS) e Back Up (BU_CHARTS) usam o mesmo formato
-  const chart = fig => ['SF_CHARTS', 'BU_CHARTS', 'CA_CHARTS', 'VT_CHARTS', 'VT_P1', 'VT_P2', 'CL_CHARTS', 'CA_ALT'].map(k => root[k] && root[k][fig]).find(Boolean);
+  const chart = fig => ['SF_CHARTS', 'BU_CHARTS', 'CA_CHARTS', 'VT_CHARTS', 'VT_P1', 'VT_P2', 'CL_CHARTS', 'CA_ALT', 'OFW_CHARTS'].map(k => root[k] && root[k][fig]).find(Boolean);
   const isaMaxOat = paFt => Math.min(50, 50 - 1.98 * paFt / 1000); // ISA+35 (linha MAX OAT LIMIT)
 
   // Interpola numa família {v, pos}; devolve pos para o valor pedido ou null.
@@ -86,7 +86,8 @@
       const xh = xAtY(ch.hd, y);
       if (xh != null && x < xh - 0.05) return fail('Fora da carta: limite de Hd excedido.');
     }
-    const xMax = inv(ch.w, GW_MAX);
+    const gwMax = ch.gwMax || GW_MAX;   // 6400 kg (Supl. 12) ou 6800 kg (Supl. 50)
+    const xMax = inv(ch.w, gwMax);
     x = Math.min(x, xMax);
     const wBase = lin(ch.w, x);
     const xLeft = ch.guides.length ? Math.min(...ch.guides.map(g => g.pts[0][0])) : inv(ch.w, 4200);
@@ -102,7 +103,7 @@
         .map(g => ({ v: g.v, pts: g.pts, top: xAtY(g.pts, ch.y0kt), at: xAtY(g.pts, yH) }))
         .filter(g => g.top != null && g.at != null)
         .sort((a, b) => a.top - b.top);
-      guides.push({ v: GW_MAX, pts: [[xMax, ch.y0kt], [xMax, yH + 50]], top: xMax, at: xMax });
+      guides.push({ v: gwMax, pts: [[xMax, ch.y0kt], [xMax, yH + 50]], top: xMax, at: xMax });
       let lo = null, hi = null;
       for (let i = 0; i < guides.length - 1; i++) {
         if (x >= guides[i].top - 1e-6 && x <= guides[i + 1].top + 1e-6) { lo = guides[i]; hi = guides[i + 1]; break; }
@@ -123,7 +124,7 @@
     }
     return {
       ok: true, fig, wBase, wMax: wHw, hw, vLim,
-      limitedBy6400: wHw >= GW_MAX - 0.5,
+      limitedBy6400: wHw >= gwMax - 0.5, gwMax,
       curves: [r.lo.v, r.hi.v], trace
     };
   }

@@ -177,3 +177,9 @@ body.fullscreen-body{overflow:hidden}
   .sidebar .field input,.sidebar .field select{font-size:13px;padding:0 8px}
   .sidebar .weight-input-row .mini-select{padding:0 4px}
 }
+.obl-block{margin-top:10px}
+.obl-block .result-box{min-height:0}
+.obl-view{line-height:1.4;padding:10px 12px 12px}
+.obl-view-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.obl-view-head .ldg-chart-cap{margin:0 0 8px}
+.obl-view .ldg-zoom{flex:none}

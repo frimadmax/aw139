@@ -9,6 +9,9 @@ if(PROC==='enhanced'){
   $('runBtn').textContent='Calcular '+t;
 }
 _loadConfinedDataFrom('../wat/data/');
+// Offshore: W.A.T. e Drop Down pelas cartas vetoriais do RFM (shared/offshore). Enhanced segue com as tabelas/carta do Supl. 97.
+const VEC=PROC==='offshore';
+if(VEC){$('ofsReview').hidden=false;['watView','ddView'].forEach(id=>OFSView.mount($(id)));$('watCanvas').style.display='none';$('watView').style.display='';}
 const KG_TO_LB=2.2046226218;
 function isLbUnit(){return $('weightUnit')?.value==='lb';}
 function parseWeightKg(){const r=Number($('weight').value||0);return isLbUnit()?r/KG_TO_LB:r;}
@@ -19,19 +22,41 @@ function calcPA(qnh,elev){const q=(qnh>=800&&qnh<=1100)?qnh:1013.25;return Math.
 function mapCfg(cfg){return cfg==='eaps_off'?'eapsOff':cfg==='eaps_on'?'eapsOn':'standard';}
 function activeTab(){return document.querySelector('.viewer-tab.active')?.dataset.tab;}
 function showTab(tab){
-  $('watCanvas').style.display=tab==='wat'?'':'none';
-  $('ddCanvas').style.display=tab==='dropdown'?'':'none';
+  $('watCanvas').style.display=!VEC&&tab==='wat'?'':'none';
+  $('ddCanvas').style.display=!VEC&&tab==='dropdown'?'':'none';
+  $('watView').style.display=VEC&&tab==='wat'?'':'none';
+  $('ddView').style.display=VEC&&tab==='dropdown'?'':'none';
   $('vizTitle').textContent=tab==='wat'?'WAT Offshore':'Dropdown Offshore';
   if(tab==='dropdown')requestAnimationFrame(()=>requestAnimationFrame(drawDD));
   else if(tab==='wat')requestAnimationFrame(()=>requestAnimationFrame(drawWAT));
 }
-function drawDD(){drawDDV7Canvas($('ddCanvas'),state.last?.ddResult,'../dropdown/assets/');}
-function drawWAT(){drawWATCanvas($('watCanvas'),state.last?.watResult,'../wat/',false);}
+const fmtHp=v=>Math.round(v).toLocaleString('pt-BR');
+function drawVecWAT(){
+  const s=state.last,cfg=(s&&s.cfg)||$('config').value,fig=OFSEngine.WAT[cfg]||OFSEngine.WAT.standard,ch=OFW_CHARTS[fig];
+  const r=s&&!s.error&&s.vw&&s.vw.ok?s.vw:null;
+  OFSView.draw($('watView'),ch,`<b>Fig. ${fig}</b> ${ch.title} · Supl. 50, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?` · leitura: <b>${fmtHp(r.kg)} kg</b>`:s&&s.error?` · ${s.error}`:''),r?[r.trace]:[]);
+}
+function drawVecDD(){
+  const s=state.last,r=s&&s.vd?s.vd:null,fig=r?r.fig:OFSEngine.ddFig(s&&s.w||6000,'takeoff'),ch=OFD_CHARTS[fig];
+  const sup=fig==='4-74'?'Supl. 50':'Supl. 12';
+  OFSView.draw($('ddView'),ch,`<b>Fig. ${fig}</b> ${ch.title} · ${sup}, RFM ${ch.rfmPage} (pág. ${ch.page} do PDF)`+(r?(r.ok?` · leitura na carta: <b>${Math.ceil(r.base)} ft</b>`:` · ${r.msg}`):''),r&&r.ok?[r.trace]:[]);
+}
+function drawDD(){if(VEC)return drawVecDD();drawDDV7Canvas($('ddCanvas'),state.last?.ddResult,'../dropdown/assets/');}
+function drawWAT(){if(VEC)return drawVecWAT();drawWATCanvas($('watCanvas'),state.last?.watResult,'../wat/',false);}
 function calc(){
   const qnh=Number($('qnh').value),elev=Number($('elevation').value||0),pa=calcPA(qnh,elev);
   const oat=Number($('oat').value||0),wRaw=Number($('weight').value||0),w=isLbUnit()?wRaw/KG_TO_LB:wRaw,hw=Number($('wind').value||0);
   const ac=Number($('aircraft').value||7000),proc=$('procedure').value,cfg=$('config').value;
   let wat;
+  if(VEC){
+    const vw=OFSEngine.wat(cfg,pa,oat,hw);
+    if(!vw.ok){state.last={error:vw.msg,proc,cfg,qnh,elev,pa,oat,w,wRaw,hw,ac,vw,vd:null};render();saveInputs();return;}
+    const vd=OFSEngine.dd(w,pa,oat,hw,{phase:'takeoff'});
+    const maxWeight=vw.kg,margin=Math.round(maxWeight-w),ok=margin>=0;
+    const dropdown=vd.ok?Math.ceil(vd.final):null;
+    state.last={qnh,elev,pa,oat,w,wRaw,hw,ac,proc,cfg,wat:maxWeight,vw,vd,dropdown,margin,ok};
+    render();saveInputs();return;
+  }
   if(proc==='enhanced'){
     if(cfg==='eaps_off')wat=calculateEnhancedEapsOff(pa,oat,w);
     else if(cfg==='eaps_on')wat=calculateEnhancedEapsOn(pa,oat,w);
@@ -60,6 +85,7 @@ function calc(){
   localStorage.setItem('aw139_offshore_takeoff_v1',JSON.stringify({qnh,elev,pa,oat,w,wRaw,weightUnit:isLbUnit()?'lb':'kg',hw,ac,proc,cfg,wat:maxWeight,dropdown,margin,ok}));
   localStorage.setItem('aw139_companion_shared_context_v1',JSON.stringify({lastModule:'decolagem-offshore',updatedAt:new Date().toISOString(),weightKg:w,oatC:oat,pressureAltitudeFt:pa,headwindKt:hw,cataAircraftSet:String(ac),cataConfiguration:cfg}));
 }
+function saveInputs(){const s=state.last;try{localStorage.setItem('aw139_offshore_takeoff_v1',JSON.stringify({qnh:s.qnh,elev:s.elev,pa:s.pa,oat:s.oat,w:s.w,wRaw:s.wRaw,weightUnit:isLbUnit()?'lb':'kg',hw:s.hw,ac:s.ac,proc:s.proc,cfg:s.cfg,vec:true}));}catch(e){}}
 function render(){
   if(!state.last)return;const s=state.last;
   document.querySelector('.result-panel')?.classList.remove('pending');
@@ -72,6 +98,12 @@ function render(){
   $('dropdownRes').textContent=s.dropdown!=null?`${s.dropdown} ft`:'—';
   $('watSummary').textContent=`${s.proc==='confined'?'Confined Area':s.proc==='enhanced'?'Enhanced':'Offshore'} · ${s.cfg} · PA ${s.pa} ft`;
   $('ddSummary').textContent=ddOk!=null?`Clearance ${s.elev-s.dropdown} ft ASL`:'Dropdown Offshore Takeoff';
+  if(VEC){
+    const d=s.vd;
+    $('watSummary').textContent=`Fig. ${s.vw.fig} · Supl. 50 · PA ${s.pa} ft${s.vw.hw?` · vento ${s.vw.hw} kt`:''}`;
+    if(d&&d.ok){const parts=[`Fig. ${d.fig}: ${Math.ceil(d.base)} ft`];if(d.wind)parts.push(`vento ${d.wind} ft`);$('ddSummary').textContent=`${ddOk!=null?`Clearance ${s.elev-s.dropdown} ft ASL · `:''}${parts.join(' · ')}`;}
+    else if(d)$('ddSummary').textContent=d.msg;
+  }
   $('margin').textContent=`Margin: ${fmtWt(s.margin)}`;
   chip.textContent=s.ok?'Viável':'Não viável';chip.className=`status-chip ${s.ok?'ok':'bad'}`;
   const tab=activeTab();
@@ -84,11 +116,13 @@ function restore(){
     if(!s){requestAnimationFrame(()=>drawWAT());return;}
     if(s.qnh!=null)$('qnh').value=s.qnh;if(s.elev!=null)$('elevation').value=s.elev;$('oat').value=s.oat;if($('weightUnit')&&s.weightUnit)$('weightUnit').value=s.weightUnit;$('weight').value=s.wRaw!=null?s.wRaw:s.w;$('wind').value=s.hw;$('aircraft').value=String(s.ac);$('config').value=s.cfg;updateWeightUi();
     if(s.proc!==PROC){requestAnimationFrame(()=>drawWAT());return;}
+    if(VEC){if(s.vec)calc();else requestAnimationFrame(()=>drawWAT());return;}
     state.last=s;
     requestAnimationFrame(()=>render());
   }catch{}
 }
 function openFS(){
+  if(VEC)return;
   const tab=activeTab();
   $('fsOverlay').hidden=false;document.body.classList.add('fullscreen-body');
   $('fsOverlay').scrollTop=0;
@@ -100,7 +134,7 @@ function openFS(){
 }
 function closeFS(){$('fsOverlay').hidden=true;document.body.classList.remove('fullscreen-body');}
 function exportPDF(){
-  if(!state.last?.watResult||state.last.watResult.error){window.print();return;}
+  if(VEC||!state.last?.watResult||state.last.watResult.error){window.print();return;}
   createWATExportCanvas(state.last.watResult,'../wat/',(ec)=>{
     ec.toBlob(blob=>{
       const url=URL.createObjectURL(blob);

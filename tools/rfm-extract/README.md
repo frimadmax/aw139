@@ -41,3 +41,9 @@ Na Seção 4 as linhas de OAT são traços grossos contornados (polígonos): usa
 linhas vermelhas do envelope. Pedaços de curva são agrupados só quando se sobrepõem na mesma direção e encadeados pela ponta.
 A ordem das curvas de peso vem do sentido dos rótulos; conferido cruzando cartas (6400 kg Seção 4 x Supl. 50 e 6800 kg
 Supl. 50 x Supl. 90 batem em até 0,3 m).
+
+Offshore W.A.T. (Supl. 50 Fig. 4-7, 4-8, 4-9, 4-9C): `ex_ofw.py 4-7,4-8,4-9,4-9C ofw.json`, `build.py ../../shared/offshore OFW_CHARTS ofw.json ofw-data.js`.
+Lido pelo `SFEngine.wat` (chave `gwMax` 6800). Conferido contra a Fig. 4E-1 do Supl. 12 (`ex_ofw.py 4E-1`): diferença máxima de 0,6 kg.
+Sem curva de -40 °C desenhada (rótulo à direita da linha de 6800 kg): -40 °C lê o peso máximo; a 4-9C não tem -40 °C.
+Offshore Drop Down (Supl. 12 Fig. 4E-7 e 4I-1, Supl. 50 Fig. 4-74): `ex_dd.py` → `dd.json`, `build.py ../../shared/offshore OFD_CHARTS dd.json ofd-data.js`.
+As linhas de peso são levemente curvas: guardar a polilinha inteira (não só as pontas). O eixo de Hp é calibrado pelos rótulos 0 a 4000 ft.
