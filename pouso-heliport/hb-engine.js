@@ -56,7 +56,7 @@
     const pm = yAtX(ch.maxOat, x);
     if (pm != null) fam.push({ v: vLim, pos: pm });
     const Y = interp(fam, oat);
-    if (Y == null) return fail('Temperatura fora das linhas de OAT da carta nesta altitude.');
+    if (Y == null) return fail('Fora da carta: nesta altitude a linha dessa OAT já saiu pelo topo da Fig. 4G-2.');
     const curve = ch.curve.slice().sort((a, b) => a[1] - b[1]);
     const X = xAtY(curve, Y);
     if (X == null) return fail('Leitura fora da curva da carta.');
