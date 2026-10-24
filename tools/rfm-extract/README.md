@@ -47,3 +47,11 @@ Lido pelo `SFEngine.wat` (chave `gwMax` 6800). Conferido contra a Fig. 4E-1 do S
 Sem curva de -40 °C desenhada (rótulo à direita da linha de 6800 kg): -40 °C lê o peso máximo; a 4-9C não tem -40 °C.
 Offshore Drop Down (Supl. 12 Fig. 4E-7 e 4I-1, Supl. 50 Fig. 4-74): `ex_dd.py` → `dd.json`, `build.py ../../shared/offshore OFD_CHARTS dd.json ofd-data.js`.
 As linhas de peso são levemente curvas: guardar a polilinha inteira (não só as pontas). O eixo de Hp é calibrado pelos rótulos 0 a 4000 ft.
+
+## Clear Area RTO (ex_rca.py)
+
+Cartas de 3 painéis (Supl. 50 Fig. 4-54/4-56/4-58/4-68A, Supl. 90 Fig. 4-92/4-94/4-96/4-98).
+`python3 ex_rca.py 4-54,... rca.json` extrai Hp, OAT (com a MAX OAT LIMIT), curvas de peso, escala de distância e
+Reference Line; `ov_rca.py rca.json DIR` desenha a conferência; `build.py ../../shared/clear CLR_CHARTS rca.json clr-data.js`.
+W.A.T. do Clear Area: `clr.json` (as entradas Clear Area de `all.json`) -> `build.py ../../shared/clear CLW_CHARTS clr.json clw-data.js`.
+Motor: `shared/clear/clr-engine.js`. As cartas 4F do Supl. 12 e as de CTO estão no CFG, mas ainda não foram conferidas.

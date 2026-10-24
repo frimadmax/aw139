@@ -22,9 +22,11 @@ const AERODROME_DB = {
   SBFS: { elevationFt: 7,   magVar: -21, runways: { RWY_15_33: { '15': 150, '33': 330 } } },
 };
 const adcFrame = document.getElementById('adcFrame');
-const watFrame = document.getElementById('watFrame');
-const rtoFrame = document.getElementById('rtoFrame');
-const frameMap = { adc: adcFrame, wat: watFrame, rto: rtoFrame };
+// W.A.T. e RTO: cartas vetoriais do RFM (shared/clear/clr-engine.js), desenhadas aqui num canvas próprio.
+const frameMap = { adc: adcFrame };
+const CLEAR_BASE = '../shared/clear/';
+const nativeViz = { wat: null, rto: null };
+const nativeCanvas = { wat: document.createElement('canvas'), rto: document.createElement('canvas') };
 const adcPreviewState = { payload: null };
 const imageCache = new Map();
 const vizRuntime = { renderSeq: 0, adcSyncSeq: 0, adcDecisionSeq: 0, adcDirty: false, modeDirty: { adc: false, wat: false, rto: false } };
@@ -632,9 +634,6 @@ function selectDepartureOption(select, preferredToken = '', preferredDep = '') {
   if (match) select.value = match.value;
   return match?.value || '';
 }
-function mapRtoConfig(config) {
-  return ({ standard: 'standard', eaps_off: 'eapsOff', eaps_on: 'eapsOn', ibf: 'ibfInstalled' })[config] || 'standard';
-}
 function mapVizLabel(v) { return ({ adc: 'Carta ADC', wat: 'Carta WAT', rto: 'Carta RTO', '': 'Em branco' })[v] || 'Em branco'; }
 
 function sanitizeDigitsInput(el, maxLen = null) {
@@ -722,15 +721,6 @@ async function waitForFieldValue(doc, id, expected, timeoutMs = 3000) {
   return false;
 }
 
-async function waitForNoPendingRto(doc, timeoutMs = 4000) {
-  const end = Date.now() + timeoutMs;
-  while (Date.now() < end) {
-    const pending = /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusDetail')) || /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusText'));
-    if (!pending) return true;
-    await sleep(25);
-  }
-  return false;
-}
 
 async function populateBaseOptions() {
   const doc = await waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']);
@@ -1010,108 +1000,38 @@ function restoreInputsFromContext() {
   updateCalcDisplay();
 }
 
-async function runWAT(input) {
-  const doc = await waitForIframe(watFrame, ['procedure', 'configuration', 'pressureAltitude', 'oat', 'actualWeight', 'headwind', 'runBtn', 'maxWeight', 'margin']);
-  setRadio(doc, 'aircraftSet', input.aircraftSet || '6800');
-  setField(doc, 'procedure', 'clear');
-  setField(doc, 'configuration', input.configuration);
-  await waitForFieldValue(doc, 'procedure', 'clear');
-  await waitForFieldValue(doc, 'configuration', input.configuration);
-  setField(doc, 'headwind', input.headwindKt);
-  setField(doc, 'pressureAltitude', input.pressureAltitudeFt);
-  setField(doc, 'oat', input.oatC);
-  setField(doc, 'actualWeight', input.weightKg);
-  await waitForFieldValue(doc, 'pressureAltitude', input.pressureAltitudeFt);
-  await waitForFieldValue(doc, 'oat', input.oatC);
-  await waitForFieldValue(doc, 'actualWeight', input.weightKg);
-  await waitForFieldValue(doc, 'headwind', input.headwindKt);
-  await nextFrame(1);
-  try { await doc.defaultView?.runCalculation?.(); } catch { clickField(doc, 'runBtn'); }
+function calcNative(mode, input) {
+  if (mode === 'wat') return CLREngine.wat(input.configuration, input.aircraftSet, input.pressureAltitudeFt, input.oatC, input.headwindKt);
+  return CLREngine.rto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
+}
 
-  const maxText = await waitForTruthy(() => {
-    const t = text(doc, 'maxWeight');
-    const summary = text(doc, 'statusText');
-    const pending = /recalculando|aguardando|loading|carregando/i.test(summary);
-    return t && t !== '—' && !pending ? t : null;
-  }, 7000);
-  const marginText = text(doc, 'margin');
-  const summary = text(doc, 'statusText');
-  const result = {
-    maxText: maxText || text(doc, 'maxWeight'),
-    marginText,
-    maxWeightKg: numberFromText(maxText || text(doc, 'maxWeight')),
-    marginKg: numberFromText(marginText),
-    summary
-  };
+async function runWAT(input) {
+  const r = calcNative('wat', input);
+  nativeViz.wat = r;
+  const ref = `Fig. ${r.name} · ${r.supl}`;
+  const result = r.ok ? {
+    maxText: `${r.kg} kg`,
+    marginText: `${Math.round(r.kg - input.weightKg)} kg`,
+    maxWeightKg: r.kg,
+    marginKg: r.kg - input.weightKg,
+    summary: r.note ? `${ref} · ${r.note}` : ref
+  } : { maxText: '—', marginText: '—', maxWeightKg: null, marginKg: null, summary: `${ref}: ${r.msg}` };
   pushSharedContext(input, { watMaxWeightKg: result.maxWeightKg, watMarginKg: result.marginKg });
   return result;
 }
 
 async function runRTO(input) {
-  const doc = await waitForIframe(rtoFrame, ['configuration', 'pressureAltitude', 'oat', 'actualWeight', 'headwind', 'runBtn', 'finalMetric']);
-  const metricEl = doc.getElementById('finalMetric');
-  const metricFtEl = doc.getElementById('finalMetricFt');
-  const statusDetailEl = doc.getElementById('statusDetail');
-  const statusTextEl = doc.getElementById('statusText');
-  const previousMetric = text(doc, 'finalMetric');
-  if (metricEl) metricEl.textContent = '—';
-  if (metricFtEl) metricFtEl.textContent = '—';
-  if (statusDetailEl) statusDetailEl.textContent = 'Recalculando…';
-  if (statusTextEl) statusTextEl.textContent = 'Aguardando nova leitura.';
-
-  const mappedConfig = mapRtoConfig(input.configuration);
-  setField(doc, 'configuration', mappedConfig);
-  await waitForFieldValue(doc, 'configuration', mappedConfig, 3500);
-  try {
-    await doc.defaultView?.ensureEffectiveProfileLoaded?.({ preserveInputs: true, autoRun: false });
-  } catch {}
-  await waitForNoPendingRto(doc, 2500);
-  try { await doc.defaultView?.clearResultsOnly?.(); } catch {}
-
-  setField(doc, 'weightUnit', 'kg');
-  setField(doc, 'headwind', input.headwindKt);
-  setField(doc, 'pressureAltitude', input.pressureAltitudeFt);
-  setField(doc, 'oat', input.oatC);
-  setField(doc, 'actualWeight', input.weightKg);
-
-  await waitForFieldValue(doc, 'pressureAltitude', input.pressureAltitudeFt);
-  await waitForFieldValue(doc, 'oat', input.oatC);
-  await waitForFieldValue(doc, 'actualWeight', input.weightKg);
-  await waitForFieldValue(doc, 'headwind', input.headwindKt);
-  await nextFrame(1);
-
-  try { await doc.defaultView?.refreshWeightSensitiveProfileIfNeeded?.(); } catch {}
-  try { await doc.defaultView?.ensureEffectiveProfileLoaded?.({ preserveInputs: true, autoRun: false }); } catch {}
-  await waitForNoPendingRto(doc, 2500);
-
-  try {
-    await doc.defaultView?.runCalculation?.();
-  } catch {
-    clickField(doc, 'runBtn');
+  const r = calcNative('rto', input);
+  nativeViz.rto = r;
+  const ref = `Fig. ${r.name} · ${r.supl}`;
+  let result;
+  if (r.ok) {
+    const m = Math.round(r.dist);
+    const wind = r.hw > 0 ? ` · carta ${Math.round(r.dist0)} m, vento ${r.hw.toFixed(0)} kt: ${Math.round(r.corr)} m` : '';
+    result = { metricText: `${m} m`, rtoMeters: m, summary: `${ref}${wind}` };
+  } else {
+    result = { metricText: '—', rtoMeters: null, summary: `${ref}: ${r.msg}` };
   }
-
-  let metricText = await waitForTruthy(() => {
-    const t = text(doc, 'finalMetric');
-    const pending = /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusDetail')) || /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusText'));
-    return /\d/.test(t) && t !== '—' && !pending && (t !== previousMetric || previousMetric === '—') ? t : null;
-  }, 8000);
-
-  if (!metricText) {
-    try { await doc.defaultView?.runCalculation?.(); } catch { clickField(doc, 'runBtn'); }
-    metricText = await waitForTruthy(() => {
-      const t = text(doc, 'finalMetric');
-      const pending = /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusDetail')) || /recalculando|aguardando|loading|carregando/i.test(text(doc, 'statusText'));
-      return /\d/.test(t) && t !== '—' && !pending ? t : null;
-    }, 6000);
-  }
-
-  metricText = metricText || text(doc, 'finalMetric');
-  const summary = text(doc, 'statusDetail') || text(doc, 'statusText');
-  const result = {
-    metricText,
-    rtoMeters: numberFromText(metricText),
-    summary
-  };
   pushSharedContext(input, { rtoMeters: result.rtoMeters });
   return result;
 }
@@ -1494,7 +1414,43 @@ async function refreshEmbeddedSizing(mode, doc = null) {
   }
 }
 
+async function drawNative(mode) {
+  let r = nativeViz[mode];
+  if (!r) { r = calcNative(mode, collectInputs()); nativeViz[mode] = r; }
+  const ch = r.ch;
+  const c = nativeCanvas[mode];
+  if (!ch) return c;
+  const img = await loadImage(CLEAR_BASE + ch.img.src);
+  if (!img) return c;
+  c.width = img.naturalWidth;
+  c.height = img.naturalHeight;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.drawImage(img, 0, 0);
+  if (!r.ok) return c;
+  const [bx, by, bw, bh] = ch.img.box, sx = c.width / bw, sy = c.height / bh;
+  const P = p => [(p[0] - bx) * sx, (p[1] - by) * sy];
+  ctx.strokeStyle = '#e6007e';
+  ctx.fillStyle = '#e6007e';
+  ctx.lineWidth = Math.max(2, sx * 0.9);
+  ctx.lineJoin = 'round';
+  for (const t of (mode === 'wat' ? [r.trace] : r.traces)) {
+    ctx.beginPath();
+    t.forEach((p, i) => { const [x, y] = P(p); if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); });
+    ctx.stroke();
+  }
+  for (const d of (mode === 'wat' ? [r.trace[1]] : r.dots)) {
+    const [x, y] = P(d);
+    ctx.beginPath();
+    ctx.arc(x, y, sx * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  return c;
+}
+
 async function prepareEmbeddedView(mode) {
+  if (mode === 'wat' || mode === 'rto') return drawNative(mode);
   try {
     const doc = await waitForIframe(frameMap[mode]);
     applyUnifiedChartView(doc, mode);
@@ -1522,17 +1478,8 @@ function parseReferenceHtml(html) {
 }
 
 function getLegendForMode(mode) {
-  if (mode === 'wat') return [
-    { color: '#ffffff', label: 'Max weight interpolado' },
-    { color: '#52a8ff', label: 'Peso atual' },
-    { color: '#62FF9C', label: 'Dentro' },
-    { color: '#FF4040', label: 'Fora' },
-  ];
-  if (mode === 'rto') return [
-    { color: '#f3b447', label: 'PA / curvas OAT usadas' },
-    { color: '#3dd9ff', label: 'Transferência' },
-    { color: '#62FF9C', label: 'Curvas de peso usadas' },
-    { color: '#ff66cc', label: 'Correction / Reference line' },
+  if (mode === 'wat' || mode === 'rto') return [
+    { color: '#e6007e', label: 'Caminho da leitura feito pelo app' },
   ];
   if (mode === 'adc') return [
     { color: '#7CFC00', label: 'OK / disponível' },
@@ -1558,10 +1505,13 @@ function getVisualizationMeta(mode) {
     };
   }
 
-  const frame = frameMap[mode];
-  const doc = frame?.contentDocument;
-  const refHtml = doc?.getElementById('chartReference')?.innerHTML || '';
-  const facts = parseReferenceHtml(refHtml);
+  const r = nativeViz[mode];
+  const ch = r?.ch;
+  const facts = ch ? [
+    { label: 'Gráfico', value: `Fig. ${r.name} — ${ch.title}` },
+    { label: 'Fonte', value: `RFM AW139 Rev 30, ${r.supl}, pág. ${ch.rfmPage} (pág. ${ch.page} do PDF)` },
+    { label: 'Leitura', value: !r.ok ? r.msg : mode === 'wat' ? `${r.kg} kg${r.note ? ' · ' + r.note : ''}` : `${Math.round(r.dist0)} m na carta${r.hw > 0 ? ` · vento ${r.hw.toFixed(0)} kt: ${r.perKt.toFixed(1)} m/kt = ${Math.round(r.corr)} m` : ''} · RTO ${Math.round(r.dist)} m` },
+  ] : [];
   return {
     legend: getLegendForMode(mode),
     facts
@@ -1610,14 +1560,14 @@ function getModeContentHeight(doc, mode) {
 function getSourceCanvas(mode) {
   try {
     if (mode === 'adc') return adcFrame.contentDocument?.getElementById('vizCanvas') || null;
-    if (mode === 'wat') return watFrame.contentDocument?.getElementById('chartCanvas') || null;
-    if (mode === 'rto') return rtoFrame.contentDocument?.getElementById('chartCanvas') || null;
+    if (mode === 'wat' || mode === 'rto') return nativeCanvas[mode];
   } catch {}
   return null;
 }
 
 function getCanvasCrop(source, mode = '') {
   if (!source) return null;
+  if (mode === 'wat' || mode === 'rto') return { x: 0, y: 0, w: source.width, h: source.height };
   try {
     if (mode === 'adc') {
       const rect = adcFrame.contentWindow?.__cataEmbedSourceRect;
@@ -2007,16 +1957,6 @@ function getModeSnapshotCanvas(mode) {
 
 function getModePdfCanvas(mode) {
   try {
-    if (mode === 'wat') {
-      const bridgeCanvas = watFrame.contentWindow?.__cataWatBridge?.getPdfCanvas?.();
-      if (bridgeCanvas && bridgeCanvas.width > 16 && bridgeCanvas.height > 16) {
-        const tmp = document.createElement('canvas');
-        tmp.width = bridgeCanvas.width;
-        tmp.height = bridgeCanvas.height;
-        tmp.getContext('2d').drawImage(bridgeCanvas, 0, 0);
-        return tmp;
-      }
-    }
     const src = getSourceCanvas(mode);
     if (src && src.width > 16 && src.height > 16) {
       const crop = getCanvasCrop(src, mode);
@@ -2471,6 +2411,7 @@ function resetFlowForm() {
   if (els.base?.options?.length) els.base.selectedIndex = 0;
   if (els.departure?.options?.length) els.departure.selectedIndex = 0;
   resetResultsPanel();
+  nativeViz.wat = nativeViz.rto = null;
   clearVisualization();
   const input = collectInputs();
   pushSharedContext(input, { cataLastResults: null, watMaxWeightKg: null, watMarginKg: null, rtoMeters: null, ctoMeters: null });
@@ -2542,10 +2483,11 @@ async function runFlow() {
         metricText: '—',
         summary: 'NO GO — vento de cauda na cabeceira selecionada. Selecione a cabeceira oposta.'
       };
+      nativeViz.rto = calcNative('rto', input);
       adc = { input, rows: [], basisMetric: 'ASDA' };
     } else {
       rto = await runRTO(input);
-      adc = await runADC(input, rto);
+      adc = rto.rtoMeters == null ? { input, rows: [], basisMetric: 'ASDA' } : await runADC(input, rto);
     }
 
     clearAllModeDirty();
@@ -2677,9 +2619,7 @@ window.addEventListener('load', async () => {
   clearVisualization();
   try {
     await Promise.all([
-      waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect']),
-      waitForIframe(watFrame, ['procedure', 'configuration', 'runBtn']),
-      waitForIframe(rtoFrame, ['configuration', 'runBtn'])
+      waitForIframe(adcFrame, ['baseSelect', 'departureEndSelect'])
     ]);
     await populateBaseOptions();
     restoreInputsFromContext();
