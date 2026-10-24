@@ -11,7 +11,6 @@ if(PROC==='enhanced'){
 _loadConfinedDataFrom('../wat/data/');
 // W.A.T. e Drop Down pelas cartas vetoriais do RFM (shared/offshore): Offshore pelo Supl. 50/12 (OFSEngine), Enhanced pelo Supl. 97 (EWEngine).
 const VEC=true,ENH=PROC==='enhanced';
-if(ENH)$('ewReview').hidden=false;
 if(VEC){['watView','ddView'].forEach(id=>OFSView.mount($(id)));$('watCanvas').style.display='none';$('watView').style.display='';}
 const KG_TO_LB=2.2046226218;
 function isLbUnit(){return $('weightUnit')?.value==='lb';}

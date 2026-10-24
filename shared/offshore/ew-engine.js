@@ -5,7 +5,7 @@
  * Drop Down: Fig. 4-10 (vale para todas as configurações), 6000 a 7000 kg.
  *   Hp (eixo de baixo) -> sobe até a linha de OAT -> direita até a borda do painel do meio ->
  *   acompanha as curvas-guia até o vento de proa (até 40 kt) -> direita até a curva de peso -> desce até a perda de altura (ft).
- *   Conferido contra as tabelas de vento zero do RFM (Fig. 4-11 e 4-12).
+ *   Conferido contra as tabelas de vento zero do RFM (Fig. 4-11 e 4-12). Acima de 150 ft (fim da escala da carta) vale a tabela, sem crédito de vento.
  */
 (function (root) {
   'use strict';
@@ -40,6 +40,16 @@
   }
 
   // ---------- Drop Down ----------
+  // tabela de vento zero: interpolação linear em OAT, Hp e peso; null se faltar célula (acima da MAX OAT da tabela)
+  function tableFt(Z, gw, pa, oat) {
+    const keys = o => Object.keys(o).map(Number).sort((a, b) => a - b);
+    const br = (ks, v) => { let lo = null, hi = null; for (const k of ks) { if (k <= v + 1e-9) lo = k; if (k >= v - 1e-9) { hi = k; break; } } return lo == null || hi == null ? null : [lo, hi]; };
+    const mix = (a, b, ka, kb, v) => (a == null || b == null ? null : ka === kb ? a : a + (v - ka) / (kb - ka) * (b - a));
+    const atOat = (row, v) => { const b = br(keys(row), v); return b && mix(row[b[0]], row[b[1]], b[0], b[1], v); };
+    const atHp = (tab, h, v) => { const b = br(keys(tab), h); return b && mix(atOat(tab[b[0]], v), atOat(tab[b[1]], v), b[0], b[1], h); };
+    const b = br(keys(Z), gw);
+    return b && mix(atHp(Z[b[0]], pa, oat), atHp(Z[b[1]], pa, oat), b[0], b[1], gw);
+  }
   function dd(gw, pa, oat, hw) {
     const ch = root.EDD_CHARTS[DD], F = ch.frame, base = { fig: DD, name: figName(DD), supl: 'Supl. 97', ch };
     const E = (msg) => fail(DD, msg, base);
@@ -97,7 +107,14 @@
     const S = ch.gw.slice().sort((p, q) => p.v - q.v);
     for (const c of S) { if (c.v <= gw + 1e-9) gl = c; if (c.v >= gw - 1e-9) { gh = c; break; } }
     const xl = xAt(gl), xh = xAt(gh);
-    if (xl == null || xh == null) return E('Leitura passa da escala de perda de altura da carta (150 ft).');
+    if (xl == null || xh == null) {
+      // a escala da carta termina em 150 ft: vale a tabela de vento zero do RFM (Fig. 4-11/4-12), sem crédito de vento
+      const t = tableFt(ch.zeroWind, gw, pa, oat);
+      if (t == null) return E('Leitura passa da escala da carta (150 ft) e fica fora da tabela de vento zero (Fig. 4-11/4-12).');
+      const n = [...notes, `Acima de 150 ft a carta não lê: valor da tabela de vento zero (Fig. ${gw > 6400 ? '4-12' : '4-11'}), sem crédito de vento.`];
+      const tr = [[x0, F.yBot], [x0, Y], ...path];
+      return Object.assign(base, { ok: true, ft: t, final: Math.ceil(t - 1e-6), hw: 0, table: true, Y, Y2, x0, xH, vLim, notes: n, traces: [tr], dots: [[x0, Y]] });
+    }
     const X = gh.v === gl.v ? xl : xl + (gw - gl.v) / (gh.v - gl.v) * (xh - xl);
     const ft = Math.max(0, lin(ch.dd, X));
     const final = Math.ceil(ft - 1e-6);

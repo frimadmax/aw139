@@ -47,6 +47,8 @@ assert len(set(json.dumps(g['pts']) for g in gw))==len(gw)
 guides=sorted([clean(c) for c in M],key=lambda c:c[0][1])
 out={FIG:dict(fig=FIG,page=int(N),rfmPage=RFM,title='Enhanced Offshore Helideck Procedure Drop Down Height BTS for CTO OEI',
     pa=PA,hw=HW,dd=DD,oat=oat,maxOat=clean(mo[0]),guides=guides,gw=gw,frame=dict(xl=xl,xr=xr,xm0=xm0,xm1=xm1,xd0=xd0,xd1=xd1,yTop=yTop,yBot=yBot))}
+# tabelas de vento zero do RFM (Fig. 4-11 e 4-12, de ex_eddtab): peso -> Hp -> OAT -> ft; usadas quando a carta passa de 150 ft
+out[FIG]['zeroWind']=json.load(open('eddtab.json'))
 for k in ('pa','hw','dd'): print(k,{a:round(b,4) for a,b in out[FIG][k].items()})
 print('oat',[o['v'] for o in oat],'gw',[g['v'] for g in gw],'guides',len(guides),'frame',{k:round(v,1) for k,v in out[FIG]['frame'].items()})
 json.dump(out,open(sys.argv[1] if len(sys.argv)>1 else 'edd.json','w'))
