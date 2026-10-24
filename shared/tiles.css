@@ -10,6 +10,7 @@
   background:linear-gradient(90deg,var(--omni-magenta) 0 22%,var(--omni-sky) 22% 100%)}
 .efb-id{display:flex;align-items:center;gap:10px;min-width:0;flex:0 1 auto;color:#fff;text-decoration:none}
 .efb-id .aw-icon{width:30px;height:30px;color:var(--omni-sky);flex:0 0 auto}
+.efb-id .efb-logo{width:34px;height:34px;border-radius:8px;flex:0 0 auto}
 .efb-id b{display:block;font-size:15px;letter-spacing:.06em}
 .efb-id small{display:block;font-size:9px;letter-spacing:.2em;white-space:nowrap;text-transform:uppercase;color:var(--omni-sky)}
 .efb-id small em{font-style:normal;color:var(--omni-magenta-2)}

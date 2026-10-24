@@ -155,7 +155,7 @@
   function createLaunchMask(){
     const mask = document.createElement('div');
     mask.className = 'pwa-launch-mask';
-    mask.innerHTML = '<div class="pwa-launch-card"><div class="pwa-launch-icon"><img src="'+launchIconPath()+'" alt=""></div><div class="pwa-launch-title">AW139</div><div class="pwa-launch-subtitle">Carregando ambiente operacional…</div></div>';
+    mask.innerHTML = '<div class="pwa-launch-card"><div class="pwa-launch-icon"><img src="'+launchIconPath()+'" alt=""></div><div class="pwa-launch-title">AeroMax 139</div><div class="pwa-launch-subtitle">Carregando ambiente operacional…</div></div>';
     document.addEventListener('DOMContentLoaded', () => {
       document.body.appendChild(mask);
     }, { once: true });
@@ -164,7 +164,7 @@
 
   function launchIconPath(){
     const path = pagePath();
-    if (path.includes('/cata/') || path.includes('/adc/') || path.includes('/wat/') || path.includes('/rto/') || isExtraApp(path)) return '../assets/icon-192.png';
+    if (['/cata/','/adc/','/wat/','/rto/','/dropdown/','/decolagem-offshore/','/pouso-offshore/'].some((d) => path.includes(d)) || isExtraApp(path)) return '../assets/icon-192.png';
     return 'assets/icon-192.png';
   }
 
