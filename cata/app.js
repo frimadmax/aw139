@@ -740,8 +740,6 @@ function applyBaseMode() {
   if (els.manualRow) { els.manualRow.hidden = !none; els.manualRow.style.display = none ? '' : 'none'; }
   if (els.departureField) { els.departureField.hidden = none; els.departureField.style.visibility = none ? 'hidden' : ''; }
   if (els.metarBtn) els.metarBtn.disabled = none;
-  const review = document.getElementById('syecReview');
-  if (review) review.style.display = els.base?.value === 'SYEC' ? '' : 'none';
 }
 function addNoBaseOption() {
   if (![...els.base.options].some(o => o.value === NO_BASE)) els.base.insertAdjacentHTML('beforeend', `<option value="${NO_BASE}">Nenhum (proa manual)</option>`);
