@@ -45,9 +45,12 @@
   const fail = msg => ({ ok: false, msg, notes: [] });
 
   // Fig. 4G-2: Hp -> linha de OAT -> direita até a curva -> desce até a distância.
-  function balked(pa, oat) {
+  function balked(paIn, oat) {
     const ch = root.HB_CHARTS[BL_FIG];
-    if (pa < -1e-9) return fail('Altitude abaixo de 0 ft: fora da Fig. 4G-2 (eixo de 0 a 14000 ft).');
+    const notes = [];
+    // O eixo da Fig. 4G-2 começa em 0 ft: abaixo disso usa 0 ft (decisão do Alexandre, 24/10/2026).
+    const pa = Math.max(0, paIn);
+    if (paIn < 0) notes.push('Altitude abaixo de 0 ft: a carta começa em 0 ft, leitura feita com 0 ft.');
     if (pa > PA_MAX + 1e-9) return fail('Acima de 14000 ft Hp: fora da carta.');
     const vLim = isaMaxOat(pa);
     if (oat > vLim + 1e-9) return fail(`OAT acima do MAX OAT LIMIT (ISA+35 = ${vLim.toFixed(1).replace('.', ',')} °C nesta altitude).`);
@@ -61,7 +64,7 @@
     const X = xAtY(curve, Y);
     if (X == null) return fail('Leitura fora da curva da carta.');
     const bottom = Math.max(...ch.oat.flatMap(c => c.pts.map(p => p[1])));
-    return { ok: true, fig: BL_FIG, dist: lin(ch.dist, X), notes: [], trace: [[x, bottom + 4], [x, Y], [X, Y], [X, bottom + 4]] };
+    return { ok: true, fig: BL_FIG, dist: lin(ch.dist, X), notes, trace: [[x, bottom + 4], [x, Y], [X, Y], [X, bottom + 4]] };
   }
 
   const heights = ldp => ({ minH: ldp - 35, endH: ldp - 15, path1Top: Math.max(200, ldp + 150) });
