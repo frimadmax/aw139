@@ -98,7 +98,9 @@
   // Gradiente para o peso: interpolação linear entre as cartas de peso vizinhas (como no RFM, Ex. 2).
   function gradForGw(config, paFt, oat, hwKt, gwKg, path = 1) {
     const fig = path === 3 ? altFig : path === 2 ? p2Fig : p1Fig;
-    const gw = Math.max(P1_GW[0], Math.min(6400, gwKg));
+    // As cartas PATH do Supl. 12 vão até 6400 kg: acima disso não há leitura (antes o app usava a de 6400 kg).
+    if (gwKg > P1_GW[P1_GW.length - 1] + 1e-9) return { ok: false, fig: fig(config, P1_GW.length - 1), msg: 'Peso acima de 6400 kg: as cartas PATH do Supl. 12 vão até 6400 kg.' };
+    const gw = Math.max(P1_GW[0], gwKg);
     let i = P1_GW.findIndex((w, k) => k < P1_GW.length - 1 && gw <= P1_GW[k + 1]);
     if (i < 0) i = P1_GW.length - 2;
     const a = grad(fig(config, i), paFt, oat, hwKt), b = grad(fig(config, i + 1), paFt, oat, hwKt);

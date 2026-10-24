@@ -194,6 +194,7 @@
       const vals = charts.map(c => c.ok ? `${c.fig}: ${c.grad.toFixed(1).replace('.', ',')} ft` : `${c.fig}: ${c.msg}`).join(' · ');
       $('chartCap').innerHTML = `<b>PATH ${path}</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
         (g.ok && charts.length > 1 ? `. Interpolado para ${fmt(g.gw)} kg: <b>${g.grad.toFixed(1).replace('.', ',')} ft/100 ft</b>.` : '') +
+        (!g.ok && g.msg ? ` · <b>${g.msg}</b>` : '') +
         (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324, confere com o Ex. 2 do RFM).' : '');
       paint('chartImg', 'chartSvg', shown[0], charts[0], 1);
       if (shown.length > 1) { $('chartWrap2').hidden = false; paint('chartImg2', 'chartSvg2', shown[1], charts[1], 1); }

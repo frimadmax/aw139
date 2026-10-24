@@ -184,6 +184,7 @@
       const vals = charts.map(c => c.ok ? `${c.fig}: ${f1(c.grad)} ft` : `${c.fig}: ${c.msg}`).join(' · ');
       $('chartCap').innerHTML = `<b>${path === 3 ? 'Subida alternativa 60 KIAS' : `PATH ${path}`}</b> ${shown.map(f => `Fig. ${f} (${C[f].gw} kg, RFM ${C[f].rfmPage})`).join(' e ')}. ${vals}` +
         (g.ok && charts.length > 1 ? `. Interpolado para ${fmt(g.gw)} kg: <b>${f1(g.grad)} ft/100 ft</b>.` : '') +
+        (!g.ok && g.msg ? ` · <b>${g.msg}</b>` : '') +
         (shown.includes('4A-13') ? ' <br>Fig. 4A-13: no PDF Rev 30 a página mostra por cima uma cópia da carta de 6000 kg; o app usa a carta de 6400 kg que está por baixo (ICN ...12324).' : '') +
         (shown.some(f => f === '4D-13' || f === '4D-14') ? ' <br>Nesta carta os rótulos −10 e −20 aparecem trocados no PDF; o app segue a ordem das curvas (mais frio à direita).' : '');
       paint('chartImg', 'chartSvg', shown[0], charts[0], 1);
