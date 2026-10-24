@@ -25,9 +25,11 @@ const adcFrame = document.getElementById('adcFrame');
 // W.A.T. e RTO: cartas vetoriais do RFM (shared/clear/clr-engine.js), desenhadas aqui num canvas próprio.
 const frameMap = { adc: adcFrame };
 const CLEAR_BASE = '../shared/clear/';
-const nativeViz = { wat: null, rto: null, cto: null };
-const nativeCanvas = { wat: document.createElement('canvas'), rto: document.createElement('canvas'), cto: document.createElement('canvas') };
-const isNativeMode = mode => mode === 'wat' || mode === 'rto' || mode === 'cto';
+const nativeViz = { wat: null, rto: null, cto: null, wra: null };
+const nativeCanvas = { wat: document.createElement('canvas'), rto: document.createElement('canvas'), cto: document.createElement('canvas'), wra: document.createElement('canvas') };
+const isNativeMode = mode => mode === 'wat' || mode === 'rto' || mode === 'cto' || mode === 'wra';
+// WRA: Fig. 4K-4 do Supl. 12 (shared/wind/), com o vento e a proa de decolagem da tela
+const WIND_BASE = '../shared/wind/';
 const adcPreviewState = { payload: null };
 const imageCache = new Map();
 const vizRuntime = { renderSeq: 0, adcSyncSeq: 0, adcDecisionSeq: 0, adcDirty: false, modeDirty: { adc: false, wat: false, rto: false } };
@@ -154,7 +156,7 @@ function setModeDirty(mode, reason = '') {
 }
 
 function markCalculationDirty(reason = 'o cálculo') {
-  ['adc', 'wat', 'rto', 'cto'].forEach(mode => setModeDirty(mode, reason));
+  ['adc', 'wat', 'rto', 'cto', 'wra'].forEach(mode => setModeDirty(mode, reason));
 }
 
 function clearModeDirty(mode) {
@@ -163,7 +165,7 @@ function clearModeDirty(mode) {
 }
 
 function clearAllModeDirty() {
-  ['adc', 'wat', 'rto', 'cto'].forEach(clearModeDirty);
+  ['adc', 'wat', 'rto', 'cto', 'wra'].forEach(clearModeDirty);
 }
 
 function setViewerLoading(title = 'Atualizando visualização', sub = 'Aguarde a carta ser atualizada.') {
@@ -641,7 +643,7 @@ function selectDepartureOption(select, preferredToken = '', preferredDep = '') {
   if (match) select.value = match.value;
   return match?.value || '';
 }
-function mapVizLabel(v) { return ({ adc: 'Carta ADC', wat: 'Carta WAT', rto: 'Carta RTO', cto: 'Carta CTO', '': 'Em branco' })[v] || 'Em branco'; }
+function mapVizLabel(v) { return ({ adc: 'Carta ADC', wat: 'Carta WAT', rto: 'Carta RTO', cto: 'Carta CTO', wra: 'Carta WRA', '': 'Em branco' })[v] || 'Em branco'; }
 
 function sanitizeDigitsInput(el, maxLen = null) {
   const allowNegative = el === els.oat;
@@ -1049,6 +1051,13 @@ function restoreInputsFromContext() {
 }
 
 function calcNative(mode, input) {
+  if (mode === 'wra') {
+    const has = input.takeoffHeadingMag != null && String(els.windDir?.value ?? '').trim() !== '';
+    const w = has ? WRA.credit(input.windDirMag % 360, input.windSpeedKt, input.takeoffHeadingMag, 'standard') : null;
+    const v = WRA.chartFor(w, 'standard');
+    const msg = !w ? (input.noBase ? 'Preencha o vento e a proa de decolagem para ver a leitura.' : 'Preencha o vento para ver a leitura.') : v.msg;
+    return { ok: !!w && v.traces.length > 0, ch: v.ch, name: v.ch?.fig, supl: v.ch?.supl, traces: v.traces, dots: v.dots, msg, w };
+  }
   if (mode === 'wat') return CLREngine.wat(input.configuration, input.aircraftSet, input.pressureAltitudeFt, input.oatC, input.headwindKt);
   if (mode === 'cto') return CLREngine.cto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
   return CLREngine.rto(input.configuration, input.weightKg, input.pressureAltitudeFt, input.oatC, input.headwindKt, input.aircraftSet);
@@ -1493,7 +1502,7 @@ async function drawNative(mode) {
   const ch = r.ch;
   const c = nativeCanvas[mode];
   if (!ch) return c;
-  const img = await loadImage(CLEAR_BASE + ch.img.src);
+  const img = await loadImage((mode === 'wra' ? WIND_BASE : CLEAR_BASE) + ch.img.src);
   if (!img) return c;
   c.width = img.naturalWidth;
   c.height = img.naturalHeight;
@@ -1583,8 +1592,9 @@ function getVisualizationMeta(mode) {
   const facts = ch ? [
     { label: 'Gráfico', value: `Fig. ${r.name} — ${ch.title}` },
     { label: 'Fonte', value: `RFM AW139 Rev 30, ${r.supl}, pág. ${ch.rfmPage} (pág. ${ch.page} do PDF)` },
-    { label: 'Leitura', value: !r.ok ? r.msg : mode === 'wat' ? `${r.kg} kg${r.note ? ' · ' + r.note : ''}` : `${Math.round(r.dist0)} m na carta${r.hw > 0 ? ` · vento ${r.hw.toFixed(0)} kt: ${r.perKt.toFixed(1)} m/kt = ${Math.round(r.corr)} m` : ''} · ${mode.toUpperCase()} ${Math.round(r.dist)} m${r.note ? ' · ' + r.note : ''}` },
+    { label: 'Leitura', value: mode === 'wra' ? (r.w ? `${WRA.describe(r.w)}` : r.msg) : !r.ok ? r.msg : mode === 'wat' ? `${r.kg} kg${r.note ? ' · ' + r.note : ''}` : `${Math.round(r.dist0)} m na carta${r.hw > 0 ? ` · vento ${r.hw.toFixed(0)} kt: ${r.perKt.toFixed(1)} m/kt = ${Math.round(r.corr)} m` : ''} · ${mode.toUpperCase()} ${Math.round(r.dist)} m${r.note ? ' · ' + r.note : ''}` },
   ] : [];
+  if (mode === 'wra') facts.push({ label: 'Status', value: 'Aba WRA em conferência' });
   return {
     legend: getLegendForMode(mode),
     facts
@@ -2488,7 +2498,7 @@ function resetFlowForm() {
   if (els.base?.options?.length) els.base.selectedIndex = 0;
   if (els.departure?.options?.length) els.departure.selectedIndex = 0;
   resetResultsPanel();
-  nativeViz.wat = nativeViz.rto = nativeViz.cto = null;
+  nativeViz.wat = nativeViz.rto = nativeViz.cto = nativeViz.wra = null;
   clearVisualization();
   const input = collectInputs();
   pushSharedContext(input, { cataLastResults: null, watMaxWeightKg: null, watMarginKg: null, rtoMeters: null, ctoMeters: null });
@@ -2553,6 +2563,7 @@ async function runFlow() {
     const tailwindNoGo = Number.isFinite(Number(input.headwindKt)) && Number(input.headwindKt) < 0;
     const wat = await runWAT(input);
     const cto = await runCTO(input);
+    nativeViz.wra = calcNative('wra', input);
     let rto;
     let adc;
 

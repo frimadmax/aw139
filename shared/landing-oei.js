@@ -27,7 +27,7 @@ async function refreshLda(){
   currentLda = null; currentLdaLabel = '';
   const base = $('baseSelect')?.value;
   const dep = $('departureEndSelect')?.value || '';
-  if (base && dep.includes('::')) {
+  if (base && base !== '__NONE__' && dep.includes('::')) {
     const [rwyId, end] = dep.split('::');
     try {
       const res = await fetch(`../adc/${base.toLowerCase()}_builtin_pack_v5.json`);
